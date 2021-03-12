@@ -1,0 +1,59 @@
+name: CIValidation
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+      types: [opened, synchronize, reopened]
+
+jobs:
+  CIValidation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: 'x64'
+
+    - name: Set up Nodejs
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install libxmlsec1-dev pkg-config
+        pip install -r requirements.txt
+
+    - name: Run python tests
+      run: './scripts/runPythonTests.sh'
+
+    - name: Run javascript tests
+      run: './scripts/runNodejsTests.sh'
+        
+    - name: Run pylint
+      run: './scripts/runPyLint.sh'
+
+    - name: Override Coverage Source Path for Sonar
+      run: |
+        sed -i "s/<source>\/home\/runner\/work\/building-bridges\/building-bridges\/bridges<\/source>/<source>\/github\/workspace\/bridges<\/source>/g" /home/runner/work/building-bridges/building-bridges/.sonar/coverage.xml
+        sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' web/coverage/lcov.info
+
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.organization=pegasystems
+          -Dsonar.projectKey=pegasystems_building-bridges
+          -Dsonar.sources=.
+          -Dsonar.python.coverage.reportPaths=.sonar/coverage.xml
+          -Dsonar.javascript.lcov.reportPaths=web/coverage/lcov.info

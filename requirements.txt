@@ -1,0 +1,11 @@
+flask-restx==0.1.0
+pymongo==3.10.1
+mockupdb==1.7.0
+pytest==5.3.4
+pytest-cov==2.8.1
+Werkzeug==0.16.1
+dacite==1.4.0
+pylint==2.5.3
+python3-saml==1.9.0
+python-dotenv==0.14.0
+configargparse==1.2.3

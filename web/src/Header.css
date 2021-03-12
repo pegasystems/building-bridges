@@ -1,0 +1,21 @@
+.App-header {
+  color: #666;
+  background-color: #151515;
+  font-size: 1.3em;
+  line-height: 1.5;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+}
+
+.App-header:before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 83%;
+    bottom: 0;
+    left: 0;
+    border-top: 98px solid #2FA3D1;
+    border-right: 27px solid transparent;
+}
