@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdminOptions renders properly test 1`] = `
+<div
+  className="admin-box"
+>
+  <fieldset
+    className="MuiFormControl-root"
+  >
+    <legend
+      className="MuiFormLabel-root"
+    >
+      Survey Status (toggle to Open or Close the survey)
+    </legend>
+    <div
+      className="MuiFormGroup-root"
+    >
+      <label
+        className="MuiFormControlLabel-root"
+      >
+        <span
+          className="MuiSwitch-root"
+        >
+          <span
+            aria-disabled={false}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-checked-2 Mui-checked"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={null}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={true}
+                className="PrivateSwitchBase-input-4 MuiSwitch-input"
+                disabled={false}
+                name="checkedB"
+                onChange={[Function]}
+                type="checkbox"
+              />
+              <span
+                className="MuiSwitch-thumb"
+              />
+            </span>
+          </span>
+          <span
+            className="MuiSwitch-track"
+          />
+        </span>
+        <span
+          className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+        >
+          Open (Questions and voting allowed)
+        </span>
+      </label>
+    </div>
+  </fieldset>
+</div>
+`;

@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Question renders properly test 1`] = `
+<li
+  className="vote undefined"
+  id="id"
+>
+  <div
+    className="right"
+  >
+    <div
+      className="thumbs"
+    >
+      <div
+        className="item"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <input
+            name="id"
+            type="hidden"
+            value="id"
+          />
+          <input
+            className="submit-up"
+            type="submit"
+          />
+        </form>
+      </div>
+      <div
+        className="item"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <input
+            name="id"
+            type="hidden"
+            value="id"
+          />
+          <input
+            className="submit-down"
+            type="submit"
+          />
+        </form>
+      </div>
+      <div
+        className="mark-as-read item "
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <input
+            name="id"
+            type="hidden"
+            value="id"
+          />
+          <input
+            className="submit-read"
+            title="Mark as read"
+            type="submit"
+            value=""
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    className="center"
+  />
+  <a
+    className="permalink"
+    href="#id"
+    title="Direct link to this post"
+  >
+    #
+  </a>
+  <div />
+</li>
+`;
