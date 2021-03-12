@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SurveyResultsInfo renders properly test 1`] = `
+<div
+  className="results-info"
+>
+  <div
+    className="aligned-center"
+  >
+    This page is only for 
+    <strong>
+      viewing survey results
+    </strong>
+    . If you want to ask or vote on questions, go to 
+    <a
+      href="/surveys/dummyKey"
+    >
+      this page
+    </a>
+    . 
+    <br />
+    <br />
+    Here is some information about the survey engagement: 
+    <br />
+  </div>
+  <table
+    className="results-stats-table"
+  >
+    <thead>
+      <tr>
+        <th
+          className="aligned-center results-stats-table"
+        >
+          Unique visitors
+        </th>
+        <th
+          className="aligned-center results-stats-table"
+        >
+          Unique question authors
+        </th>
+        <th
+          className="aligned-center results-stats-table"
+        >
+          Unique voters
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          className="aligned-center results-stats-table"
+        >
+          235
+        </td>
+        <td
+          className="aligned-center results-stats-table"
+        >
+          13
+        </td>
+        <td
+          className="aligned-center results-stats-table"
+        >
+          34
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateSurvey renders properly test 1`] = `
+<div
+  className="newSurveys"
+>
+  <div
+    className="new-survey-box"
+  >
+    <form
+      id="createBridge"
+      onSubmit={[Function]}
+    >
+      <h4>
+        Survey name
+      </h4>
+      <div
+        className="creation-flex"
+      >
+        <input
+          className="survey-name"
+          onChange={[Function]}
+          placeholder="Title of My Bridges Survey"
+          type="text"
+          value=""
+        />
+      </div>
+      <h4>
+        Optional Features
+      </h4>
+      <div
+        className="options"
+      >
+        <label
+          className="container-checkbox"
+          htmlFor="hide_votes"
+        >
+          Hide vote totals until after a user votes
+          <input
+            id="hide_votes"
+            name="hide_votes"
+            onChange={[Function]}
+            type="checkbox"
+            value="false"
+          />
+          <span
+            className="checkmark"
+          />
+        </label>
+      </div>
+      <input
+        className="add-new-button"
+        type="submit"
+        value="Create survey"
+      />
+    </form>
+  </div>
+</div>
+`;

@@ -1,0 +1,26 @@
+name: Build and Publish Docker Image
+on:
+  release:
+    types: [published]
+jobs:
+  build_and_push:
+    name: Push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Frontend
+        run: './scripts/buildFrontEnd.sh'
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: ghcr.io/pegasystems/building-bridges:${{ github.event.release.tag_name }}

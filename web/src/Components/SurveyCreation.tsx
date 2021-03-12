@@ -1,0 +1,81 @@
+import React from 'react';
+import * as Models from '../Models'
+
+interface SurveyCreationState {
+    newSurveyName: string;
+    hideVotes: boolean;
+    surveys: Models.Survey[];
+}
+
+interface SurveyCreationProps {
+    addSurvey(survey: Models.Survey): void
+}
+
+export default class SurveyCreation extends React.Component<SurveyCreationProps, SurveyCreationState>  {
+
+    state = {
+        newSurveyName: '',
+        hideVotes: false,
+        surveys: [] as Models.Survey[]
+    }
+
+    handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        fetch('/api/surveys/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    title: this.state.newSurveyName,
+                    hideVotes: this.state.hideVotes
+                }
+            )
+        })
+        .then(response => response.json())
+        .then(data => {
+            const survey = new Models.Survey(
+                data.key, this.state.newSurveyName, data.results_secret, data.admin_secret, 0, 0, 0
+            );
+            this.props.addSurvey(survey);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        e.preventDefault();
+    };
+
+    handleSurveyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({newSurveyName: e.target.value});
+    };
+
+    onCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            hideVotes: e.target.checked
+        });
+    }
+
+    render(): JSX.Element {
+        return (
+            <div className="newSurveys" >
+                <div className="new-survey-box">
+                    <form id="createBridge" onSubmit={this.handleSubmit}>
+                        <h4>Survey name</h4>
+                        <div className="creation-flex">
+                            <input className="survey-name" type="text" value={this.state.newSurveyName} 
+                                onChange={this.handleSurveyNameChange} placeholder="Title of My Bridges Survey"/>
+                        </div>
+                        <h4>Optional Features</h4>
+                        <div className="options">
+                            <label htmlFor="hide_votes" className="container-checkbox">Hide vote totals until after a user votes
+                                <input type="checkbox" id="hide_votes" name="hide_votes" value={String(this.state.hideVotes)} onChange={this.onCheckBoxClick}/>
+                                <span className="checkmark"></span>
+                            </label>
+                        </div>
+                        <input className="add-new-button" type="submit" value="Create survey"/>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+}

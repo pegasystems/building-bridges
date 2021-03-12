@@ -1,0 +1,125 @@
+.center {
+    flex: 1;
+    order: 0;
+}
+
+.right {
+    order: 1;
+    margin-left: 15px;
+    flex-direction: column;
+	justify-content: right;
+	flex-wrap: wrap;
+}
+
+.thumbs {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.thumbs > div[class=item] {
+	flex-basis: 30%;
+}
+
+.vote {
+	display: flex;
+}
+
+#voted .right{
+	flex-basis: 190px;
+}
+
+.vote form {
+	float: right;
+}
+
+.vote > .right form input {
+	line-height: 40px;
+	font-weight: bold;
+	font-size: 24px;
+	padding-left: 40px;
+	border: medium none;
+	border-spacing: 0;
+}
+
+ul li {
+	padding: 15px 15px 15px 10px;
+}
+
+ul li:before {
+    float: left;
+    font-size: 26px;
+    color: #aaa;
+	width: 50px;
+}
+
+ul.enumerate li:before {
+    counter-increment: ranks;
+    content: counter(ranks);
+}
+
+h2 {
+    width: 65%;
+}
+
+svg {
+	display: table;
+	margin: 0 auto;
+	padding-top: 20px;
+}
+
+.voted-unvoted-header{
+
+    width: 66%;
+    margin: 18px auto;
+
+}
+.hide-votes > .responses {
+	display:table;
+	width: 100%;
+}
+
+
+.hide-votes > .responses > .questions {
+	display: table-cell;
+	width: 50%;
+}
+
+.hide-votes > .responses > .questions > ul {
+	width: 90%;
+}
+
+.hide-votes > .responses > .questions > .voted-unvoted-header{
+	width: 90%;
+}
+
+@media only screen and (max-width: 800px) {
+	.hide-votes > .responses {
+		display:block;
+		width: inherit;
+	}
+
+	.hide-votes > .responses > .questions {
+		display: block;
+		width: inherit;
+	}
+
+	.hide-votes > .responses > .questions > ul {
+		width: 65%;
+	}
+
+	.hide-votes > .responses > .questions > .voted-unvoted-header{
+		width: 65%;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+
+	.hide-votes > .responses > .questions > ul {
+		width: 90%;
+	}
+
+	.hide-votes > .responses > .questions > .voted-unvoted-header{
+		width: 90%;
+	}
+}
