@@ -1,0 +1,122 @@
+.new-survey-box {
+    margin: 30px auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+.new-survey-box form {
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    border-radius: 6px 6px 6px 6px;
+    list-style: none outside none;
+    padding: 8px 9px 9px;
+    text-shadow: 1px 1px 0 white;
+}
+
+.new-survey-box form .add-new-survey-button {
+    width: 110px;
+    height: 38px;
+    background-color: #2FA3D1;
+    color: #FFF;
+    display: block;
+    margin-top: 2%;
+}
+
+.add-new-button {
+    background-color: #2FA3D1;
+    border: none;
+    color: white;
+    font-size: 17px;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    cursor: pointer;
+    height: 38px;
+    border-radius: 8px;
+    padding: 10px 10px 10px 10px;
+}
+
+.new-survey-box input[type=text] {
+    font-size: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 6px;
+}
+
+h4 {
+    font-family: 'Open Sans Condensed', Arial, Helvetica, sans-serif;
+    font-size: 23px;
+    font-weight: normal;
+}
+
+.submit-up,
+.submit-down {
+    background: url('./img/sprite.svg') no-repeat;
+}
+
+.mark-as-read {
+    font-size: 10px;
+    flex-basis: 20%;
+}
+
+.submit-read {
+    background: url('./img/check.png') no-repeat;
+    background-size: 30px;
+    background-position: center;
+    opacity: .4;
+    flex-basis: 20%;
+}
+
+.read {
+    border-color: rgb(85, 85, 85);
+}
+
+.read .submit-read {
+    opacity: 1;
+}
+
+.up {
+    border-color: rgba(144, 209, 132, 1);
+}
+
+.submit-up {
+    color: rgba(144, 209, 132, 0.6);
+    background-position: 5px -298px;
+}
+
+.up .submit-up {
+    color: rgba(144, 209, 132, 1);
+    background-position: 5px -98px;
+}
+
+.submit-down {
+    color: rgba(230, 122, 133, 0.5);
+    top: 82px;
+    background-position: 5px -192px;
+}
+
+.down {
+    border-color: rgba(230, 122, 133, 1);
+}
+
+.down .submit-down {
+    color: rgba(230, 122, 133, 1);
+    background-position: 5px 8px;
+}
+
+.permalink {
+    background: #2FA3D1;
+    position: absolute;
+    left: -28px;
+    top: 0.7em;
+    width: 28px;
+    height: 28px;
+    padding: 3px 0 0;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+    text-shadow: none;
+    display: none;
+}

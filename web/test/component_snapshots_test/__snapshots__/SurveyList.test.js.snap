@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SurveyList renders properly test 1`] = `
+<div
+  className="survey-list"
+>
+  <table
+    className="table survey-list"
+  >
+    <thead>
+      <tr>
+        <th
+          colSpan={1}
+        >
+          <h4>
+            Your surveys
+          </h4>
+        </th>
+        <th
+          className="aligned-center"
+          colSpan={1}
+        >
+          <h4>
+            Unique visitors
+          </h4>
+        </th>
+        <th
+          className="aligned-center"
+          colSpan={1}
+        >
+          <h4>
+            Question authors
+          </h4>
+        </th>
+        <th
+          className="aligned-center"
+          colSpan={1}
+        >
+          <h4>
+            Voters
+          </h4>
+        </th>
+        <th
+          className="aligned-center"
+          colSpan={1}
+        >
+          <h4>
+            Created
+          </h4>
+        </th>
+        <th
+          colSpan={3}
+        />
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        className=""
+      >
+        <td>
+          <a
+            href="surveys/title-1"
+          >
+            title
+          </a>
+        </td>
+        <td
+          className="fixed aligned-center"
+        />
+        <td
+          className="fixed aligned-center"
+        />
+        <td
+          className="fixed aligned-center"
+        />
+        <td
+          className="fixed aligned-center"
+        >
+          1/26/2020, 1:51:50 PM
+        </td>
+        <td
+          className="fixed"
+        >
+          <i
+            className="copy"
+            onClick={[Function]}
+          >
+            Copy link
+          </i>
+        </td>
+        <td
+          className="fixed"
+        >
+          <a
+            href="surveys/title-1?results_secret=cf9ff3424c90759a"
+          >
+            Show results
+          </a>
+        </td>
+        <td
+          className="fixed"
+        >
+          <a
+            href="surveys/title-1?admin_secret=cf9ff3424c90759b"
+          >
+            Admin (Don't share this link)
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
