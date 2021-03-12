@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Survey link renders properly test 1`] = `
+<i
+  className="copy"
+  onClick={[Function]}
+>
+  Copy link
+</i>
+`;
+
+exports[`Survey link shows info about copied link 1`] = `
+<i
+  className="copy"
+  onClick={[Function]}
+>
+  Copied!
+</i>
+`;

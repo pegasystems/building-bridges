@@ -1,0 +1,22 @@
+.App-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0;
+}
+
+.App-footer div {
+    position: relative;
+    display:inline-block;
+    background-color: #656860;
+    margin: auto;
+    max-width: 40%;
+    border-radius: 25px;
+    color: #e1e1e1;
+    text-align: left;
+    padding: 1.5em;
+}
+
+.App-footer a  {
+    color: #2FA3D1;
+}
