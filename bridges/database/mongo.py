@@ -105,7 +105,7 @@ def get_question(question_id: str) -> Question:
     )
 
     if result:
-        return from_dict(data_class=Question, data=result['questions'][0])
+        return from_dict(data_class=Question, data=result['questions'][1])
     else:
         raise NotFoundError(QUESTION_NOT_FOUND_ERROR_MESSAGE)
 
