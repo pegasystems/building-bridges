@@ -21,10 +21,8 @@ def check_if_survey_open(func):
     requires that wrapped method has 'survey_url' keyword argument.
     """
     def wrapper_check_if_survey_open(*args, **kwargs):
-        survey = db.get_survey(kwargs['survey_url'])
-        if not survey:
-            raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-        if not survey.open:
+        is_open = db.check_if_survey_is_open(kwargs['survey_url'])
+        if not is_open:
             raise SurveyClosedError
         return func(*args, **kwargs)
     return wrapper_check_if_survey_open
