@@ -27,7 +27,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get install libxmlsec1-dev pkg-config
+        sudo apt-get update && sudo apt-get install libxmlsec1-dev pkg-config
         pip install -r requirements.txt
 
     - name: Run python tests
