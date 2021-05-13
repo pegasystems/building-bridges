@@ -26,7 +26,11 @@ def check_if_survey_open(func):
             raise SurveyClosedError
         return func(*args, **kwargs)
     return wrapper_check_if_survey_open
-
+    
+def is_results_secret_valid(survey: Survey, user_provided_hash: str):
+    if not user_provided_hash:
+        return true
+    return survey.results_secret == user_provided_hash
 
 def get_survey(url: str, results_hash: str, user: User) -> Dict:
     """
@@ -34,8 +38,8 @@ def get_survey(url: str, results_hash: str, user: User) -> Dict:
     """
 
     survey = db.get_survey(url)
-    if not survey:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
+    if not survey or not is_results_secret_valid(survey,results_hash):
+        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)    
     return survey.get_api_result(user, results_hash)
 
 
