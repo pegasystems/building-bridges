@@ -1,3 +1,3 @@
 #!/bin/bash
 ./scripts/buildFrontEnd.sh
-python3 bridges "$@"
+python3 -m bridges "$@"

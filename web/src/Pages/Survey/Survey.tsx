@@ -176,7 +176,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                               sort={true}
                               voted={true}
                               surveyKey={this.surveyKey}
-                              isResultPage={!this.showNewQuestionBox()}
+                              isResultPage={this.showResultsSummary()}
+                              open={this.state.open}
                 />;
         } else {
             questionsLists =
@@ -190,6 +191,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         enumerate={true}
                         surveyKey={this.surveyKey}
                         isResultPage={false}
+                        open={this.state.open}
                     />
 
                     <QuestionList
@@ -201,6 +203,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         enumerate={false}
                         surveyKey={this.surveyKey}
                         isResultPage={false}
+                        open={this.state.open}
                     />
                 </>;
         }
@@ -250,8 +253,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         );
     }
 
-    private showResultsSummary() {
-        return (this.results_secret || this.admin_secret);
+    private showResultsSummary(): boolean {
+        return Boolean(this.results_secret || this.admin_secret);
     }
 
     private showNewQuestionBox() {
