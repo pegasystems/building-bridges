@@ -64,7 +64,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         }
 
         if(this.admin_secret){
-            this.results_secret? fetchUrl+=`&admin_secret=${this.admin_secret}` : fetchUrl+=`?admin_secret=${this.admin_secret}`
+            fetchUrl+=`${this.results_secret? '&' : '?'}admin_secret=${this.admin_secret}`
         }
 
         fetch(fetchUrl)
