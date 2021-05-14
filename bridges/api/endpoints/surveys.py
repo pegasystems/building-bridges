@@ -133,6 +133,8 @@ class SurveyItem(Resource):
         survey = logic.get_survey(url,
                                   survey_secrets_parser.parse_args(
                                       request)['results_secret'],
+                                  survey_secrets_parser.parse_args(
+                                      request)['admin_secret'],    
                                   request.user), HTTPStatus.OK
         logic.add_view_if_not_exists(viewer=request.user, survey_url=url)
         return survey

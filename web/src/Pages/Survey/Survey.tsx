@@ -31,7 +31,7 @@ interface SurveyProps {
 
 export default class Survey extends React.Component<SurveyProps, SurveyState> {
     surveyKey: string;
-    results_secret?: string | string[] | null;
+    results_secret?: string;
     admin_secret?: string;
 
     constructor(props: SurveyProps) {
@@ -48,8 +48,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             open: true
         };
         this.surveyKey = props?.match?.params?.surveyKey;
-        this.results_secret = queryString.parse(props?.location?.search).results_secret;
-        this.admin_secret = queryString.parse(props?.location?.search).admin_secret?.toString()
+        this.results_secret = queryString.parse(props?.location?.search).results_secret?.toString();
+        this.admin_secret = queryString.parse(props?.location?.search).admin_secret?.toString();
     }
 
     componentDidMount() {
@@ -57,7 +57,17 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     getQuestions() {
-        fetch(`${SURVEYS_API}${this.surveyKey}?results_secret=${this.results_secret}`)
+        var fetchUrl = `${SURVEYS_API}${this.surveyKey}`
+
+        if(this.results_secret){
+            fetchUrl += `?results_secret=${this.results_secret}`
+        }
+
+        if(this.admin_secret){
+            this.results_secret? fetchUrl+=`&admin_secret=${this.admin_secret}` : fetchUrl+=`?admin_secret=${this.admin_secret}`
+        }
+
+        fetch(fetchUrl)
             .then(response => {
                 if (response.status === 404) {
                     window.location.href = '/page404';
