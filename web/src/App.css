@@ -63,6 +63,15 @@ aside {
     width:100%
 }
 
+.creation-flex .survey-description {
+    width:100%;
+    font-size: 18px;
+    box-sizing: border-box;
+    padding: 6px;
+    margin: 0px 6px;
+    text-align: left;
+}
+
 .creation-flex * {
     margin: 0 6px;
     /*flex-grow: 1;*/

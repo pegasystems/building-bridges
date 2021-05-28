@@ -72,9 +72,13 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                             <input className="survey-name" type="text" value={this.state.newSurveyName} 
                                 onChange={this.handleSurveyNameChange} placeholder="Title of My Bridges Survey"/>
                         </div>
+                        <h4>Survey description</h4>
+                        <div className="creation-flex">
                         {/* TODO: Modify css or sth on the description */}
-                        <textarea className="survey-name" value={this.state.description} 
+                        <textarea className="survey-description" value={this.state.description} 
                                 onChange={this.handleSurveyDescriptionChange} placeholder="Description (optional)"/>
+                        </div>
+
                         <h4>Optional Features</h4>
                         <div className="options">
                             <label htmlFor="hide_votes" className="container-checkbox">Hide vote totals until after a user votes
