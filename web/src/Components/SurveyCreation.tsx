@@ -3,6 +3,7 @@ import * as Models from '../Models'
 
 interface SurveyCreationState {
     newSurveyName: string;
+    description: string;
     hideVotes: boolean;
     surveys: Models.Survey[];
 }
@@ -15,6 +16,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
 
     state = {
         newSurveyName: '',
+        description: '',
         hideVotes: false,
         surveys: [] as Models.Survey[]
     }
@@ -28,7 +30,8 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
             body: JSON.stringify(
                 {
                     title: this.state.newSurveyName,
-                    hideVotes: this.state.hideVotes
+                    description: this.state.description,
+                    hideVotes: this.state.hideVotes,
                 }
             )
         })
@@ -48,6 +51,10 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
     handleSurveyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({newSurveyName: e.target.value});
     };
+    
+    handleSurveyDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        this.setState({description: e.target.value});
+    };
 
     onCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
@@ -65,6 +72,9 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                             <input className="survey-name" type="text" value={this.state.newSurveyName} 
                                 onChange={this.handleSurveyNameChange} placeholder="Title of My Bridges Survey"/>
                         </div>
+                        {/* TODO: Modify css or sth on the description */}
+                        <textarea className="survey-name" value={this.state.description} 
+                                onChange={this.handleSurveyDescriptionChange} placeholder="Description (optional)"/>
                         <h4>Optional Features</h4>
                         <div className="options">
                             <label htmlFor="hide_votes" className="container-checkbox">Hide vote totals until after a user votes

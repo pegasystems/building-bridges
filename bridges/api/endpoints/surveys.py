@@ -19,6 +19,8 @@ surveyApi = {
                                     description='Secret to get results of the survey'),
     'admin_secret': fields.String(required=True,
                                   description='Secret to get to the admin page of the survey'),
+    'description': fields.String(required=False,
+                                  description='Description of the survey'),
     'hideVotes': fields.Boolean(required=False, description='Hide votes from users', default=False),
     'open': fields.Boolean(required=False, description='Is survey active', default=True),
     'key': fields.String(readOnly=True, required=True, description='Uri key for the survey'),
@@ -34,7 +36,7 @@ surveyApi = {
 }
 
 survey_basic = api.model('Survey Title', dict_subset(
-    surveyApi, {'title', 'hideVotes'}))
+    surveyApi, {'title', 'hideVotes', 'description'}))
 survey_creation = api.model(
     'Survey Creation', dict_subset(surveyApi, {'key', 'results_secret', 'admin_secret'}))
 survey_state = api.model(
@@ -81,7 +83,7 @@ class SurveyCollection(Resource):
         key_and_secrets = logic.create_survey(
             title=request.json["title"],
             hide_votes=request.json.get("hideVotes") or False,
-            description=None,
+            description=request.json.get("description"),
             author=request.user)
         return key_and_secrets, HTTPStatus.CREATED
 

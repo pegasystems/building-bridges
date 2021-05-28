@@ -15,6 +15,7 @@ import './Survey.css';
 interface SurveyState {
     questions: Models.Question[];
     title: string;
+    description: string;
     fetchInProgress: boolean;
     hideVotes: boolean;
     viewsNumber: number;
@@ -40,6 +41,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             questions: [] as Models.Question[],
             fetchInProgress: true,
             title: '',
+            description: '',
             hideVotes: false,
             viewsNumber: 0,
             questionersNumber: 0,
@@ -232,6 +234,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             <div className={(this.state.hideVotes && this.state.open) ? 'hide-votes' : 'not-hide'}>
                 <div className="title-div">
                     <h1 className="survey-title">{this.state.title}</h1>
+                    {/* TODO: Modify css or sth on the description */}
+                    <h1 className="survey-description">{this.state.description}</h1>
                     <SurveyLink link={document.location.href}/>
                     {!this.state.open && !this.admin_secret &&
                         <div className='results-info'>
