@@ -23,6 +23,7 @@ class GetSurveysTest(BasicTest):
             "hide_votes": False,
             'open': True,
             "results_secret": "secret",
+            "admin_secret": "admin-secret",
             "views": [USER1],
             'author': {"host": "localhost", "cookie": "cookie"},
             "url": "example-url",
@@ -33,7 +34,8 @@ class GetSurveysTest(BasicTest):
                     'author': {"host": "localhost", "cookie": "cookie"},
                     "date": self.sample_timestamp(),
                     "votes": [],
-                    "_id": self.example_ids[1]
+                    "_id": self.example_ids[1],
+                    "hidden": False
                 },
                 {
                     "content": "example-content-2",
@@ -45,7 +47,8 @@ class GetSurveysTest(BasicTest):
                          'upvote': True
                          }
                     ],
-                    "_id": self.example_ids[2]
+                    "_id": self.example_ids[2],
+                    "hidden": False
                 },
                 {
                     "content": "example-content-3",
@@ -57,7 +60,8 @@ class GetSurveysTest(BasicTest):
                          'upvote': False
                          }
                     ],
-                    "_id": self.example_ids[3]
+                    "_id": self.example_ids[3],
+                    "hidden": False
                 }
             ]}]})
 
@@ -87,7 +91,8 @@ class GetSurveysTest(BasicTest):
                     "downvotes": 0,
                     "isAuthor": True,
                     "voted": "none",
-                    "read": "false"
+                    "read": "false",
+                    "hidden": False
                 },
                 {
                     "_id": str(self.example_ids[2]),
@@ -96,7 +101,8 @@ class GetSurveysTest(BasicTest):
                     "downvotes": 0,
                     "isAuthor": True,
                     "voted": "up",
-                    "read": "false"
+                    "read": "false",
+                    "hidden": False
                 },
                 {
                     "_id": str(self.example_ids[3]),
@@ -105,7 +111,8 @@ class GetSurveysTest(BasicTest):
                     "downvotes": 1,
                     "isAuthor": True,
                     "voted": "down",
-                    "read": "false"
+                    "read": "false",
+                    "hidden": False
                 },
             ]
         })
@@ -121,6 +128,7 @@ class GetSurveysTest(BasicTest):
             "hide_votes": True,
             'open': True,
             "results_secret": "secret",
+            "admin_secret": "admin-secret",
             "views": [USER1],
             'author': {"host": "NOT-LOCALHOST", "cookie": "BAD_COOKIE"},
             "url": "example-url",
@@ -136,7 +144,8 @@ class GetSurveysTest(BasicTest):
                          'upvote': True
                          }
                     ],
-                    "_id": self.example_ids[2]
+                    "_id": self.example_ids[2],
+                    "hidden": False
                 },
             ]}]})
 
@@ -166,17 +175,15 @@ class GetSurveysTest(BasicTest):
                     "downvotes": None,
                     "isAuthor": False,
                     "voted": "none",
-                    "read": "false"
+                    "read": "false",
+                    "hidden": False
                 },
             ]
         })
 
-    def test_hidden_votes_with_secret(self):
-        future = self.make_future_get_request('surveys/url-1?results_secret=secret')
 
-        # get one survey
-        request = self.server.receives()
-        request.ok(cursor={'id': 0, 'firstBatch': [{
+    def test_hidden_votes_secrets(self):
+        db_response = [{
             "_id": self.example_ids[0],
             "title": "example-title",
             "description": "example_description",
@@ -184,6 +191,7 @@ class GetSurveysTest(BasicTest):
             "hide_votes": False,
             'open': True,
             "results_secret": "secret",
+            "admin_secret": "admin-secret",
             'author': {"host": "NOT-LOCALHOST", "cookie": "BAD_COOKIE"},
             "url": "example-url",
             "date": self.sample_timestamp(),
@@ -208,22 +216,12 @@ class GetSurveysTest(BasicTest):
                          }
                     ],
                     "voted": "none",
-                    "_id": self.example_ids[2]
+                    "_id": self.example_ids[2],
+                    "hidden": False
                 },
-            ]}]})
+            ]}]
 
-        # get user view
-        request = self.server.receives()
-        request.ok(cursor={'id': 0, 'firstBatch': []})
-
-        # add one view
-        request = self.server.receives()
-        request.ok({"nModified": 1})
-
-        http_response = future()
-        self.assertEqual(http_response.status_code, HTTPStatus.OK)
-        data = json.loads(http_response.get_data(as_text=True))
-        self.assertEqual(data, {
+        api_correct_secret_response = {
             "title": "example-title",
             "key": "example-url-1",
             "hideVotes": False,
@@ -238,10 +236,47 @@ class GetSurveysTest(BasicTest):
                     "downvotes": 2,
                     "isAuthor": False,
                     "voted": "none",
-                    "read": "false"
+                    "read": "false",
+                    "hidden": False
                 },
             ]
-        })
+        }
+
+        def handle_db_new_views(self):
+            # get user view
+            request = self.server.receives()
+            request.ok(cursor={'id': 0, 'firstBatch': []})
+
+            # add one view
+            request = self.server.receives()
+            request.ok({"nModified": 1})
+
+        def handle_correct_secret(url):
+            future = self.make_future_get_request(url)
+            request = self.server.receives()
+            request.ok(cursor={'id': 0, 'firstBatch': db_response})
+            handle_db_new_views(self)
+            http_response = future()
+            self.assertEqual(http_response.status_code, HTTPStatus.OK)
+            data = json.loads(http_response.get_data(as_text=True))
+            self.assertEqual(data, api_correct_secret_response)
+
+        def test_hidden_votes_wrong_admin_secret():
+            future = self.make_future_get_request('surveys/url-1?admin_secret=wrong-admin-secret')
+            request = self.server.receives()
+            request.ok(cursor={'id': 0, 'firstBatch': db_response})
+            http_response = future()
+            self.assertEqual(http_response.status_code, HTTPStatus.UNAUTHORIZED)
+
+        def test_hidden_votes_with_admin_secret():
+            handle_correct_secret('surveys/url-1?admin_secret=admin-secret')
+
+        def test_hidden_votes_with_results_secret():
+            handle_correct_secret('surveys/url-1?results_secret=secret')
+
+        test_hidden_votes_with_admin_secret()
+        test_hidden_votes_with_results_secret()
+        test_hidden_votes_wrong_admin_secret()
 
     def test_notFound(self):
         future = self.make_future_get_request('surveys/not-existing-url-1')

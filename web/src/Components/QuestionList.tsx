@@ -1,6 +1,7 @@
 import React from 'react';
 import Question from "./Question" 
 import * as Models from '../Models'
+import QuestionModel from '../Models/Question';
 
 interface QuestionListProps {
     questions: Models.Question[];
@@ -11,6 +12,7 @@ interface QuestionListProps {
     functions: any;
     surveyKey: string;
     isResultPage: boolean;
+    adminSecret: string | undefined;
     open: boolean;
 }
 
@@ -18,16 +20,23 @@ export default class QuestionList extends React.Component<QuestionListProps, {}>
 
     doNothingFunction = (_: any) => (__: any) => (e: any) => {e.preventDefault();};
 
+    sortQuestion(lhs: QuestionModel, rhs: QuestionModel): number {
+        if (lhs.hidden !== rhs.hidden) {
+            return +lhs.hidden - +rhs.hidden;
+        }
+        return (rhs.upvotes - rhs.downvotes) - (lhs.upvotes - lhs.downvotes)
+    }
+
     render(): JSX.Element {
         let questions = this.props.questions;
         if (questions) {
             if (this.props.sort) {
-                questions = questions.sort((a, b) => (b.upvotes - b.downvotes) - (a.upvotes - a.downvotes));
+                questions = questions.sort(this.sortQuestion);
             }
 
             const surveyElements = questions
                 .map(question => {
-                    let {deleteQuestion, addVoteCallback, deleteVoteCallback, markAsReadCallback} = this.props.functions;
+                    let {deleteQuestion, addVoteCallback, deleteVoteCallback, markAsReadCallback, updateQuestionInState} = this.props.functions;
                     if (!this.props.open || this.props.isResultPage) {
                         deleteQuestion = this.doNothingFunction;
                         addVoteCallback = this.doNothingFunction;
@@ -45,6 +54,8 @@ export default class QuestionList extends React.Component<QuestionListProps, {}>
                                   deleteQuestionCallback={deleteQuestion}
                                   deleteVoteCallback={deleteVoteCallback}
                                   markAsReadCallback={markAsReadCallback}
+                                  adminSecret={this.props.adminSecret}
+                                  updateQuestionInState={updateQuestionInState}
                                   key={question._id}/>
                     );
                 });

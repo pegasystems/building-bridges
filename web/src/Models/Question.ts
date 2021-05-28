@@ -9,6 +9,7 @@ export default class QuestionModel {
     downvotes: number = 0;
     voted: UserVote = UserVote.None;
     read: string = 'false';
+    hidden: boolean = false;
 
     addUserVote(voteType: UserVote) {
         if (voteType === UserVote.Up) {
@@ -44,6 +45,7 @@ export default class QuestionModel {
         question.voted = questionDict.voted;
         question._id = questionDict._id;
         question.read = questionDict.read;
+        question.hidden = questionDict.hidden;
 
         question.hideVotes = question.upvotes == null && question.read === 'false';
         return question;

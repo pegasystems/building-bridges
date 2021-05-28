@@ -77,5 +77,6 @@ exports[`Question renders properly test 1`] = `
     #
   </a>
   <div />
+  <div />
 </li>
 `;

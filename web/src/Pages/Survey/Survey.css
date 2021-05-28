@@ -79,6 +79,9 @@ svg {
 	width: 100%;
 }
 
+.hidden {
+	opacity: 0.2;
+}
 
 .hide-votes > .responses > .questions {
 	display: table-cell;

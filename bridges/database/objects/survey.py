@@ -37,7 +37,7 @@ class Survey(MongoObject):
 
         return get_url(self.url, self.number)
 
-    def get_api_result(self, user: User, user_results_secret: str) -> Dict:
+    def get_api_result(self, user: User, user_results_secret: str, user_admin_secret: str) -> Dict:
         """
         Creates an api result from the database object (itself),
         so we don't expose the author of the question and details
@@ -45,15 +45,16 @@ class Survey(MongoObject):
         """
 
         result = self.as_dict()
+        result['questions'] = []
 
         result["key"] = self.key
         result["hideVotes"] = self.hide_votes
         result["viewsNumber"] = self._count_views()
         result["votersNumber"] = self._count_voters()
         result["questionersNumber"] = self._count_questioners()
-        for i, question in enumerate(self.questions):
-            hide_votes = self.open and self.hide_votes and self.results_secret != user_results_secret
-            result['questions'][i] = question.get_api_result(user, hide_votes)
+        for question in filter(lambda q: not q.hidden or self.admin_secret == user_admin_secret, self.questions):
+            hide_votes = self.open and self.hide_votes and self.results_secret != user_results_secret and self.admin_secret != user_admin_secret
+            result['questions'].append(question.get_api_result(user, hide_votes))
         return result
 
     @staticmethod

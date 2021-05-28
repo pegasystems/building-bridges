@@ -455,10 +455,21 @@ input.remove[type=submit] {
     display: none;
 }
 
+.hide-eye {
+    border-radius: 5px;
+    right: -256px;
+    font-size: 20px;
+    position: relative;
+    top: -0.5em;
+}
+
 li:hover input.remove[type=submit] {
     display: block;
 }
 
+li:hover .hide-eye {
+    display: block;
+}
 
 
 li:hover .permalink {

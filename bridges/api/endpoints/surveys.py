@@ -3,8 +3,8 @@ import logging
 from http import HTTPStatus
 from typing import Dict, Tuple
 from flask import request
-from flask_restx import Resource, fields, reqparse
-from bridges.api.serializers import question
+from flask_restx import Resource, fields
+from bridges.api.serializers import question, survey_secrets_parser
 from bridges.api import logic
 from bridges.api.restplus import api
 from bridges.utils import dict_subset
@@ -55,21 +55,6 @@ survey_details_with_secrets = api.inherit(
 )
 survey_details_with_questions = api.inherit(
     'Survey Details with Questions', survey_details, dict_subset(surveyApi, {'questions'}))
-
-survey_secrets_parser = reqparse.RequestParser()
-survey_secrets_parser.add_argument(
-    'results_secret',
-    type=str,
-    required=False,
-    help='Secret to get full results of survey',
-    location='args')
-survey_secrets_parser.add_argument(
-    'admin_secret',
-    type=str,
-    required=False,
-    help='Secret to get to the admin page of survey',
-    location='args')
-
 
 @ns.route('/')
 class SurveyCollection(Resource):
@@ -130,9 +115,11 @@ class SurveyItem(Resource):
         Returns a single survey.
         """
 
+        secret_args = survey_secrets_parser.parse_args(request)
+
         survey = logic.get_survey(url,
-                                  survey_secrets_parser.parse_args(
-                                      request)['results_secret'],
+                                  secret_args['results_secret'],
+                                  secret_args['admin_secret'],
                                   request.user), HTTPStatus.OK
         logic.add_view_if_not_exists(viewer=request.user, survey_url=url)
         return survey
