@@ -38,7 +38,7 @@ class GetSurveysTest(BasicTest):
             },
             {
                 'title': 'title2', 'url': 'testurl', 'date': self.sample_timestamp(), 'number': 3, 'hide_votes': True,
-                'open': True, 'author': {"host": "host", "cookie": "cookie"}, "_id": self.example_ids[1],
+                'open': True, 'author': {"host": "host", "cookie": "cookie"}, "_id": self.example_ids[1], 'description': 'desc',
                 'questions': [
                     {'content': 'Q1?', 'author': USER2,
                      'votes': [{'author': USER2, 'upvote': False}]},
@@ -56,11 +56,11 @@ class GetSurveysTest(BasicTest):
         data = json.loads(http_response.get_data(as_text=True))
         self.assertEqual(data, [
             {
-                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(),
+                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(), 'description': None,
                 'hideVotes': False, 'open': True, 'viewsNumber': 2, 'votersNumber': 1, 'questionersNumber': 1
             },
             {
-                'title': 'title2', 'key': 'testurl-3', 'date': self.sample_timestamp_string(),
+                'title': 'title2', 'key': 'testurl-3', 'date': self.sample_timestamp_string(), 'description': 'desc',
                 'hideVotes': True, 'open': True, 'viewsNumber': 1, 'votersNumber': 2, 'questionersNumber': 2
             }
         ])
@@ -72,7 +72,7 @@ class GetSurveysTest(BasicTest):
         request.ok(cursor={'id': 0, 'firstBatch': [
             {
                 'title': 'title1', 'url': 'url', 'date': self.sample_timestamp(), 'number': 2, 'hide_votes': False,
-                'open': True, 'author': {"host": "localhost", "cookie": "cookie"}, "_id": self.example_ids[0],
+                'open': True, 'author': {"host": "localhost", "cookie": "cookie"}, "_id": self.example_ids[0], 'description': 'desc',
                 'questions': [
                     {'content': 'Q1?', 'author': USER3,
                      'votes': [{'author': USER1, 'upvote': False}]},
@@ -90,7 +90,7 @@ class GetSurveysTest(BasicTest):
         data = json.loads(http_response.get_data(as_text=True))
         self.assertEqual(data, [
             {
-                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(),
+                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(), 'description': 'desc',
                 'hideVotes': False, 'viewsNumber': 3, 'votersNumber': 3, 'questionersNumber': 2,
                 'open': True, "results_secret": "SECRET", "admin_secret": "SECRET"
             }

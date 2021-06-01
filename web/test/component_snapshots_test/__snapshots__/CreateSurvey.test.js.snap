@@ -26,6 +26,19 @@ exports[`CreateSurvey renders properly test 1`] = `
         />
       </div>
       <h4>
+        Survey description
+      </h4>
+      <div
+        className="creation-flex"
+      >
+        <textarea
+          className="survey-description"
+          onChange={[Function]}
+          placeholder="Description (optional)"
+          value=""
+        />
+      </div>
+      <h4>
         Optional Features
       </h4>
       <div

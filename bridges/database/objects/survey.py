@@ -24,7 +24,7 @@ class Survey(MongoObject):
     hide_votes: Optional[bool] = False
     open: Optional[bool] = True
     url: Optional[str] = None
-    description = None
+    description: Optional[str] = None
     questions: List[Question] = field(default_factory=list)
     date: datetime = field(default_factory=datetime.now)
     views: List[User] = field(default_factory=list)
@@ -49,6 +49,7 @@ class Survey(MongoObject):
 
         result["key"] = self.key
         result["hideVotes"] = self.hide_votes
+        result["description"] = self.description
         result["viewsNumber"] = self._count_views()
         result["votersNumber"] = self._count_voters()
         result["questionersNumber"] = self._count_questioners()
@@ -86,6 +87,7 @@ class Survey(MongoObject):
         result = {}
         result['title'] = self.title
         result['key'] = self.key
+        result["description"] = self.description
         result['date'] = self.date
         result['hideVotes'] = self.hide_votes
         result['viewsNumber'] = self._count_views()

@@ -73,7 +73,7 @@ def add_vote(user: User, question_id: str, vote_type: str) -> None:
 
 def create_survey(title: str, hide_votes: bool,
                   results_secret: str, admin_secret: str,
-                  _: str, author: User) -> str:
+                  description: str, author: User) -> str:
     """
     Create new survey in db
     """
@@ -83,6 +83,7 @@ def create_survey(title: str, hide_votes: bool,
     survey = Survey(
         title=title,
         number=number,
+        description=description,
         hide_votes=hide_votes,
         results_secret=results_secret,
         author=author,

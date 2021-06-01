@@ -12,6 +12,11 @@ exports[`SurveyComponent renders properly test 1`] = `
     >
       
     </h1>
+    <h1
+      className="survey-description"
+    >
+      
+    </h1>
     <i
       className="copy"
       onClick={[Function]}

@@ -79,6 +79,7 @@ class GetSurveysTest(BasicTest):
         self.assertEqual(data, {
             "title": "example-title",
             "key": "example-url-1",
+            "description": "example_description",
             "hideVotes": False,
             'open': True,
             "viewsNumber": 1, "votersNumber": 1, "questionersNumber": 1,
@@ -123,7 +124,6 @@ class GetSurveysTest(BasicTest):
         request.ok(cursor={'id': 0, 'firstBatch': [{
             "_id": self.example_ids[0],
             "title": "example-title",
-            "description": "example_description",
             "number": 1,
             "hide_votes": True,
             'open': True,
@@ -164,6 +164,7 @@ class GetSurveysTest(BasicTest):
             "title": "example-title",
             "key": "example-url-1",
             "hideVotes": True,
+            "description": None,
             'open': True,
             "viewsNumber": 1, "votersNumber": 1, "questionersNumber": 1,
             "date": self.sample_timestamp_string(),
@@ -225,6 +226,7 @@ class GetSurveysTest(BasicTest):
             "title": "example-title",
             "key": "example-url-1",
             "hideVotes": False,
+            "description": "example_description",
             'open': True,
             "viewsNumber": 2, "votersNumber": 2, "questionersNumber": 1,
             "date": self.sample_timestamp_string(),
