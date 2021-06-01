@@ -28,7 +28,12 @@ def check_if_survey_open(func):
     return wrapper_check_if_survey_open
 
 
-def get_survey(url: str, results_hash: str, user: User) -> Dict:
+def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
+    if not user_provided_secret:
+        return True
+    return server_secret == user_provided_secret
+
+def get_survey(url: str, results_hash: str, admin_secret: str, user: User) -> Dict:
     """
     Gets single survey information for given user
     """
@@ -36,6 +41,8 @@ def get_survey(url: str, results_hash: str, user: User) -> Dict:
     survey = db.get_survey(url)
     if not survey:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
+    if not is_secret_valid_if_provided(survey.results_secret,results_hash) or not is_secret_valid_if_provided(survey.admin_secret,admin_secret):
+        raise UnauthorizedError()
     return survey.get_api_result(user, results_hash)
 
 

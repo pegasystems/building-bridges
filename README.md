@@ -54,7 +54,7 @@ docker run --name building-bridges -p 80:8888 -e ENV_VARIABLES -d ghcr.io/pegasy
 
 ### Non-Docker way
 
-If you don't want to use docker for your Building Bridges instance, you can simply run `./scripts/runBridges.sh` to build and run Building Bridges. You want to specify an optional parameters using that (ex. `./scripts/runBridges.sh -p 8000`).
+If you don't want to use docker for your Building Bridges instance, you can simply run `./scripts/runBridges.sh` to build and run Building Bridges. You can also specify optional parameters here (ex. `./scripts/runBridges.sh -p 8000`).
 
 ### Configuration
 
@@ -90,7 +90,7 @@ Please take a look at our [contributing](docs/CONTRIBUTING.md) guidelines if you
 
 Having this project here wouldn't have been possible without Meeples team at Pegasystems:
 
-* Ryan DaRiN
+* Ryan DaRin
 * Maciej Danielak
 * Marek Jagielski
 * Dominik Adamiak
