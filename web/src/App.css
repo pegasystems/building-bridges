@@ -244,13 +244,17 @@ header {
     padding: 6px;
 }
 
-.survey-description {
-    text-align: center;
-    text-decoration: none;
-    margin-top: 0.5%;
-    font-weight: 400;
-    color: rgb(0, 0, 0);
-    font-family: 'Open Sans Condensed', Arial, Helvetica, sans-serif;
+.survey-description {  
+    text-align: center;  
+    text-decoration: none;  
+    font-weight: 400;  
+    color: #000;  
+    font-family: "Open Sans Condensed",Arial,Helvetica,sans-serif;  
+    padding: 12px;  
+    padding-top: 0;  
+    margin: 0 auto;  
+    width: 65%;  
+    font-size: 18px;  
 }
 
 h1 .beta {

@@ -74,7 +74,6 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                         </div>
                         <h4>Survey description</h4>
                         <div className="creation-flex">
-                        {/* TODO: Modify css or sth on the description */}
                         <textarea className="survey-description" value={this.state.description} 
                                 onChange={this.handleSurveyDescriptionChange} placeholder="Description (optional)"/>
                         </div>

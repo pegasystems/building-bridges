@@ -234,7 +234,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             <div className={(this.state.hideVotes && this.state.open) ? 'hide-votes' : 'not-hide'}>
                 <div className="title-div">
                     <h1 className="survey-title">{this.state.title}</h1>
-                    {/* TODO: Modify css or sth on the description */}
                     <h1 className="survey-description">{this.state.description}</h1>
                     <SurveyLink link={document.location.href}/>
                     {!this.state.open && !this.admin_secret &&
