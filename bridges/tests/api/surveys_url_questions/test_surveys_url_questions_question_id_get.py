@@ -34,7 +34,8 @@ class GetQuestionTest(BasicTest):
                         "date": self.sample_timestamp(),
                         "upvote": True
                     }],
-                    "_id": self.example_ids[1]
+                    "_id": self.example_ids[1],
+                    "hidden": False
                 }
             ]}]})
 
@@ -49,7 +50,8 @@ class GetQuestionTest(BasicTest):
             'downvotes': 0,
             'upvotes': 1,
             'votes': [{'upvote': True, 'date': self.sample_timestamp_string()}],
-            'read': 'false'
+            'read': 'false',
+            'hidden': False
         })
 
     def test_notFound(self):

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass, field
 from bson.objectid import ObjectId
 from bridges.database.objects.question_user_context import QuestionUserContext
@@ -16,6 +16,7 @@ class Question(MongoObject):
 
     content: str
     author: User
+    hidden: Optional[bool] = False
     votes: List[Vote] = field(default_factory=list)
     user_contexts: List[QuestionUserContext] = field(default_factory=list)
     _id: ObjectId = None

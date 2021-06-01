@@ -162,6 +162,20 @@ def set_survey_state(survey_url: str, is_open: bool) -> str:
     return surveys_collection.find_one(url_and_number)['open']
 
 
+def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> str:
+    """
+    Set question state: whether it's hidden or not
+    """
+    result = surveys_collection.update_one(
+        {MONGO_QUESTIONS_ID: ObjectId(question_id)},
+        {MONGO_SET: {'questions.$.hidden': is_hidden}})
+
+
+    if result.raw_result['nModified'] == 0:
+        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
+    return is_hidden
+
+
 def add_question(author: User, survey_url, content) -> ObjectId:
     """
     Add new question to db

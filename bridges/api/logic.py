@@ -28,7 +28,12 @@ def check_if_survey_open(func):
     return wrapper_check_if_survey_open
 
 
-def get_survey(url: str, results_hash: str, user: User) -> Dict:
+def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
+    if not user_provided_secret:
+        return True
+    return server_secret == user_provided_secret
+
+def get_survey(url: str, results_hash: str, admin_secret: str, user: User) -> Dict:
     """
     Gets single survey information for given user
     """
@@ -36,7 +41,10 @@ def get_survey(url: str, results_hash: str, user: User) -> Dict:
     survey = db.get_survey(url)
     if not survey:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-    return survey.get_api_result(user, results_hash)
+
+    if not is_secret_valid_if_provided(survey.results_secret,results_hash) or not is_secret_valid_if_provided(survey.admin_secret,admin_secret):
+        raise UnauthorizedError("Wrong secret provided.")
+    return survey.get_api_result(user, results_hash, admin_secret)
 
 
 @check_if_survey_open
@@ -172,3 +180,20 @@ def mark_as_read(question_id: str, survey_url: str, user: User, is_read: bool):
     Mark as read
     """
     db.mark_as_read(user, question_id, is_read)
+
+
+def set_question_state(survey_url: str, question_id: str, admin_hash: str, hidden: bool):
+    """
+    Set survey state
+    """
+    survey = db.get_survey(survey_url)
+
+    if not survey:
+        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
+
+    if survey.admin_secret != admin_hash:
+        raise UnauthorizedError("You're not authorized to hide question in someone else's survey.")
+
+    return {
+        'open': db.set_question_state(survey_url, question_id, hidden)
+    }

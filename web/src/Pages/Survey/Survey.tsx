@@ -48,7 +48,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             open: true
         };
         this.surveyKey = props?.match?.params?.surveyKey;
-        this.results_secret = queryString.parse(props?.location?.search).results_secret;
+        this.results_secret = queryString.parse(props?.location?.search).results_secret?.toString();
         this.admin_secret = queryString.parse(props?.location?.search).admin_secret?.toString()
     }
 
@@ -57,9 +57,18 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     getQuestions() {
-        fetch(`${SURVEYS_API}${this.surveyKey}?results_secret=${this.results_secret}`)
+        var fetchUrl = `${SURVEYS_API}${this.surveyKey}`
+
+        if(this.results_secret) {
+            fetchUrl += `?results_secret=${this.results_secret}`
+        }
+        if(this.admin_secret) {
+            fetchUrl+=`${this.results_secret? '&' : '?'}admin_secret=${this.admin_secret}`
+        }
+
+        fetch(fetchUrl)
             .then(response => {
-                if (response.status === 404) {
+                if (response.status === 404 || response.status === 401) {
                     window.location.href = '/page404';
                 }
                 return response.json();
@@ -108,7 +117,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
         }
     }
 
-    updateQuestionInState(question: Models.Question) {
+    updateQuestionInState = (question: Models.Question) => {
         const questionIndex = this.state.questions.findIndex(q => q._id === question._id);
         this.setState({
             questions: update(this.state.questions, {
@@ -162,7 +171,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             deleteQuestion: this.deleteQuestionCallback,
             addVoteCallback: this.addVoteCallback,
             deleteVoteCallback: this.deleteVoteCallback,
-            markAsReadCallback: this.markAsReadCallback
+            markAsReadCallback: this.markAsReadCallback,
+            updateQuestionInState: this.updateQuestionInState
         };
 
         let questionsLists;
@@ -177,6 +187,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                               voted={true}
                               surveyKey={this.surveyKey}
                               isResultPage={this.showResultsSummary()}
+                              adminSecret={this.admin_secret}
                               open={this.state.open}
                 />;
         } else {
@@ -191,6 +202,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         enumerate={true}
                         surveyKey={this.surveyKey}
                         isResultPage={false}
+                        adminSecret=''
                         open={this.state.open}
                     />
 
@@ -203,6 +215,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         enumerate={false}
                         surveyKey={this.surveyKey}
                         isResultPage={false}
+                        adminSecret=''
                         open={this.state.open}
                     />
                 </>;
