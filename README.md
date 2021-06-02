@@ -98,6 +98,6 @@ Having this project here wouldn't have been possible without Meeples team at Peg
 * Wojciech Buczek
 
 ## License
->You can check out the full license [here](docs/LICENSE.md)
+>You can check out the full license [here](LICENSE)
 
 This project is licensed under the terms of the **MIT** license.
