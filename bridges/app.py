@@ -12,6 +12,7 @@ from bridges.api.endpoints.info import ns as info_namespace
 from bridges.database.mongo import init as mongo_init
 from bridges.api.restplus import api
 from bridges.argument_parser import args
+from bridges.utils import get_user_name_and_email_from_session
 from werkzeug.contrib.fixers import ProxyFix
 from bridges.database.objects.user import User
 import secrets
@@ -147,7 +148,9 @@ def get_user():
         user_id = session.get('samlNameId')
         return hashlib.sha256(str.encode(user_id)).hexdigest() if user_id else None
 
-    user = User(get_host_from_request(), get_cookie_from_request(), get_hashed_id_from_session())
+    user_data = get_user_name_and_email_from_session()
+    user = User(get_host_from_request(), get_cookie_from_request(), get_hashed_id_from_session(),
+                user_data['userFullName'], user_data['userEmail'])
     request.user = user
 
 

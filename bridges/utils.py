@@ -1,6 +1,7 @@
 import re
 from bridges.errors import BadUrlError
 from typing import Dict
+from flask import session
 
 
 def get_url(title: str, number: int) -> str:
@@ -47,6 +48,19 @@ def get_url_and_number(url: str) -> Dict[str, str]:
         }
     except (IndexError, ValueError):
         raise BadUrlError("Couldn't get the index of the survey")
+
+
+def get_user_name_and_email_from_session():
+    """
+    If SAML is enabled, user full name and email should be saved in samlFullName and samlEmail.
+    """
+
+    user_full_name = session.get('samlFullName')
+    user_email = session.get('samlEmail')
+    return {
+        'userFullName': user_full_name,
+        'userEmail': user_email
+    }
 
 
 def dict_subset(dictionary: Dict, keys: set) -> Dict:

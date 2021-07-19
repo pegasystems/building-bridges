@@ -43,7 +43,7 @@ class PostSurveysTest(BasicTest):
         self.assertEqual(http_response.status_code, HTTPStatus.BAD_REQUEST)
 
     def test_serverIssue(self):
-        def broken_create_survey(title, hide_votes, description, author):
+        def broken_create_survey(title, hide_votes, is_anonymous, description, author):
             raise ArithmeticError
 
         temp = bridges.api.logic.create_survey

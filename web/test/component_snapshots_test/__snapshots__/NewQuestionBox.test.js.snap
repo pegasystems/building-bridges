@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NewQuestionBox renders properly test 1`] = `
+<div
+  className="question-box"
+>
+  <h4>
+    Ask a question
+  </h4>
+  <form
+    onSubmit={[Function]}
+  >
+    <textarea
+      id="questionBox"
+      name="question"
+      onChange={[Function]}
+      value=""
+    />
+    <label
+      htmlFor="questionBox"
+    >
+      
+    </label>
+    <div />
+    <input
+      className="add-new-button"
+      type="submit"
+      value="Submit"
+    />
+  </form>
+</div>
+`;

@@ -11,6 +11,8 @@ class User(MongoObject):
     host: str
     cookie: Optional[str]
     user_id: Optional[str]
+    full_name: Optional[str]
+    email: Optional[str]
 
     def __hash__(self):
         return hash(self.user_id)
@@ -40,3 +42,6 @@ class User(MongoObject):
                 {f'{prefix}user_id': self.user_id if self.user_id else ''}
             ]
         }
+
+    def get_user_without_sensitive_data(self):
+        return User(self.host, self.cookie, None, None, None)

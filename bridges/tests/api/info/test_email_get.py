@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 from bridges.tests.api.basic_test import BasicTest
 
+
 class GetEmailTest(BasicTest):
     """
     Class to test email endpoint.

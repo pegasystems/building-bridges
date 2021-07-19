@@ -17,6 +17,7 @@ interface SurveyState {
     title: string;
     description: string;
     fetchInProgress: boolean;
+    isAnonymous: boolean;
     hideVotes: boolean;
     viewsNumber: number;
     questionersNumber: number;
@@ -42,6 +43,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             fetchInProgress: true,
             title: '',
             description: '',
+            isAnonymous: true,
             hideVotes: false,
             viewsNumber: 0,
             questionersNumber: 0,
@@ -256,7 +258,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
                     }
                     {this.showNewQuestionBox() &&
-                        <NewQuestionBox surveyKey={this.surveyKey} afterSubmit={this.addQuestionToState}/>
+                        <NewQuestionBox surveyKey={this.surveyKey} isAnonymous={this.state.isAnonymous}
+                                        afterSubmit={this.addQuestionToState}/>
                     }
                 </div>
                 <div className="responses">

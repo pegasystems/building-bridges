@@ -22,6 +22,7 @@ class Survey(MongoObject):
     admin_secret: Optional[str]
     _id: ObjectId = None
     hide_votes: Optional[bool] = False
+    is_anonymous: Optional[bool] = True
     open: Optional[bool] = True
     asking_questions_enabled: Optional[bool] = True
     voting_enabled: Optional[bool] = True
@@ -51,6 +52,7 @@ class Survey(MongoObject):
 
         result["key"] = self.key
         result["hideVotes"] = self.hide_votes
+        result["isAnonymous"] = self.is_anonymous
         result["description"] = self.description
         result["viewsNumber"] = self._count_views()
         result["votersNumber"] = self._count_voters()
@@ -92,6 +94,7 @@ class Survey(MongoObject):
         result["description"] = self.description
         result['date'] = self.date
         result['hideVotes'] = self.hide_votes
+        result['isAnonymous'] = self.is_anonymous
         result['viewsNumber'] = self._count_views()
         result['votersNumber'] = self._count_voters()
         result['questionersNumber'] = self._count_questioners()

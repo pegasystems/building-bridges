@@ -5,6 +5,7 @@ interface SurveyCreationState {
     newSurveyName: string;
     description: string;
     hideVotes: boolean;
+    isAnonymous: boolean;
     surveys: Models.Survey[];
 }
 
@@ -18,6 +19,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         newSurveyName: '',
         description: '',
         hideVotes: false,
+        isAnonymous: true,
         surveys: [] as Models.Survey[]
     }
 
@@ -32,6 +34,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                     title: this.state.newSurveyName,
                     description: this.state.description,
                     hideVotes: this.state.hideVotes,
+                    isAnonymous: this.state.isAnonymous,
                 }
             )
         })
@@ -56,9 +59,15 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         this.setState({description: e.target.value});
     };
 
-    onCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleHideVotesCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
-            hideVotes: e.target.checked
+            hideVotes: e.target.checked,
+        });
+    }
+
+    handleIsAnonymousCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            isAnonymous: !e.target.checked,
         });
     }
 
@@ -81,7 +90,11 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                         <h4>Optional Features</h4>
                         <div className="options">
                             <label htmlFor="hide_votes" className="container-checkbox">Hide vote totals until after a user votes
-                                <input type="checkbox" id="hide_votes" name="hide_votes" value={String(this.state.hideVotes)} onChange={this.onCheckBoxClick}/>
+                                <input type="checkbox" id="hide_votes" name="hide_votes" value={String(this.state.hideVotes)} onChange={this.handleHideVotesCheckBoxClick}/>
+                                <span className="checkmark"></span>
+                            </label>
+                            <label htmlFor="show_names" className="container-checkbox">Show full names of question authors
+                                <input type="checkbox" id="show_names" name="show_names" value={String(!this.state.isAnonymous)} onChange={this.handleIsAnonymousCheckBoxClick}/>
                                 <span className="checkmark"></span>
                             </label>
                         </div>

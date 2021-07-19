@@ -45,6 +45,7 @@ exports[`SurveyComponent renders properly test 1`] = `
         >
           
         </label>
+        <div />
         <input
           className="add-new-button"
           type="submit"

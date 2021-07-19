@@ -17,6 +17,7 @@ class PostQuestionTest(BasicTest):
             content=QUESTIONS_CONTENT))
         # get data about survey
         self.mock_get_info_about_survey()
+        self.mock_get_info_about_survey()
         # update one survey - add question into it
         request = self.server.receives()
         request.ok({"nModified": 1})
