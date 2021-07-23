@@ -137,30 +137,22 @@ def get_survey(url: str) -> Survey:
     clear_url = '/' if url[0] == '/' else url
     url_and_number = get_url_and_number(clear_url)
     survey_db_result = surveys_collection.find_one(url_and_number)
-    return from_dict(data_class=Survey,
-                     data=survey_db_result) if survey_db_result else None
-
-def check_if_survey_is_open(url: str) -> bool:
-    clear_url = '/' if url[0] == '/' else url
-    url_and_number = get_url_and_number(clear_url)
-    survey_db_result = surveys_collection.find_one(url_and_number, { 'open': 1 })
-    return survey_db_result.get('open', True) if survey_db_result else True
+    return from_dict(
+        data_class=Survey,
+        data=survey_db_result) if survey_db_result else None
 
 
-def set_survey_state(survey_url: str, is_open: bool) -> str:
+def update_survey_settings(survey: Survey, settings) -> str:
     """
-    Set survey state: whether it's open (active)
-    or closed (frozen).
+    Update survey settings.
     """
-    url_and_number = get_url_and_number(survey_url)
 
     result = surveys_collection.update_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number']},
+        {'_id': survey._id},
         {MONGO_SET: {'open': is_open}})
 
     if result.raw_result['nModified'] == 0:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-    return surveys_collection.find_one(url_and_number)['open']
 
 
 def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> str:
@@ -177,17 +169,16 @@ def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> st
     return is_hidden
 
 
-def add_question(author: User, survey_url, content) -> ObjectId:
+def add_question(author: User, survey: Survey, content) -> ObjectId:
     """
     Add new question to db
     """
 
-    url_and_number = get_url_and_number(survey_url)
     # We generate our own ID, so we can return it to user without asking db
     # about it
     question = Question(content=content, author=author, _id=ObjectId())
     result = surveys_collection.update_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number']},
+        {'_id': survey._id},
         {MONGO_PUSH: {'questions': question.as_dict(skip_id=False)}})
 
     # We use raw_result, because MockupDB framework does not support field

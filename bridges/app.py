@@ -2,9 +2,10 @@
 import logging.config
 
 import re
-import os, socket
+import os
+import socket
 from flask import Flask, Blueprint, render_template, request, session, g
-from bridges.api.endpoints.surveys import ns as surveys_namespace
+from bridges.api.surveys import ns as surveys_namespace
 from bridges.api.endpoints.questions import ns as questions_namespace
 from bridges.api.endpoints.votes import ns as votes_namespace
 from bridges.api.endpoints.user_contexts import ns as question_user_contexts_namespace

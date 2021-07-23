@@ -15,23 +15,11 @@ from bridges.database.objects.user import User
 SURVEY_NOT_FOUND_ERROR_MESSAGE = "Survey not found."
 
 
-def check_if_survey_open(func):
-    """
-    Checks if survey is open before executing operations on the survey;
-    requires that wrapped method has 'survey_url' keyword argument.
-    """
-    def wrapper_check_if_survey_open(*args, **kwargs):
-        is_open = db.check_if_survey_is_open(kwargs['survey_url'])
-        if not is_open:
-            raise SurveyClosedError
-        return func(*args, **kwargs)
-    return wrapper_check_if_survey_open
-
-
 def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
     if not user_provided_secret:
         return True
     return server_secret == user_provided_secret
+
 
 def get_survey(url: str, results_hash: str, admin_secret: str, user: User) -> Dict:
     """
@@ -47,7 +35,6 @@ def get_survey(url: str, results_hash: str, admin_secret: str, user: User) -> Di
     return survey.get_api_result(user, results_hash, admin_secret)
 
 
-@check_if_survey_open
 def add_vote(question_id: str, survey_url: str, user: User, is_upvote: bool) -> None:
     """
     Vote up/down on question
@@ -61,7 +48,6 @@ def add_vote(question_id: str, survey_url: str, user: User, is_upvote: bool) -> 
     db.add_vote(user, question_id, is_upvote)
 
 
-@check_if_survey_open
 def delete_vote(question_id: str, survey_url: str, user: User) -> None:
     """
     Delete user's vote on question
@@ -79,7 +65,6 @@ def get_question(question_id: str, user: User) -> Question:
     return question.get_api_result(user)
 
 
-@check_if_survey_open
 def remove_question(question_id: str, survey_url: str, user: User) -> None:
     """
     Remove user's given question
@@ -92,8 +77,7 @@ def remove_question(question_id: str, survey_url: str, user: User) -> None:
     db.remove_question(question_id)
 
 
-@check_if_survey_open
-def add_question(survey_url: str, question: str, user: User) -> ObjectId:
+def add_question(survey: Survey, question: str, user: User) -> ObjectId:
     """
     Add question to given survey
     """
@@ -113,7 +97,7 @@ def add_question(survey_url: str, question: str, user: User) -> ObjectId:
     user_without_id = User(user.host, user.cookie, None)
 
     check_question_requirements(question)
-    question_id = db.add_question(user_without_id, survey_url, sanitize(question))
+    question_id = db.add_question(user_without_id, survey, sanitize(question))
     return question_id
 
 
@@ -131,20 +115,13 @@ def create_survey(title: str, hide_votes: bool, description: str, author: User) 
     }
 
 
-def set_survey_state(survey_url: str, is_open: bool, admin_hash: str) -> Dict[str, bool]:
+def update_survey_settings(survey: Survey, settings) -> Dict[str, bool]:
     """
-    Set survey state
+    Update survey settings
     """
-    survey = db.get_survey(survey_url)
-
-    if not survey:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-
-    if survey.admin_secret != admin_hash:
-        raise UnauthorizedError("You're not authorized to set state in someone else's survey.")
 
     return {
-        'open': db.set_survey_state(survey_url, is_open) if survey.open != is_open else is_open
+        'open': db.set_survey_state(survey, settings) if survey.open != is_open else is_open
     }
 
 
@@ -156,15 +133,6 @@ def add_view_if_not_exists(viewer: User, survey_url: str) -> None:
     db.add_view_if_not_exists(viewer, survey_url)
 
 
-def get_all_surveys() -> List[Dict]:
-    """
-    Returns a list of all surveys, but with limited data about them
-    (so without the questions, votes etc.).
-    """
-
-    return list(map(Survey.get_api_brief_result, db.get_all_surveys()))
-
-
 def get_user_surveys(user: User) -> List[Dict]:
     """
     Returns a list of all surveys created by
@@ -174,7 +142,6 @@ def get_user_surveys(user: User) -> List[Dict]:
     return list(map(Survey.get_api_brief_result_with_secrets, db.get_all_surveys(user)))
 
 
-@check_if_survey_open
 def mark_as_read(question_id: str, survey_url: str, user: User, is_read: bool):
     """
     Mark as read

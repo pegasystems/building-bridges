@@ -1,24 +1,39 @@
 import unittest
 import json
 
-from bridges.tests.api.utils import get_client_server
-from bson.objectid import ObjectId
-from typing import List
-from mockupdb import go
 from datetime import datetime
+from bson.objectid import ObjectId
+from mockupdb import go
+
+from bridges.tests.api.utils import get_client_server
 
 API_NAMESPACE = "api/"
 APP_JSON_CONTENT_TYPE = 'application/json'
 ADMIN_SECRET = 's3cr3t'
-USER = {'host': 'host1.example.com', 'cookie': 'cookie1', 'user_id': 'abcdefghijklmnop'}
+USER = {
+    'host': 'host1.example.com',
+    'cookie': 'cookie1',
+    'user_id': 'abcdefghijklmnop'
+}
 
 
 class BasicTest(unittest.TestCase):
+
     def mock_get_info_about_survey(self, is_open=True):
         request = self.server.receives()
-        request.ok(cursor={'id': 1, 'firstBatch': [
-            {'title': 'title', 'number': 1, 'results_secret': 'secret', 'admin_secret': ADMIN_SECRET, 'author': USER,
-             'open': is_open}]})
+        request.ok(cursor={
+            'id': 1,
+            'firstBatch': [
+                {
+                    'title': 'title', 
+                    'number': 1, 
+                    'results_secret': 'secret', 
+                    'admin_secret': ADMIN_SECRET, 
+                    'author': USER,
+                    'open': is_open
+                }
+            ]
+        })
 
     @classmethod
     def setUpClass(cls):
