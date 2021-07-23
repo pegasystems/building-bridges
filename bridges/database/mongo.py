@@ -147,20 +147,26 @@ def check_if_survey_is_open(url: str) -> bool:
     return survey_db_result.get('open', True) if survey_db_result else True
 
 
-def set_survey_state(survey_url: str, is_open: bool) -> str:
+def set_survey_state(survey: Survey, is_open: bool) -> str:
     """
     Set survey state: whether it's open (active)
     or closed (frozen).
     """
-    url_and_number = get_url_and_number(survey_url)
 
     result = surveys_collection.update_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number']},
-        {MONGO_SET: {'open': is_open}})
+        {
+            '_id': survey._id
+        },
+        {
+            MONGO_SET: {
+                'open': is_open
+            }
+        }
+    )
 
     if result.raw_result['nModified'] == 0:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-    return surveys_collection.find_one(url_and_number)['open']
+    return surveys_collection.find_one({'_id':survey._id})['open']
 
 
 def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> str:
