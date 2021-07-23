@@ -10,6 +10,7 @@ from bridges.api import logic
 from bridges.api.question_model import question
 from bridges.api.restplus import api
 from bridges.database.objects.survey import Survey
+from bridges.errors import UnauthorizedError
 from bridges.utils import dict_subset
 
 log = logging.getLogger(__name__)
@@ -178,7 +179,7 @@ survey_details_model = api.inherit(
     )
 )
 
-survey_details_with_secrets = api.inherit(
+survey_details_with_secrets_model = api.inherit(
     'Survey Details with secrets', survey_details_model, dict_subset(
         survey_model, {
             'results_secret',
@@ -186,7 +187,8 @@ survey_details_with_secrets = api.inherit(
         }
     )
 )
-survey_details_with_questions = api.inherit(
+
+survey_details_with_questions_model = api.inherit(
     'Survey Details with Questions', survey_details_model, dict_subset(
         survey_model, {
             'questions'
@@ -231,7 +233,7 @@ class MySurveyCollection(Resource):
     Api points that operates on user surveys.
     """
 
-    @api.marshal_with(survey_details_with_secrets)
+    @api.marshal_with(survey_details_with_secrets_model)
     def get(self) -> Tuple[Dict, HTTPStatus]:
         """
         Returns user surveys with details and secret.
@@ -248,20 +250,23 @@ class SurveyItem(Resource):
     Api points that operates on single survey.
     """
 
-    @api.marshal_with(survey_details_with_questions)
+    @api.marshal_with(survey_details_with_questions_model)
     @survey_api.get
-    def get(self, survey: Survey) -> Tuple[Dict, HTTPStatus]:
+    def get(self, survey: Survey) -> Tuple[Dict, int]:
         """
         Returns a single survey.
         """
 
         secret_args = survey_secrets.parse_args(request)
+        results_hash = secret_args['results_secret']
+        admin_secret = secret_args['admin_secret']
 
-        # survey = logic.get_survey(survey_url,
-        #                           secret_args['results_secret'],
-        #                           secret_args['admin_secret'],
-        #                           request.user), HTTPStatus.OK
-        return survey
+        if not logic.is_secret_valid_if_provided(survey.results_secret, results_hash) or \
+                not logic.is_secret_valid_if_provided(survey.admin_secret,admin_secret):
+            raise UnauthorizedError("Wrong secret provided.")
+        logic.add_view_if_not_exists(viewer=request.user, survey=survey)
+
+        return survey.get_api_result(request.user, results_hash, admin_secret), HTTPStatus.OK
 
     @api.expect(survey_settings_model)
     @api.response(201, 'Survey state changed.')

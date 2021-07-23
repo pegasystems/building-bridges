@@ -33,7 +33,7 @@ question_id_model = api.model("Question id", dict_subset(question_model_dict, {
     '_id'
 }))
 
-question_details_model = api.inherit('Detalic question', question, {
+question_details_model = api.inherit("Question's details", question, {
     'votes': fields.List(fields.Nested(votes))
 })
 
