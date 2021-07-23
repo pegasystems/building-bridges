@@ -22,24 +22,31 @@ ns = api.namespace(
     description='Operations related to surveys')
 
 votes = api.model('Votes', {
-    'upvote': fields.Boolean(required=True, description='Is vote an upvote'),
-    'date': fields.DateTime(description="Date of the vote")
+    'upvote': fields.Boolean(
+        required=True,
+        description='Is vote an upvote'),
+    'date': fields.DateTime(
+        description="Date of the vote")
 })
 
-question_id = api.model("Question id", dict_subset(question_model_dict, {'_id'}))
+question_id_model = api.model("Question id", dict_subset(question_model_dict, {
+    '_id'
+}))
 
-detalic_question = api.inherit('Detalic question', question, {
+question_details_model = api.inherit('Detalic question', question, {
     'votes': fields.List(fields.Nested(votes))
 })
 
-post_question = api.model("Post question", {
+post_question_model = api.model("Post question", {
     'content': fields.String(
         required=True,
         description='Content of the question')
 })
 
-question_state = api.model(
-    'Question State', dict_subset(question_model_dict, {'hidden'}))
+question_state_model = api.model(
+    'Question State', dict_subset(question_model_dict, {
+        'hidden'
+    }))
 
 @ns.route('/<string:survey_url>/questions')
 class QuestionCollection(Resource):
@@ -48,8 +55,8 @@ class QuestionCollection(Resource):
     in one survey.
     """
 
-    @api.expect(post_question, validate=True)
-    @api.marshal_with(question_id)
+    @api.expect(post_question_model, validate=True)
+    @api.marshal_with(question_id_model)
     @surveys.survey_api.get
     @surveys.survey_api.asking_questions_enabled
     def post(self, survey: Survey) -> Tuple[Dict, int]:
@@ -73,7 +80,7 @@ class QuestionItem(Resource):
     Api points that operates on single question in one survey.
     """
 
-    @api.marshal_with(detalic_question)
+    @api.marshal_with(question_details_model)
     def get(self, survey_url: str,
             question_id: str) -> Tuple[Dict, HTTPStatus]:
         """
@@ -95,9 +102,9 @@ class QuestionItem(Resource):
             return {
                 "message": "Can't remove question that already has votes"}, HTTPStatus.FORBIDDEN
 
-    @api.expect(question_state)
+    @api.expect(question_state_model)
     @api.response(201, 'Question state changed.')
-    @api.marshal_with(question_state)
+    @api.marshal_with(question_state_model)
     def put(self, survey_url: str,
                question_id: str) -> Tuple[Dict, HTTPStatus]:
         """
