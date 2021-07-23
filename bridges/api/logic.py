@@ -33,19 +33,6 @@ def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
         return True
     return server_secret == user_provided_secret
 
-def get_survey(url: str, results_hash: str, admin_secret: str, user: User) -> Dict:
-    """
-    Gets single survey information for given user
-    """
-
-    survey = db.get_survey(url)
-    if not survey:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-
-    if not is_secret_valid_if_provided(survey.results_secret,results_hash) or not is_secret_valid_if_provided(survey.admin_secret,admin_secret):
-        raise UnauthorizedError("Wrong secret provided.")
-    return survey.get_api_result(user, results_hash, admin_secret)
-
 
 @check_if_survey_open
 def add_vote(question_id: str, survey_url: str, user: User, is_upvote: bool) -> None:
@@ -148,12 +135,12 @@ def set_survey_state(survey_url: str, is_open: bool, admin_hash: str) -> Dict[st
     }
 
 
-def add_view_if_not_exists(viewer: User, survey_url: str) -> None:
+def add_view_if_not_exists(viewer: User, survey: Survey) -> None:
     """
     Adds new view document to database if it doesn't exists yet.
     """
 
-    db.add_view_if_not_exists(viewer, survey_url)
+    db.add_view_if_not_exists(viewer, survey)
 
 
 def get_all_surveys() -> List[Dict]:
