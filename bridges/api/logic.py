@@ -118,20 +118,13 @@ def create_survey(title: str, hide_votes: bool, description: str, author: User) 
     }
 
 
-def set_survey_state(survey_url: str, is_open: bool, admin_hash: str) -> Dict[str, bool]:
+def set_survey_state(survey: Survey, is_open: bool) -> Dict[str, bool]:
     """
     Set survey state
     """
-    survey = db.get_survey(survey_url)
-
-    if not survey:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-
-    if survey.admin_secret != admin_hash:
-        raise UnauthorizedError("You're not authorized to set state in someone else's survey.")
 
     return {
-        'open': db.set_survey_state(survey_url, is_open) if survey.open != is_open else is_open
+        'open': db.set_survey_state(survey, is_open) if survey.open != is_open else is_open
     }
 
 

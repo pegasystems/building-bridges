@@ -50,6 +50,22 @@ class SurveyApi(object):
 
         return wrapper_get
 
+    @staticmethod
+    def admin(func):
+        """
+        Check if it is an admin of survey.
+        """
+        def wrapper_owner(*args, **kwargs):
+            survey = kwargs['survey']
+            admin_secret = survey_secrets.parse_args(request)['admin_secret']
+            if survey.admin_secret != admin_secret:
+                return {
+                           'error': 'Not allowed.'
+                       }, HTTPStatus.UNAUTHORIZED
+            return func(*args, survey=survey)
+
+        return wrapper_owner
+
 
 survey_api = SurveyApi()
 
@@ -96,10 +112,14 @@ survey_model = {
         required=False,
         description='Number of unique people who asked questions',
         default=False),
+    'error': fields.String(
+        readOnly=True,
+        required=False,
+        description='Message in case of error'),
 }
 
-survey_basic_model = api.model('Survey Title', dict_subset(
-    survey_model, {
+survey_basic_model = api.model(
+    'Survey Title', dict_subset(survey_model, {
         'title',
         'hideVotes',
         'description'
@@ -112,9 +132,10 @@ survey_created_model = api.model(
         'admin_secret'
     }))
 
-survey_state_model = api.model(
-    'Survey State', dict_subset(survey_model, {
-        'open'
+survey_settings_model = api.model(
+    'Survey Settings', dict_subset(survey_model, {
+        'open',
+        'error'
     }))
 
 survey_details_model = api.inherit(
@@ -129,6 +150,7 @@ survey_details_model = api.inherit(
         }
     )
 )
+
 survey_details_with_secrets_model = api.inherit(
     'Survey Details with secrets', survey_details_model, dict_subset(
         survey_model, {
@@ -137,10 +159,12 @@ survey_details_with_secrets_model = api.inherit(
         }
     )
 )
+
 survey_details_with_questions_model = api.inherit(
-    'Survey Details with Questions', survey_details_model, dict_subset(survey_model, {
-        'questions'
-    }))
+    'Survey Details with Questions', survey_details_model, dict_subset(
+        survey_model, {
+            'questions'
+        }))
 
 
 @ns.route('/')
@@ -214,16 +238,16 @@ class SurveyItem(Resource):
 
         return survey.get_api_result(request.user, results_hash, admin_secret), HTTPStatus.OK
 
-    @api.expect(survey_state_model)
+    @api.expect(survey_settings_model)
     @api.response(201, 'Survey state changed.')
-    @api.marshal_with(survey_state_model)
-    def put(self, survey_url: str) -> Tuple[Dict, HTTPStatus]:
+    @api.marshal_with(survey_settings_model)
+    @survey_api.get
+    @survey_api.admin
+    def put(self, survey: Survey) -> Tuple[Dict, int]:
         """
         Sets survey state: open/closed
         """
 
-        is_open = logic.set_survey_state(survey_url=survey_url,
-                                         is_open=request.json.get("open") or False,
-                                         admin_hash=survey_secrets
-                                         .parse_args(request)['admin_secret'])
+        is_open = logic.set_survey_state(survey=survey,
+                                         is_open=request.json.get("open") or False)
         return is_open, HTTPStatus.CREATED
