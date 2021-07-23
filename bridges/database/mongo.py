@@ -197,22 +197,31 @@ def add_question(author: User, survey_url, content) -> ObjectId:
     return question._id
 
 
-def add_view_if_not_exists(viewer: User, survey_url) -> None:
+def add_view_if_not_exists(viewer: User, survey: Survey) -> None:
     """
     Adds new view document to database if it doesn't exist yet.
     """
 
-    url_and_number = get_url_and_number(survey_url)
-
     previous_user_view = surveys_collection.find_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number'],
-         'views': {'$elemMatch': viewer.get_mongo_equal_query()}}
+        {
+            '_id': survey._id,
+            'views': {
+                '$elemMatch': viewer.get_mongo_equal_query()
+            }
+        }
     )
 
     if not previous_user_view:
         result = surveys_collection.update_one(
-            {'url': url_and_number['url'], 'number': url_and_number['number']},
-            {MONGO_PUSH: {'views': viewer.as_dict()}})
+            {
+                '_id': survey._id
+            },
+            {
+                MONGO_PUSH: {
+                    'views': viewer.as_dict()
+                }
+            }
+        )
 
         if result.raw_result['nModified'] == 0:
             raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
