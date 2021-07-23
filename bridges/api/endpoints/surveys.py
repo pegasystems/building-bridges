@@ -4,8 +4,9 @@ from http import HTTPStatus
 from typing import Dict, Tuple, Callable
 from flask import request
 from flask_restx import Resource, fields
-from bridges.api.serializers import question, survey_secrets_parser
+from bridges.api.serializers import survey_secrets_parser
 from bridges.api import logic
+from bridges.api.question_model import question
 from bridges.api.restplus import api
 from bridges.database.objects.survey import Survey
 from bridges.errors import UnauthorizedError
