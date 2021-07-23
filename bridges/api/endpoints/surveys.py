@@ -1,10 +1,10 @@
 import logging
 
+from flask_restx import reqparse
 from http import HTTPStatus
 from typing import Dict, Tuple, Callable
 from flask import request
 from flask_restx import Resource, fields
-from bridges.api.serializers import survey_secrets_parser
 from bridges.api import logic
 from bridges.api.question_model import question
 from bridges.api.restplus import api
@@ -14,6 +14,22 @@ from bridges.utils import dict_subset
 import bridges.database.mongo as db
 
 log = logging.getLogger(__name__)
+
+survey_secrets = reqparse.RequestParser()\
+    \
+    .add_argument(
+    'results_secret',
+    type=str,
+    required=False,
+    help='Secret to get full results of survey',
+    location='args')\
+    \
+    .add_argument(
+    'admin_secret',
+    type=str,
+    required=False,
+    help='Secret to get to the admin page of survey',
+    location='args')
 
 
 class SurveyApi(object):
@@ -173,7 +189,7 @@ class MySurveyCollection(Resource):
 
 
 @ns.route('/<string:survey_url>')
-@api.expect(survey_secrets_parser)
+@api.expect(survey_secrets)
 @api.response(404, 'Survey not found.')
 class SurveyItem(Resource):
     """
@@ -187,7 +203,7 @@ class SurveyItem(Resource):
         Returns a single survey.
         """
 
-        secret_args = survey_secrets_parser.parse_args(request)
+        secret_args = survey_secrets.parse_args(request)
         results_hash = secret_args['results_secret']
         admin_secret = secret_args['admin_secret']
 
@@ -208,6 +224,6 @@ class SurveyItem(Resource):
 
         is_open = logic.set_survey_state(survey_url=survey_url,
                                          is_open=request.json.get("open") or False,
-                                         admin_hash=survey_secrets_parser
+                                         admin_hash=survey_secrets
                                          .parse_args(request)['admin_secret'])
         return is_open, HTTPStatus.CREATED

@@ -6,9 +6,9 @@ from flask import request
 from flask_restx import fields
 from flask_restx import Resource
 from bridges.api import logic
+from bridges.api.endpoints.surveys import survey_secrets
 from bridges.api.question_model import question_model_dict, question
 from bridges.api.restplus import api
-from bridges.api.serializers import survey_secrets_parser
 from bridges.errors import QuestionRemovingError
 from bridges.utils import dict_subset
 
@@ -31,7 +31,7 @@ question_id_model = api.model("Question id", dict_subset(question_model_dict, {
     '_id'
 }))
 
-question_details_model = api.inherit('Detalic question', question, {
+question_details_model = api.inherit("Question's details", question, {
     'votes': fields.List(fields.Nested(votes))
 })
 
@@ -69,7 +69,7 @@ class QuestionCollection(Resource):
 
 
 @ns.route('/<string:survey_url>/questions/<string:question_id>')
-@api.expect(survey_secrets_parser)
+@api.expect(survey_secrets)
 @api.response(404, 'Question not found.')
 class QuestionItem(Resource):
     """
@@ -111,6 +111,6 @@ class QuestionItem(Resource):
                     survey_url=survey_url,
                     question_id=question_id,
                     hidden=request.json.get("hidden") or False,
-                    admin_hash=survey_secrets_parser
+                    admin_hash=survey_secrets
                     .parse_args(request)['admin_secret'])
         return None, HTTPStatus.OK
