@@ -239,15 +239,20 @@ class SurveyItem(Resource):
         return survey.get_api_result(request.user, results_hash, admin_secret), HTTPStatus.OK
 
     @api.expect(survey_settings_model)
-    @api.response(201, 'Survey state changed.')
+    @api.response(201, 'Survey settings changed.')
     @api.marshal_with(survey_settings_model)
     @survey_api.get
     @survey_api.admin
     def put(self, survey: Survey) -> Tuple[Dict, int]:
         """
-        Sets survey state: open/closed
+        Change survey settings.
         """
 
-        is_open = logic.set_survey_state(survey=survey,
-                                         is_open=request.json.get("open") or False)
-        return is_open, HTTPStatus.CREATED
+        settings = ['open']
+        settings_values = {s: request.json.get(s) for s in settings}
+        settings_not_none = {key: value for (key, value) in settings_values.items() if value is not None}
+        settings_changed = {key: value for (key, value) in settings_not_none.items() if value != survey.__getattribute__(key)}
+
+        survey = db.update_survey(survey, settings_changed)
+
+        return survey.__dict__, HTTPStatus.CREATED
