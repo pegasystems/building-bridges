@@ -13,7 +13,7 @@ interface QuestionListProps {
     surveyKey: string;
     isResultPage: boolean;
     adminSecret: string | undefined;
-    open: boolean;
+    askingQuestionsEnabled: boolean;
 }
 
 export default class QuestionList extends React.Component<QuestionListProps, {}> {
@@ -37,7 +37,7 @@ export default class QuestionList extends React.Component<QuestionListProps, {}>
             const surveyElements = questions
                 .map(question => {
                     let {deleteQuestion, addVoteCallback, deleteVoteCallback, markAsReadCallback, updateQuestionInState} = this.props.functions;
-                    if (!this.props.open || this.props.isResultPage) {
+                    if (!this.props.askingQuestionsEnabled || this.props.isResultPage) {
                         deleteQuestion = this.doNothingFunction;
                         addVoteCallback = this.doNothingFunction;
                         deleteVoteCallback = this.doNothingFunction;

@@ -68,7 +68,7 @@ class SurveyApi(object):
     @staticmethod
     def asking_questions_enabled(func) -> Callable:
         """
-        Validate if adding questions to given survey is open before executing operations on the survey.
+        Validate if adding questions to given survey is enabled before executing operations on the survey.
         """
         def wrapper_asking_questions_enabled(*args, survey: Survey, **kwargs):
             if not survey.asking_questions_enabled:
@@ -100,10 +100,6 @@ survey_model = {
         required=False,
         description='Hide votes from users',
         default=False),
-    'open': fields.Boolean(
-        required=False,
-        description='Is survey active',
-        default=True),
     'askingQuestionsEnabled': fields.Boolean(
         required=False,
         description='Does posting question allowed',
@@ -150,7 +146,6 @@ survey_created_model = api.model(
 
 survey_settings_model = api.model(
     'Survey Settings', dict_subset(survey_model, {
-        'open',
         'askingQuestionsEnabled',
         'error'
     }))
@@ -160,8 +155,7 @@ survey_details_model = api.inherit(
         survey_model, {
             'key',
             'date',
-            'allowAskingQuestions',
-            'open',
+            'askingQuestionsEnabled',
             'viewsNumber',
             'votersNumber',
             'questionersNumber'
@@ -266,7 +260,7 @@ class SurveyItem(Resource):
         Change survey settings.
         """
 
-        settings = ['open']
+        settings = ['askingQuestionsEnabled']
         settings_values = {s: request.json.get(s) for s in settings}
         settings_not_none = {key: value for (key, value) in settings_values.items() if value is not None}
         settings_changed = {key: value for (key, value) in settings_not_none.items() if value != survey.__getattribute__(key)}

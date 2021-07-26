@@ -1,7 +1,7 @@
 import React, { FormEvent } from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 
@@ -11,11 +11,11 @@ interface AdminOptionsProps {
     surveyKey: string;
     adminSecret: string;
     surveyStateCallback: any;
-    open: boolean;
+    askingQuestionsEnabled: boolean;
 }
 
 interface AdminOptionsState {
-    open: boolean;
+    askingQuestionsEnabled: boolean;
     errorMessage: string;
 }
 
@@ -27,7 +27,7 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({open: !this.props.open})
+            body: JSON.stringify({askingQuestionsEnabled: !this.props.askingQuestionsEnabled})
         })
         .then(async response => {
             let data = await response.json();
@@ -38,18 +38,17 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
     render(): JSX.Element {
         return (<div className="admin-box">
                 <FormControl component="fieldset">
-                    <FormLabel component="legend">Survey Status (toggle to Open or Close the survey)</FormLabel>
                     <FormGroup>
                         <FormControlLabel
                             control={
-                            <Switch
-                                checked={this.props.open}
+                            <Checkbox
+                                checked={this.props.askingQuestionsEnabled}
                                 onChange={this.handleSubmit}
                                 name="checkedB"
                                 color="primary"
                             />
                             }
-                            label={this.props.open ? 'Open (Questions and voting allowed)' : 'Closed (No new questions or voting allowed)'}
+                            label={this.props.askingQuestionsEnabled ? 'Open (Questions and voting allowed)' : 'Closed (No new questions or voting allowed)'}
                         />
                     </FormGroup>
                 </FormControl>

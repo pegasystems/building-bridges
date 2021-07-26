@@ -15,27 +15,13 @@ from bridges.database.objects.user import User
 SURVEY_NOT_FOUND_ERROR_MESSAGE = "Survey not found."
 
 
-def check_if_survey_open(func):
-    """
-    Checks if survey is open before executing operations on the survey;
-    requires that wrapped method has 'survey_url' keyword argument.
-    """
-    def wrapper_check_if_survey_open(*args, **kwargs):
-        is_open = db.check_if_survey_is_open(kwargs['survey_url'])
-        if not is_open:
-            raise SurveyClosedError
-        return func(*args, **kwargs)
-    return wrapper_check_if_survey_open
-
-
 def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
     if not user_provided_secret:
         return True
     return server_secret == user_provided_secret
 
 
-@check_if_survey_open
-def add_vote(question_id: str, survey_url: str, user: User, is_upvote: bool) -> None:
+def add_vote(question_id: str, user: User, is_upvote: bool) -> None:
     """
     Vote up/down on question
     """
@@ -48,8 +34,7 @@ def add_vote(question_id: str, survey_url: str, user: User, is_upvote: bool) -> 
     db.add_vote(user, question_id, is_upvote)
 
 
-@check_if_survey_open
-def delete_vote(question_id: str, survey_url: str, user: User) -> None:
+def delete_vote(question_id: str, user: User) -> None:
     """
     Delete user's vote on question
     """
@@ -142,8 +127,7 @@ def get_user_surveys(user: User) -> List[Dict]:
     return list(map(Survey.get_api_brief_result_with_secrets, db.get_all_surveys(user)))
 
 
-@check_if_survey_open
-def mark_as_read(question_id: str, survey_url: str, user: User, is_read: bool):
+def mark_as_read(question_id: str, user: User, is_read: bool):
     """
     Mark as read
     """
