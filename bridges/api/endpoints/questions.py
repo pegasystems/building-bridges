@@ -48,6 +48,7 @@ question_state_model = api.model(
         'hidden'
     }))
 
+
 @ns.route('/<string:survey_url>/questions')
 class QuestionCollection(Resource):
     """
@@ -57,14 +58,16 @@ class QuestionCollection(Resource):
 
     @api.expect(post_question_model, validate=True)
     @api.marshal_with(question_id_model)
-    def post(self, survey_url: str) -> Tuple[Dict, HTTPStatus]:
+    @survey_api.get
+    @survey_api.asking_questions_enabled
+    def post(self, survey: Survey) -> Tuple[Dict, int]:
         """
         Add new question
         """
 
         return {
             "_id": str(logic.add_question(
-                survey_url=survey_url,
+                survey=survey,
                 question=request.json["content"],
                 user=request.user))
         }, HTTPStatus.CREATED
@@ -79,29 +82,29 @@ class QuestionItem(Resource):
     """
 
     @api.marshal_with(question_details_model)
-    def get(self, survey_url: str,
-            question_id: str) -> Tuple[Dict, HTTPStatus]:
+    def get(self, survey_url: str, question_id: str) -> Tuple[Dict, HTTPStatus]:
         """
         Returns a single question in survey
         """
 
         return logic.get_question(question_id=question_id, user=request.user)
 
-    def delete(self, survey_url: str,
-               question_id: str) -> Tuple[Dict, HTTPStatus]:
+    @survey_api.get
+    @survey_api.asking_questions_enabled
+    def delete(self, survey: Survey, question_id: str) -> Tuple[Dict, int]:
         """
         Deletes a single question in survey
         """
 
         try:
-            logic.remove_question(question_id=question_id, survey_url=survey_url, user=request.user)
+            logic.remove_question(question_id=question_id, user=request.user)
             return None, HTTPStatus.NO_CONTENT
         except QuestionRemovingError:
             return {
                 "message": "Can't remove question that already has votes"}, HTTPStatus.FORBIDDEN
 
     @api.expect(question_state_model)
-    @api.response(201, 'Survey state changed.')
+    @api.response(201, 'Question state changed.')
     @api.marshal_with(question_state_model)
     @survey_api.get
     @survey_api.admin

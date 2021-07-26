@@ -66,8 +66,7 @@ def get_question(question_id: str, user: User) -> Question:
     return question.get_api_result(user)
 
 
-@check_if_survey_open
-def remove_question(question_id: str, survey_url: str, user: User) -> None:
+def remove_question(question_id: str, user: User) -> None:
     """
     Remove user's given question
     """
@@ -79,8 +78,7 @@ def remove_question(question_id: str, survey_url: str, user: User) -> None:
     db.remove_question(question_id)
 
 
-@check_if_survey_open
-def add_question(survey_url: str, question: str, user: User) -> ObjectId:
+def add_question(survey: Survey, question: str, user: User) -> ObjectId:
     """
     Add question to given survey
     """
@@ -100,7 +98,7 @@ def add_question(survey_url: str, question: str, user: User) -> ObjectId:
     user_without_id = User(user.host, user.cookie, None)
 
     check_question_requirements(question)
-    question_id = db.add_question(user_without_id, survey_url, sanitize(question))
+    question_id = db.add_question(user_without_id, survey, sanitize(question))
     return question_id
 
 

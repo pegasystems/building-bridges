@@ -181,23 +181,24 @@ def set_question_state(question_id: str, is_hidden: bool) -> str:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
 
 
-def add_question(author: User, survey_url, content) -> ObjectId:
+def add_question(author: User, survey: Survey, content) -> ObjectId:
     """
     Add new question to db
     """
 
-    url_and_number = get_url_and_number(survey_url)
     # We generate our own ID, so we can return it to user without asking db
     # about it
     question = Question(content=content, author=author, _id=ObjectId())
-    result = surveys_collection.update_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number']},
-        {MONGO_PUSH: {'questions': question.as_dict(skip_id=False)}})
+    surveys_collection.update_one(
+        {
+            '_id': survey._id
+        },
+        {
+            MONGO_PUSH: {
+                'questions': question.as_dict(skip_id=False)
+            }
+        })
 
-    # We use raw_result, because MockupDB framework does not support field
-    # nModified directly
-    if result.raw_result['nModified'] == 0:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
     return question._id
 
 

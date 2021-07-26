@@ -65,6 +65,20 @@ class SurveyApi(object):
 
         return wrapper_owner
 
+    @staticmethod
+    def asking_questions_enabled(func) -> Callable:
+        """
+        Validate if adding questions to given survey is open before executing operations on the survey.
+        """
+        def wrapper_asking_questions_enabled(*args, **kwargs):
+            survey = kwargs['survey']
+            if not survey.asking_questions_enabled:
+                return {
+                           'error': 'Asking questions not allowed for this survey'
+                       }, HTTPStatus.METHOD_NOT_ALLOWED
+            return func(*args, survey=survey)
+        return wrapper_asking_questions_enabled
+
 
 survey_api = SurveyApi()
 
@@ -90,6 +104,10 @@ survey_model = {
     'open': fields.Boolean(
         required=False,
         description='Is survey active',
+        default=True),
+    'askingQuestionsEnabled': fields.Boolean(
+        required=False,
+        description='Does posting question allowed',
         default=True),
     'key': fields.String(
         readOnly=True,
@@ -134,6 +152,7 @@ survey_created_model = api.model(
 survey_settings_model = api.model(
     'Survey Settings', dict_subset(survey_model, {
         'open',
+        'askingQuestionsEnabled',
         'error'
     }))
 
@@ -142,6 +161,7 @@ survey_details_model = api.inherit(
         survey_model, {
             'key',
             'date',
+            'allowAskingQuestions',
             'open',
             'viewsNumber',
             'votersNumber',
