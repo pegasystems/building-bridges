@@ -46,7 +46,7 @@ class SurveyApi(object):
                 return {
                            'error': 'Survey not found'
                        }, HTTPStatus.NOT_FOUND
-            return func(*args, survey=survey)
+            return func(*args, survey=survey, **{i: kwargs[i] for i in kwargs if i != 'survey_url'})
 
         return wrapper_get
 
@@ -55,14 +55,13 @@ class SurveyApi(object):
         """
         Check if it is an admin of survey.
         """
-        def wrapper_owner(*args, **kwargs):
-            survey = kwargs['survey']
+        def wrapper_owner(*args, survey: Survey, **kwargs):
             admin_secret = survey_secrets.parse_args(request)['admin_secret']
             if survey.admin_secret != admin_secret:
                 return {
                            'error': 'Not allowed.'
                        }, HTTPStatus.UNAUTHORIZED
-            return func(*args, survey=survey)
+            return func(*args, survey=survey, **kwargs)
 
         return wrapper_owner
 
