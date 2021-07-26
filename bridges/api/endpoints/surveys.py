@@ -70,13 +70,12 @@ class SurveyApi(object):
         """
         Validate if adding questions to given survey is open before executing operations on the survey.
         """
-        def wrapper_asking_questions_enabled(*args, **kwargs):
-            survey = kwargs['survey']
+        def wrapper_asking_questions_enabled(*args, survey: Survey, **kwargs):
             if not survey.asking_questions_enabled:
                 return {
                            'error': 'Asking questions not allowed for this survey'
                        }, HTTPStatus.METHOD_NOT_ALLOWED
-            return func(*args, survey=survey)
+            return func(*args, survey=survey, **kwargs)
         return wrapper_asking_questions_enabled
 
 
