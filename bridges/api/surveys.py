@@ -46,7 +46,7 @@ class SurveyApi(object):
                 return {
                            'error': 'Survey not found'
                        }, HTTPStatus.NOT_FOUND
-            return func(*args, survey=survey)
+            return func(*args, survey=survey, **{i: kwargs[i] for i in kwargs if i != 'survey_url'})
 
         return wrapper_get
 
@@ -55,14 +55,13 @@ class SurveyApi(object):
         """
         Check if it is an admin of survey.
         """
-        def wrapper_owner(*args, **kwargs):
-            survey = kwargs['survey']
+        def wrapper_owner(*args, survey: Survey, **kwargs):
             admin_secret = survey_secrets.parse_args(request)['admin_secret']
             if survey.admin_secret != admin_secret:
                 return {
-                       'error': 'Not allowed.'
+                           'error': 'Not allowed.'
                        }, HTTPStatus.UNAUTHORIZED
-            return func(*args, survey=survey)
+            return func(*args, survey=survey, **kwargs)
 
         return wrapper_owner
 
@@ -135,14 +134,20 @@ survey_model = {
         fields.Nested(question)),
     'viewsNumber': fields.Integer(
         required=False,
-        description='Number of unique viewers', default=False),
+        description='Number of unique viewers',
+        default=False),
     'votersNumber': fields.Integer(
         required=False,
-        description='Number of unique voters', default=False),
+        description='Number of unique voters',
+        default=False),
     'questionersNumber': fields.Integer(
         required=False,
         description='Number of unique people who asked questions',
         default=False),
+    'error': fields.String(
+        readOnly=True,
+        required=False,
+        description='Message in case of error'),
 }
 
 survey_basic_model = api.model(
@@ -269,18 +274,20 @@ class SurveyItem(Resource):
         return survey.get_api_result(request.user, results_hash, admin_secret), HTTPStatus.OK
 
     @api.expect(survey_settings_model)
-    @api.response(201, 'Survey state changed.')
+    @api.response(201, 'Survey settings changed.')
     @api.marshal_with(survey_settings_model)
     @survey_api.get
     @survey_api.admin
-    def update(self, survey: Survey) -> Tuple[Dict, HTTPStatus]:
+    def put(self, survey: Survey) -> Tuple[Dict, int]:
         """
         Change survey settings.
         """
 
-        is_open = logic.set_survey_settings(
-            survey=survey,
-            is_open=request.json.get("open") or False,
-            admin_hash=survey_secrets
-                .parse_args(request)['admin_secret'])
-        return is_open, HTTPStatus.CREATED
+        settings = ['open']
+        settings_values = {s: request.json.get(s) for s in settings}
+        settings_not_none = {key: value for (key, value) in settings_values.items() if value is not None}
+        settings_changed = {key: value for (key, value) in settings_not_none.items() if value != survey.__getattribute__(key)}
+
+        survey = db.update_survey(survey, settings_changed)
+
+        return survey.__dict__, HTTPStatus.CREATED

@@ -142,20 +142,29 @@ def get_survey(url: str) -> Survey:
         data=survey_db_result) if survey_db_result else None
 
 
-def update_survey_settings(survey: Survey, settings) -> str:
+def update_survey(survey: Survey, settings: dict) -> Survey:
     """
-    Update survey settings.
+    Update survey settings).
     """
 
-    result = surveys_collection.update_one(
-        {'_id': survey._id},
-        {MONGO_SET: {'open': is_open}})
+    if not settings:
+        return survey
+    else:
+        surveys_collection.update_one(
+            {
+                '_id': survey._id
+            },
+            {
+                MONGO_SET: settings
+            }
+        )
+        survey = surveys_collection.find_one({'_id': survey._id})
+        return from_dict(
+            data_class=Survey,
+            data=survey) if survey else None
 
-    if result.raw_result['nModified'] == 0:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
 
-
-def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> str:
+def set_question_state(question_id: str, is_hidden: bool) -> str:
     """
     Set question state: whether it's hidden or not
     """
@@ -163,10 +172,8 @@ def set_question_state(survey_url: str, question_id: str, is_hidden: bool) -> st
         {MONGO_QUESTIONS_ID: ObjectId(question_id)},
         {MONGO_SET: {'questions.$.hidden': is_hidden}})
 
-
     if result.raw_result['nModified'] == 0:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-    return is_hidden
 
 
 def add_question(author: User, survey: Survey, content) -> ObjectId:
@@ -188,22 +195,31 @@ def add_question(author: User, survey: Survey, content) -> ObjectId:
     return question._id
 
 
-def add_view_if_not_exists(viewer: User, survey_url) -> None:
+def add_view_if_not_exists(viewer: User, survey: Survey) -> None:
     """
     Adds new view document to database if it doesn't exist yet.
     """
 
-    url_and_number = get_url_and_number(survey_url)
-
     previous_user_view = surveys_collection.find_one(
-        {'url': url_and_number['url'], 'number': url_and_number['number'],
-         'views': {'$elemMatch': viewer.get_mongo_equal_query()}}
+        {
+            '_id': survey._id,
+            'views': {
+                '$elemMatch': viewer.get_mongo_equal_query()
+            }
+        }
     )
 
     if not previous_user_view:
         result = surveys_collection.update_one(
-            {'url': url_and_number['url'], 'number': url_and_number['number']},
-            {MONGO_PUSH: {'views': viewer.as_dict()}})
+            {
+                '_id': survey._id
+            },
+            {
+                MONGO_PUSH: {
+                    'views': viewer.as_dict()
+                }
+            }
+        )
 
         if result.raw_result['nModified'] == 0:
             raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)

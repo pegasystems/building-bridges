@@ -8,6 +8,7 @@ SURVEYS_ENDPOINT = 'surveys/url-1'
 
 
 class PutSurveysTest(BasicTest):
+
     def test_close_survey_normal(self):
         will_survey_be_open_after_change = False
         future = self.make_future_put_request(f'{SURVEYS_ENDPOINT}?admin_secret={ADMIN_SECRET}',
@@ -58,18 +59,6 @@ class PutSurveysTest(BasicTest):
         json_result = json.loads(http_response.data.decode())
         self.assertEqual(json_result['open'], will_survey_be_open_after_change)
         self.assertEqual(http_response.status_code, HTTPStatus.CREATED)
-
-    def test_open_survey_issue(self):
-        will_survey_be_open_after_change = True
-        future = self.make_future_put_request(f'{SURVEYS_ENDPOINT}?admin_secret={ADMIN_SECRET}',
-                                              dict(open=will_survey_be_open_after_change))
-        # get data about survey
-        self.mock_get_info_about_survey(is_open=False)
-        # update survey state
-        request = self.server.receives()
-        request.ok({'nModified': 0})
-        http_response = future()
-        self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_open_survey_already_open(self):
         will_survey_be_open_after_change = True
