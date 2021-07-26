@@ -150,20 +150,3 @@ def mark_as_read(question_id: str, survey_url: str, user: User, is_read: bool):
     Mark as read
     """
     db.mark_as_read(user, question_id, is_read)
-
-
-def set_question_state(survey_url: str, question_id: str, admin_hash: str, hidden: bool):
-    """
-    Set survey state
-    """
-    survey = db.get_survey(survey_url)
-
-    if not survey:
-        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
-
-    if survey.admin_secret != admin_hash:
-        raise UnauthorizedError("You're not authorized to hide question in someone else's survey.")
-
-    return {
-        'open': db.set_question_state(survey_url, question_id, hidden)
-    }

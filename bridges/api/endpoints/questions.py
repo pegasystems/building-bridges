@@ -6,11 +6,13 @@ from flask import request
 from flask_restx import fields
 from flask_restx import Resource
 from bridges.api import logic
-from bridges.api.endpoints.surveys import survey_secrets
+from bridges.api.endpoints.surveys import survey_secrets, survey_api
 from bridges.api.question_model import question_model_dict, question
 from bridges.api.restplus import api
+from bridges.database.objects.survey import Survey
 from bridges.errors import QuestionRemovingError
 from bridges.utils import dict_subset
+import bridges.database.mongo as db
 
 
 log = logging.getLogger(__name__)
@@ -101,16 +103,13 @@ class QuestionItem(Resource):
     @api.expect(question_state_model)
     @api.response(201, 'Survey state changed.')
     @api.marshal_with(question_state_model)
-    def put(self, survey_url: str,
-               question_id: str) -> Tuple[Dict, HTTPStatus]:
+    @survey_api.get
+    @survey_api.admin
+    def put(self, survey: Survey, question_id: str) -> Tuple[Dict, int]:
         """
         Hides a single question in survey
         """
 
-        logic.set_question_state(
-                    survey_url=survey_url,
-                    question_id=question_id,
-                    hidden=request.json.get("hidden") or False,
-                    admin_hash=survey_secrets
-                    .parse_args(request)['admin_secret'])
+        db.set_question_state(question_id, request.json.get("hidden") or False)
+
         return None, HTTPStatus.OK
