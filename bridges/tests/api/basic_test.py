@@ -3,7 +3,6 @@ import json
 
 from bridges.tests.api.utils import get_client_server
 from bson.objectid import ObjectId
-from typing import List
 from mockupdb import go
 from datetime import datetime
 
@@ -14,11 +13,27 @@ USER = {'host': 'host1.example.com', 'cookie': 'cookie1', 'user_id': 'abcdefghij
 
 
 class BasicTest(unittest.TestCase):
+
+    @staticmethod
+    def get_survey(is_open=True):
+        return {
+            '_id': ObjectId('666f6f2d6261722d71757578'),
+            'title': 'title',
+            'number': 1,
+            'results_secret': 'secret',
+            'admin_secret': ADMIN_SECRET,
+            'author': USER,
+            'open': is_open
+        }
+
     def mock_get_info_about_survey(self, is_open=True):
         request = self.server.receives()
-        request.ok(cursor={'id': 1, 'firstBatch': [
-            {'title': 'title', 'number': 1, 'results_secret': 'secret', 'admin_secret': ADMIN_SECRET, 'author': USER,
-             'open': is_open}]})
+        request.ok(cursor={
+            'id': 1,
+            'firstBatch': [
+                self.get_survey(is_open)
+            ]
+        })
 
     @classmethod
     def setUpClass(cls):

@@ -118,16 +118,6 @@ def create_survey(title: str, hide_votes: bool, description: str, author: User) 
     }
 
 
-def set_survey_state(survey: Survey, is_open: bool) -> Dict[str, bool]:
-    """
-    Set survey state
-    """
-
-    return {
-        'open': db.set_survey_state(survey, is_open) if survey.open != is_open else is_open
-    }
-
-
 def add_view_if_not_exists(viewer: User, survey: Survey) -> None:
     """
     Adds new view document to database if it doesn't exists yet.
