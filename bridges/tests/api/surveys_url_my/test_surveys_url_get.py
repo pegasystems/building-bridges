@@ -22,6 +22,8 @@ class GetSurveysTest(BasicTest):
             "number": 1,
             "hide_votes": False,
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "results_secret": "secret",
             "admin_secret": "admin-secret",
             "views": [USER1],
@@ -82,6 +84,8 @@ class GetSurveysTest(BasicTest):
             "description": "example_description",
             "hideVotes": False,
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "viewsNumber": 1, "votersNumber": 1, "questionersNumber": 1,
             "date": self.sample_timestamp_string(),
             "questions": [
@@ -127,6 +131,8 @@ class GetSurveysTest(BasicTest):
             "number": 1,
             "hide_votes": True,
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "results_secret": "secret",
             "admin_secret": "admin-secret",
             "views": [USER1],
@@ -166,6 +172,8 @@ class GetSurveysTest(BasicTest):
             "hideVotes": True,
             "description": None,
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "viewsNumber": 1, "votersNumber": 1, "questionersNumber": 1,
             "date": self.sample_timestamp_string(),
             "questions": [
@@ -182,7 +190,6 @@ class GetSurveysTest(BasicTest):
             ]
         })
 
-
     def test_hidden_votes_secrets(self):
         db_response = [{
             "_id": self.example_ids[0],
@@ -191,6 +198,8 @@ class GetSurveysTest(BasicTest):
             "number": 1,
             "hide_votes": False,
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "results_secret": "secret",
             "admin_secret": "admin-secret",
             'author': {"host": "NOT-LOCALHOST", "cookie": "BAD_COOKIE"},
@@ -228,6 +237,8 @@ class GetSurveysTest(BasicTest):
             "hideVotes": False,
             "description": "example_description",
             'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
             "viewsNumber": 2, "votersNumber": 2, "questionersNumber": 1,
             "date": self.sample_timestamp_string(),
             "questions": [

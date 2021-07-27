@@ -34,7 +34,8 @@ class GetSurveysTest(BasicTest):
                 'number': 2,
                 'hide_votes': False,
                 'open': True,
-                'askingQuestionsEnabled': True,
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
                 'author': {
                     "host": "host",
                     "cookie": "cookie"
@@ -65,7 +66,8 @@ class GetSurveysTest(BasicTest):
                 'number': 3,
                 'hide_votes': True,
                 'open': True,
-                'askingQuestionsEnabled': True,
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
                 'author': {
                     "host": "host",
                     "cookie": "cookie"
@@ -111,7 +113,8 @@ class GetSurveysTest(BasicTest):
                 'description': None,
                 'hideVotes': False,
                 'open': True,
-                'askingQuestionsEnabled': True,
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
                 'viewsNumber': 2,
                 'votersNumber': 1,
                 'questionersNumber': 1
@@ -123,7 +126,8 @@ class GetSurveysTest(BasicTest):
                 'description': 'desc',
                 'hideVotes': True,
                 'open': True,
-                'askingQuestionsEnabled': True,
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
                 'viewsNumber': 1,
                 'votersNumber': 2,
                 'questionersNumber': 2
@@ -142,7 +146,8 @@ class GetSurveysTest(BasicTest):
                 'number': 2,
                 'hide_votes': False,
                 'open': True,
-                'askingQuestionsEnabled': True,
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
                 'author': {
                     "host": "localhost",
                     "cookie": "cookie"
@@ -175,7 +180,13 @@ class GetSurveysTest(BasicTest):
                         ]
                     }
                 ],
-                "admin_secret": "SECRET", "results_secret": "SECRET", 'views': [USER1, USER2, USER3]
+                "admin_secret": "SECRET",
+                "results_secret": "SECRET",
+                'views': [
+                    USER1,
+                    USER2,
+                    USER3
+                ]
             },
         ]})
         http_response = future()
@@ -192,8 +203,9 @@ class GetSurveysTest(BasicTest):
                 'votersNumber': 3,
                 'questionersNumber': 2,
                 'open': True,
-                'askingQuestionsEnabled': True,
-                "results_secret": "SECRET",
-                "admin_secret": "SECRET"
+                'asking_questions_enabled': True,
+                'voting_enabled': True,
+                'results_secret': 'SECRET',
+                'admin_secret': 'SECRET'
             }
         ])

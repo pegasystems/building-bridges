@@ -24,6 +24,7 @@ class Survey(MongoObject):
     hide_votes: Optional[bool] = False
     open: Optional[bool] = True
     asking_questions_enabled: Optional[bool] = True
+    voting_enabled: Optional[bool] = True
     url: Optional[str] = None
     description: Optional[str] = None
     questions: List[Question] = field(default_factory=list)

@@ -23,13 +23,19 @@ class DeleteQuestionTest(BasicTest):
             "title": "exampleTitle",
             "description": "example_description",
             "number": 1,
-            'author': {"host": "localhost", "cookie": "cookie"},
+            'author': {
+                "host": "localhost",
+                "cookie": "cookie"
+            },
             "url": "example-url",
             "date": timestamp,
             "questions": [
                 {
                     "content": "example-content",
-                    'author': {"host": "localhost", "cookie": "cookie"},
+                    'author': {
+                        "host": "localhost",
+                        "cookie": "cookie"
+                    },
                     "date": timestamp,
                     "votes": [],
                     "_id": self.example_ids[1]
@@ -40,10 +46,10 @@ class DeleteQuestionTest(BasicTest):
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.NO_CONTENT)
 
-    def test_not_delete_comment_in_closed_survey(self):
+    def test_not_delete_comment_in_disabled_survey(self):
         future = self.make_future_delete_request(f'{QUESTION_ENDPOINT}{str(self.example_ids[1])}')
         # get data about survey
-        self.mock_get_info_about_survey(is_open=False)
+        self.mock_get_info_about_survey(asking_questions_enabled=False)
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 

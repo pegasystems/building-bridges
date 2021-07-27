@@ -253,10 +253,19 @@ def remove_user_vote(user: User, question_id: str) -> None:
     """
 
     result = surveys_collection.update_one(
-        {MONGO_QUESTIONS_ID: ObjectId(question_id)},
-        {MONGO_PULL: {
-            'questions.$[elem].votes': user.get_mongo_equal_query('author')}},
-        array_filters=[{'elem._id': ObjectId(question_id)}])
+        {
+            MONGO_QUESTIONS_ID: ObjectId(question_id)
+        },
+        {
+            MONGO_PULL: {
+                'questions.$[elem].votes': user.get_mongo_equal_query('author')
+            }
+        },
+        array_filters=[
+            {
+                'elem._id': ObjectId(question_id)
+            }
+        ])
     if result.raw_result['nModified'] == 0:
         raise NotFoundError(QUESTION_NOT_FOUND_ERROR_MESSAGE)
 

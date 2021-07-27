@@ -11,6 +11,7 @@ QUESTIONS_ENDPOINT = 'surveys/test-1/questions/'
 
 
 class PutVoteTest(BasicTest):
+
     def test_normal(self):
         future = self.make_future_put_request(
             f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}/vote?type=up')
@@ -29,19 +30,21 @@ class PutVoteTest(BasicTest):
         future = self.make_future_put_request(
             f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}/vote?type=up')
         # get data about survey
-        self.mock_get_info_about_survey(is_open=False)
+        self.mock_get_info_about_survey(voting_enabled=False)
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 
     def test_bad_request_value(self):
         future = self.make_future_put_request(
             f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}/vote?type=bad_value')
+        self.mock_get_info_about_survey()
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.BAD_REQUEST)
 
     def test_bad_request_key(self):
         future = self.make_future_put_request(
             f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}/vote?bad_type=up')
+        self.mock_get_info_about_survey()
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.BAD_REQUEST)
 

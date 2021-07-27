@@ -23,11 +23,11 @@ class PostQuestionTest(BasicTest):
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.CREATED)
 
-    def test_not_add_comment_to_closed_survey(self):
+    def test_not_add_question_to_disabled_survey(self):
         future = self.make_future_post_request(QUESTIONS_ENDPOINT, dict(
             content=QUESTIONS_CONTENT))
         # get data about survey
-        self.mock_get_info_about_survey(is_open=False)
+        self.mock_get_info_about_survey(asking_questions_enabled=False)
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 
@@ -36,22 +36,6 @@ class PostQuestionTest(BasicTest):
             bad_content_key=QUESTIONS_CONTENT))
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.BAD_REQUEST)
-
-    def test_serverIssue(self):
-        def broken_add_question(title, description, author):
-            raise ArithmeticError
-
-        temp = bridges.api.logic.add_question
-        bridges.api.logic.add_question = broken_add_question
-
-        future = self.make_future_post_request(QUESTIONS_ENDPOINT, dict(
-            content=QUESTIONS_CONTENT))
-        http_response = future()
-
-        bridges.api.logic.add_question = temp
-        self.assertEqual(
-            http_response.status_code,
-            HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def test_surveyNotFound(self):
         future = self.make_future_post_request(QUESTIONS_ENDPOINT, dict(
