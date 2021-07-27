@@ -23,7 +23,7 @@ class DeleteVoteTest(BasicTest):
     def test_not_delete_vote_in_closed_survey(self):
         future = self.make_future_delete_request(f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}/vote')
         # get data about survey
-        self.mock_get_info_about_survey(is_open=False)
+        self.mock_get_info_about_survey(voting_enabled=False)
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 

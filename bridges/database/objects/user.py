@@ -26,11 +26,17 @@ class User(MongoObject):
 
     def get_mongo_equal_query(self, prefix=''):
         prefix = prefix + '.' if prefix != '' else prefix
-        return {"$or":
-                [{"$and": [
-                    {f'{prefix}user_id': None},
-                    {"$or":
-                     [{f'{prefix}host': self.host},
-                      {f'{prefix}cookie': self.cookie}]
-                     }], },
-                    {f'{prefix}user_id': self.user_id if self.user_id else ''}]}
+        return {
+            "$or": [
+                {
+                    "$and": [
+                        {f'{prefix}user_id': None},
+                        {"$or": [
+                            {f'{prefix}host': self.host},
+                            {f'{prefix}cookie': self.cookie}
+                        ]}
+                    ],
+                },
+                {f'{prefix}user_id': self.user_id if self.user_id else ''}
+            ]
+        }

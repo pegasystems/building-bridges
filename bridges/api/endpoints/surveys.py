@@ -78,6 +78,20 @@ class SurveyApi(object):
             return func(*args, survey=survey, **kwargs)
         return wrapper_asking_questions_enabled
 
+    @staticmethod
+    def voting_enabled(func) -> Callable:
+        """
+        Validate if voting on questions is open before executing operations on the survey.
+        """
+        def wrapper_voting_enabled(*args, survey: Survey, **kwargs):
+            if not survey.voting_enabled:
+                return {
+                           'error': 'Voting not allowed for this survey'
+                       }, HTTPStatus.METHOD_NOT_ALLOWED
+            return func(*args, survey=survey, **kwargs)
+
+        return wrapper_voting_enabled
+
 
 survey_api = SurveyApi()
 
@@ -104,9 +118,13 @@ survey_model = {
         required=False,
         description='Is survey active',
         default=True),
-    'askingQuestionsEnabled': fields.Boolean(
+    'asking_questions_enabled': fields.Boolean(
         required=False,
-        description='Does posting question allowed',
+        description='Is posting question allowed',
+        default=True),
+    'voting_enabled': fields.Boolean(
+        required=False,
+        description='Is voting allowed',
         default=True),
     'key': fields.String(
         readOnly=True,
@@ -151,7 +169,8 @@ survey_created_model = api.model(
 survey_settings_model = api.model(
     'Survey Settings', dict_subset(survey_model, {
         'open',
-        'askingQuestionsEnabled',
+        'asking_questions_enabled',
+        'voting_enabled',
         'error'
     }))
 
@@ -161,7 +180,8 @@ survey_details_model = api.inherit(
             'key',
             'date',
             'open',
-            'askingQuestionsEnabled',
+            'asking_questions_enabled',
+            'voting_enabled',
             'viewsNumber',
             'votersNumber',
             'questionersNumber'
@@ -266,7 +286,7 @@ class SurveyItem(Resource):
         Change survey settings.
         """
 
-        settings = ['open']
+        settings = ['asking_questions_enabled', 'voting_enabled']
         settings_values = {s: request.json.get(s) for s in settings}
         settings_not_none = {key: value for (key, value) in settings_values.items() if value is not None}
         settings_changed = {key: value for (key, value) in settings_not_none.items() if value != survey.__getattribute__(key)}
