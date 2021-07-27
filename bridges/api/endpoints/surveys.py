@@ -160,8 +160,8 @@ survey_details_model = api.inherit(
         survey_model, {
             'key',
             'date',
-            'allowAskingQuestions',
             'open',
+            'askingQuestionsEnabled',
             'viewsNumber',
             'votersNumber',
             'questionersNumber'
