@@ -7,8 +7,8 @@ interface SurveyResultsInfoProps {
     questionersNumber: number;
     votersNumber: number;
     adminSecret?: string;
-    surveyStateCallback: any;
-    open: boolean;
+    askingQuestionsEnabled: boolean;
+    votingEnabled: boolean;
 }
 
 export default class SurveyResultsInfo extends React.Component<SurveyResultsInfoProps> {
@@ -39,8 +39,8 @@ export default class SurveyResultsInfo extends React.Component<SurveyResultsInfo
                     </tbody>
                 </table>
                 {this.props.adminSecret && 
-                    <AdminOptionsBox open={this.props.open} 
-                                     surveyStateCallback={this.props.surveyStateCallback} 
+                    <AdminOptionsBox askingQuestionsEnabled={this.props.askingQuestionsEnabled}
+                                     votingEnabled={this.props.votingEnabled}
                                      surveyKey={this.props.surveyKey} 
                                      adminSecret={this.props.adminSecret}/>
                 }

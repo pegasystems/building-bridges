@@ -23,7 +23,6 @@ class Survey(MongoObject):
     _id: ObjectId = None
     hide_votes: Optional[bool] = False
     is_anonymous: Optional[bool] = True
-    open: Optional[bool] = True
     asking_questions_enabled: Optional[bool] = True
     voting_enabled: Optional[bool] = True
     url: Optional[str] = None
@@ -58,7 +57,7 @@ class Survey(MongoObject):
         result["votersNumber"] = self._count_voters()
         result["questionersNumber"] = self._count_questioners()
         for question in filter(lambda q: not q.hidden or self.admin_secret == user_admin_secret, self.questions):
-            hide_votes = self.open and self.hide_votes and self.results_secret != user_results_secret and self.admin_secret != user_admin_secret
+            hide_votes = self.voting_enabled and self.hide_votes and self.results_secret != user_results_secret and self.admin_secret != user_admin_secret
             result['questions'].append(question.get_api_result(user, hide_votes))
         return result
 

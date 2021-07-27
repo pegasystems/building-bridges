@@ -15,7 +15,8 @@ global.fetch = jest.fn(() =>
 test('AdminOptions renders properly test', () => {
     const component = renderer.create(
         <AdminOptionsBox 
-            open={true} 
+            askingQuestionsEnabled={true} 
+            votingEnabled={true} 
             surveyKey={'test_survey_key'} 
             adminSecret={'admin_secret'}
         />
@@ -25,21 +26,17 @@ test('AdminOptions renders properly test', () => {
 });
 
 test('AdminOptions properly handle submit', () => {
-    function callback(state) {
-        try {
-          expect(state).toBe(false);
-          done();
-        } catch (error) {
-          done(error);
-        }
-    }
+    const formEventMocked = { target: <HTMLInputElement 
+      type='checkbox'
+      name='askingQuestionsEnabled'
+      checked={false}/> }
     const component = shallow(
         <AdminOptionsBox 
-            open={true} 
+            askingQuestionsEnabled={true} 
+            votingEnabled={true} 
             surveyKey={'test_survey_key'} 
             adminSecret={'admin_secret'}
-            surveyStateCallback={callback}
         />
     );
-    component.instance().handleSubmit('')
+    component.instance().handleChange(formEventMocked)
 }); 
