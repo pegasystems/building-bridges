@@ -14,6 +14,12 @@ question_model_dict = {
         description='Number of downvotes in the question'),
     'isAuthor': fields.Boolean(
         description='Is current user author of the question'),
+    'isAnonymous': fields.Boolean(
+        description='Is author of the question anonymous'),
+    'authorFullName': fields.String(
+        description='Full name of the question author'),
+    'authorEmail': fields.String(
+        description='E-mail of the question author'),
     'voted': fields.String(
         description='How the current user voted on the question (up/down/none)'),
     'read': fields.String(

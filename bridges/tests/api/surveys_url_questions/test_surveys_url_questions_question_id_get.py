@@ -51,7 +51,10 @@ class GetQuestionTest(BasicTest):
             'upvotes': 1,
             'votes': [{'upvote': True, 'date': self.sample_timestamp_string()}],
             'read': 'false',
-            'hidden': False
+            'hidden': False,
+            'isAnonymous': True,
+            'authorEmail': None,
+            'authorFullName': None
         })
 
     def test_notFound(self):
@@ -64,7 +67,7 @@ class GetQuestionTest(BasicTest):
         self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_serverIssue(self):
-        def broken_get_question(title, description, author):
+        def broken_get_question(question_id, user):
             raise ArithmeticError
 
         temp = bridges.api.logic.get_question

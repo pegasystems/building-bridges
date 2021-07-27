@@ -114,6 +114,10 @@ survey_model = {
         required=False,
         description='Hide votes from users',
         default=False),
+    'isAnonymous': fields.Boolean(
+        required=False,
+        description='Are askers in the survey anonymous'
+    ),
     'open': fields.Boolean(
         required=False,
         description='Is survey active',
@@ -156,6 +160,7 @@ survey_basic_model = api.model(
     'Survey Title', dict_subset(survey_model, {
         'title',
         'hideVotes',
+        'isAnonymous',
         'description'
     }))
 
@@ -230,6 +235,7 @@ class SurveyCollection(Resource):
         key_and_secrets = logic.create_survey(
             title=request.json["title"],
             hide_votes=request.json.get("hideVotes") or False,
+            is_anonymous=request.json.get("isAnonymous"),
             description=request.json.get("description"),
             author=request.user)
         return key_and_secrets, HTTPStatus.CREATED

@@ -1,3 +1,4 @@
+from re import findall
 from urllib.parse import urlparse
 from typing import Dict
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
@@ -7,6 +8,7 @@ from bridges.argument_parser import args
 
 
 ASSERTION_CUSTOMER_SERVICE = '/oauth2/callback/saml/'
+SAML_EMAIL_KEY = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
 
 
 def load(app: Flask) -> None:
@@ -35,6 +37,9 @@ def load(app: Flask) -> None:
         if len(errors) == 0:
             if 'AuthNRequestID' in session:
                 del session['AuthNRequestID']
+
+            session['samlEmail'] = auth.get_attributes()[SAML_EMAIL_KEY][0]
+            session['samlFullName'] = ' '.join(auth.get_attributes()['FirstName'] + auth.get_attributes()['LastName'])
             session['samlNameId'] = auth.get_nameid()
             return redirect(auth.redirect_to(request.form['RelayState']))
         else:

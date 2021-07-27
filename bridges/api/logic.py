@@ -21,6 +21,20 @@ def is_secret_valid_if_provided(server_secret: str, user_provided_secret: str):
     return server_secret == user_provided_secret
 
 
+def anonymize_user(func):
+    """
+    Make sure authenticated user remains anonymous before executing operations;
+    if the wrapped method has keyword argument of type 'User',
+    it clears all user's sensitive data.
+    """
+    def wrapper_anonymize_user(*args, **kwargs):
+        user_key = next((k for k in kwargs.keys() if isinstance(kwargs[k], User)), None)
+        kwargs[user_key] = kwargs[user_key].get_user_without_sensitive_data() if user_key else kwargs[user_key]
+        return func(*args, **kwargs)
+    return wrapper_anonymize_user
+
+
+@anonymize_user
 def add_vote(question_id: str, user: User, is_upvote: bool) -> None:
     """
     Vote up/down on question
@@ -34,6 +48,7 @@ def add_vote(question_id: str, user: User, is_upvote: bool) -> None:
     db.add_vote(user, question_id, is_upvote)
 
 
+@anonymize_user
 def delete_vote(question_id: str, user: User) -> None:
     """
     Delete user's vote on question
@@ -51,6 +66,7 @@ def get_question(question_id: str, user: User) -> Question:
     return question.get_api_result(user)
 
 
+@anonymize_user
 def remove_question(question_id: str, user: User) -> None:
     """
     Remove user's given question
@@ -80,27 +96,30 @@ def add_question(survey: Survey, question: str, user: User) -> ObjectId:
     # It's enough for us to store user's host and cookie in database,
     # so to make it more anonymous, we don't save ID
     # of the question's author.
-    user_without_id = User(user.host, user.cookie, None)
+    user = user.get_user_without_sensitive_data() if survey.is_anonymous \
+        else User(user.host, user.cookie, None, user.full_name, user.email)
 
     check_question_requirements(question)
-    question_id = db.add_question(user_without_id, survey, sanitize(question))
+    question_id = db.add_question(user, survey, sanitize(question), survey.is_anonymous)
     return question_id
 
 
-def create_survey(title: str, hide_votes: bool, description: str, author: User) -> Dict[str, str]:
+@anonymize_user
+def create_survey(title: str, hide_votes: bool, is_anonymous: bool, description: str, author: User) -> Dict[str, str]:
     """
     Create new survey
     """
     results_secret = secrets.token_hex(8)
     admin_secret = secrets.token_hex(8)
     return {
-        'key': db.create_survey(sanitize(title), hide_votes, results_secret,
+        'key': db.create_survey(sanitize(title), hide_votes, is_anonymous, results_secret,
                                 admin_secret, sanitize(description), author),
         'results_secret': results_secret,
         'admin_secret': admin_secret
     }
 
 
+@anonymize_user
 def add_view_if_not_exists(viewer: User, survey: Survey) -> None:
     """
     Adds new view document to database if it doesn't exists yet.
@@ -118,6 +137,7 @@ def get_all_surveys() -> List[Dict]:
     return list(map(Survey.get_api_brief_result, db.get_all_surveys()))
 
 
+@anonymize_user
 def get_user_surveys(user: User) -> List[Dict]:
     """
     Returns a list of all surveys created by
@@ -127,6 +147,7 @@ def get_user_surveys(user: User) -> List[Dict]:
     return list(map(Survey.get_api_brief_result_with_secrets, db.get_all_surveys(user)))
 
 
+@anonymize_user
 def mark_as_read(question_id: str, user: User, is_read: bool):
     """
     Mark as read

@@ -3,6 +3,12 @@
     order: 0;
 }
 
+.footnote {
+	font-style: italic;
+	font-size: 13px;
+	color: #949494;
+}
+
 .right {
     order: 1;
     margin-left: 15px;

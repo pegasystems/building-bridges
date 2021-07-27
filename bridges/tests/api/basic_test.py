@@ -24,7 +24,8 @@ class BasicTest(unittest.TestCase):
             'admin_secret': ADMIN_SECRET,
             'author': USER,
             'asking_questions_enabled': asking_questions_enabled,
-            'voting_enabled': voting_enabled
+            'voting_enabled': voting_enabled,
+            'is_anonymous': True,
         }
 
     def mock_get_info_about_survey(self, asking_questions_enabled=True, voting_enabled=True):
@@ -35,6 +36,7 @@ class BasicTest(unittest.TestCase):
                 self.get_survey(asking_questions_enabled, voting_enabled)
             ]
         })
+
 
     @classmethod
     def setUpClass(cls):

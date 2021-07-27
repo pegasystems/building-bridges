@@ -7,9 +7,20 @@ from bridges.tests.api.basic_test import BasicTest
 USER1 = {'host': 'host1.example.com', 'cookie': 'cookie1', 'user_id': 'abcdefghijklmnop'}
 USER2 = {'host': 'host2.example.com', 'cookie': 'cookie2', 'user_id': 'abcdefghijklmnop'}
 USER3 = {'host': 'host3.example.com', 'cookie': 'cookie3', 'user_id': 'qrstuvwxy987654321'}
+USER4 = {'host': 'host3.example.com', 'cookie': 'cookie3', 'user_id': 'njnkajdaj812721811',
+         'full_name': 'John Doe', 'email': 'john.doe@company.com'}
 
 
 class GetSurveysTest(BasicTest):
+
+    def handle_db_new_views(self):
+        # get user view
+        request = self.server.receives()
+        request.ok(cursor={'id': 0, 'firstBatch': []})
+
+        # add one view
+        request = self.server.receives()
+        request.ok({"nModified": 1})
 
     def test_standard(self):
         future = self.make_future_get_request('surveys/url-1')
@@ -21,6 +32,7 @@ class GetSurveysTest(BasicTest):
             "description": "example_description",
             "number": 1,
             "hide_votes": False,
+            "is_anonymous": True,
             'open': True,
             'asking_questions_enabled': True,
             'voting_enabled': True,
@@ -67,13 +79,7 @@ class GetSurveysTest(BasicTest):
                 }
             ]}]})
 
-        # get user view
-        request = self.server.receives()
-        request.ok(cursor={'id': 0, 'firstBatch': []})
-
-        # add one view
-        request = self.server.receives()
-        request.ok({"nModified": 1})
+        self.handle_db_new_views()
 
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.OK)
@@ -83,6 +89,7 @@ class GetSurveysTest(BasicTest):
             "key": "example-url-1",
             "description": "example_description",
             "hideVotes": False,
+            "isAnonymous": True,
             'open': True,
             'asking_questions_enabled': True,
             'voting_enabled': True,
@@ -97,7 +104,10 @@ class GetSurveysTest(BasicTest):
                     "isAuthor": True,
                     "voted": "none",
                     "read": "false",
-                    "hidden": False
+                    "hidden": False,
+                    "isAnonymous": True,
+                    "authorEmail": None,
+                    "authorFullName": None
                 },
                 {
                     "_id": str(self.example_ids[2]),
@@ -107,7 +117,10 @@ class GetSurveysTest(BasicTest):
                     "isAuthor": True,
                     "voted": "up",
                     "read": "false",
-                    "hidden": False
+                    "hidden": False,
+                    "isAnonymous": True,
+                    "authorEmail": None,
+                    "authorFullName": None
                 },
                 {
                     "_id": str(self.example_ids[3]),
@@ -117,7 +130,72 @@ class GetSurveysTest(BasicTest):
                     "isAuthor": True,
                     "voted": "down",
                     "read": "false",
+                    "hidden": False,
+                    "isAnonymous": True,
+                    "authorEmail": None,
+                    "authorFullName": None
+                },
+            ]
+        })
+
+    def test_not_anonymous_survey_should_return_question_author_info(self):
+        future = self.make_future_get_request('surveys/url-1')
+        # get one survey
+        request = self.server.receives()
+        request.ok(cursor={'id': 0, 'firstBatch': [{
+            "_id": self.example_ids[0],
+            "title": "example-title",
+            "description": "example_description",
+            "number": 1,
+            "hide_votes": False,
+            "is_anonymous": False,
+            'open': True,
+            "results_secret": "secret",
+            "admin_secret": "admin-secret",
+            "views": [USER4],
+            'author': {"host": "localhost", "cookie": "cookie"},
+            "url": "example-url",
+            "date": self.sample_timestamp(),
+            "questions": [
+                {
+                    "content": "example-content-1",
+                    'author': USER4,
+                    'is_anonymous': False,
+                    "date": self.sample_timestamp(),
+                    "votes": [],
+                    "_id": self.example_ids[1],
                     "hidden": False
+                },
+            ]}]})
+
+        self.handle_db_new_views()
+
+        http_response = future()
+        data = json.loads(http_response.get_data(as_text=True))
+        self.assertEqual(data, {
+            "title": "example-title",
+            "key": "example-url-1",
+            "description": "example_description",
+            "hideVotes": False,
+            "isAnonymous": False,
+            'open': True,
+            'asking_questions_enabled': True,
+            'voting_enabled': True,
+            "viewsNumber": 1, "votersNumber": 0, "questionersNumber": 1,
+            "date": self.sample_timestamp_string(),
+            "questions": [
+                {
+                    "_id": str(self.example_ids[1]),
+                    "content": "example-content-1",
+                    "upvotes": 0,
+                    "downvotes": 0,
+                    "isAuthor": False,
+                    "voted": "none",
+                    "read": "false",
+                    "hidden": False,
+                    "isAnonymous": False,
+                    "authorEmail": USER4['email'],
+                    "authorFullName": USER4['full_name']
                 },
             ]
         })
@@ -130,6 +208,7 @@ class GetSurveysTest(BasicTest):
             "title": "example-title",
             "number": 1,
             "hide_votes": True,
+            "isAnonymous": True,
             'open': True,
             'asking_questions_enabled': True,
             'voting_enabled': True,
@@ -151,17 +230,12 @@ class GetSurveysTest(BasicTest):
                          }
                     ],
                     "_id": self.example_ids[2],
-                    "hidden": False
+                    "hidden": False,
+                    "isAnonymous": True
                 },
             ]}]})
 
-        # get user view
-        request = self.server.receives()
-        request.ok(cursor={'id': 0, 'firstBatch': []})
-
-        # add one view
-        request = self.server.receives()
-        request.ok({"nModified": 1})
+        self.handle_db_new_views()
 
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.OK)
@@ -170,6 +244,7 @@ class GetSurveysTest(BasicTest):
             "title": "example-title",
             "key": "example-url-1",
             "hideVotes": True,
+            "isAnonymous": True,
             "description": None,
             'open': True,
             'asking_questions_enabled': True,
@@ -179,13 +254,16 @@ class GetSurveysTest(BasicTest):
             "questions": [
                 {
                     "_id": str(self.example_ids[2]),
+                    "authorEmail": None,
+                    "authorFullName": None,
                     "content": "example-content-2",
                     "upvotes": None,
                     "downvotes": None,
                     "isAuthor": False,
                     "voted": "none",
                     "read": "false",
-                    "hidden": False
+                    "hidden": False,
+                    "isAnonymous": True
                 },
             ]
         })
@@ -197,6 +275,7 @@ class GetSurveysTest(BasicTest):
             "description": "example_description",
             "number": 1,
             "hide_votes": False,
+            "isAnonymous": True,
             'open': True,
             'asking_questions_enabled': True,
             'voting_enabled': True,
@@ -235,6 +314,7 @@ class GetSurveysTest(BasicTest):
             "title": "example-title",
             "key": "example-url-1",
             "hideVotes": False,
+            "isAnonymous": True,
             "description": "example_description",
             'open': True,
             'asking_questions_enabled': True,
@@ -250,25 +330,19 @@ class GetSurveysTest(BasicTest):
                     "isAuthor": False,
                     "voted": "none",
                     "read": "false",
-                    "hidden": False
+                    "hidden": False,
+                    "isAnonymous": True,
+                    "authorEmail": None,
+                    "authorFullName": None
                 },
             ]
         }
-
-        def handle_db_new_views(self):
-            # get user view
-            request = self.server.receives()
-            request.ok(cursor={'id': 0, 'firstBatch': []})
-
-            # add one view
-            request = self.server.receives()
-            request.ok({"nModified": 1})
 
         def handle_correct_secret(url):
             future = self.make_future_get_request(url)
             request = self.server.receives()
             request.ok(cursor={'id': 0, 'firstBatch': db_response})
-            handle_db_new_views(self)
+            self.handle_db_new_views()
             http_response = future()
             self.assertEqual(http_response.status_code, HTTPStatus.OK)
             data = json.loads(http_response.get_data(as_text=True))

@@ -55,5 +55,6 @@ jobs:
           -Dsonar.organization=pegasystems
           -Dsonar.projectKey=pegasystems_building-bridges
           -Dsonar.sources=.
+          -Dsonar.coverage.exclusions=web/test/component_snapshots_test/**/*,bridges/tests/**/*
           -Dsonar.python.coverage.reportPaths=.sonar/coverage.xml
           -Dsonar.javascript.lcov.reportPaths=web/coverage/lcov.info
