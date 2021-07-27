@@ -28,27 +28,76 @@ class GetSurveysTest(BasicTest):
         request = self.server.receives()
         request.ok(cursor={'id': 0, 'firstBatch': [
             {
-                'title': 'title1', 'url': 'url', 'date': self.sample_timestamp(), 'number': 2, 'hide_votes': False,
-                'open': True, 'author': {"host": "host", "cookie": "cookie"}, "_id": self.example_ids[0],
+                'title': 'title1',
+                'url': 'url',
+                'date': self.sample_timestamp(),
+                'number': 2,
+                'hide_votes': False,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                'author': {
+                    "host": "host",
+                    "cookie": "cookie"
+                },
+                "_id": self.example_ids[0],
                 'questions': [
-                    {'content': 'Q1?', 'author': USER1,
-                     'votes': [{'author': USER2, 'upvote': False}]}
+                    {
+                        'content': 'Q1?',
+                        'author': USER1,
+                        'votes': [
+                            {
+                                'author': USER2,
+                                'upvote': False
+                            }
+                        ]
+                    }
                 ],
-                "secret": "SECRET", 'views': [USER1, USER2]
+                "secret": "SECRET",
+                'views': [
+                    USER1,
+                    USER2
+                ]
             },
             {
-                'title': 'title2', 'url': 'testurl', 'date': self.sample_timestamp(), 'number': 3, 'hide_votes': True,
-                'open': True, 'author': {"host": "host", "cookie": "cookie"}, "_id": self.example_ids[1], 'description': 'desc',
+                'title': 'title2',
+                'url': 'testurl',
+                'date': self.sample_timestamp(),
+                'number': 3,
+                'hide_votes': True,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                'author': {
+                    "host": "host",
+                    "cookie": "cookie"
+                },
+                "_id": self.example_ids[1],
+                'description': 'desc',
                 'questions': [
-                    {'content': 'Q1?', 'author': USER2,
-                     'votes': [{'author': USER2, 'upvote': False}]},
-                    {'content': 'Q2?', 'author': USER1,
-                     'votes': [
-                         {'author': USER2, 'upvote': False},
-                         {'author': USER3, 'upvote': True}
-                     ]}
+                    {
+                        'content': 'Q1?',
+                        'author': USER2,
+                        'votes': [
+                            {'author': USER2, 'upvote': False}
+                        ]
+                    },
+                    {
+                        'content': 'Q2?',
+                        'author': USER1,
+                        'votes': [
+                             {
+                                 'author': USER2,
+                                 'upvote': False},
+                             {
+                                 'author': USER3,
+                                 'upvote': True
+                             }
+                        ]
+                    }
                 ],
-                "secret": "SECRET", 'views': [USER1]
+                "secret": "SECRET",
+                'views': [
+                    USER1
+                ]
             }
         ]})
         http_response = future()
@@ -56,12 +105,28 @@ class GetSurveysTest(BasicTest):
         data = json.loads(http_response.get_data(as_text=True))
         self.assertEqual(data, [
             {
-                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(), 'description': None,
-                'hideVotes': False, 'open': True, 'viewsNumber': 2, 'votersNumber': 1, 'questionersNumber': 1
+                'title': 'title1',
+                'key': 'url-2',
+                'date': self.sample_timestamp_string(),
+                'description': None,
+                'hideVotes': False,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                'viewsNumber': 2,
+                'votersNumber': 1,
+                'questionersNumber': 1
             },
             {
-                'title': 'title2', 'key': 'testurl-3', 'date': self.sample_timestamp_string(), 'description': 'desc',
-                'hideVotes': True, 'open': True, 'viewsNumber': 1, 'votersNumber': 2, 'questionersNumber': 2
+                'title': 'title2',
+                'key': 'testurl-3',
+                'date': self.sample_timestamp_string(),
+                'description': 'desc',
+                'hideVotes': True,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                'viewsNumber': 1,
+                'votersNumber': 2,
+                'questionersNumber': 2
             }
         ])
 
@@ -71,16 +136,44 @@ class GetSurveysTest(BasicTest):
         request = self.server.receives()
         request.ok(cursor={'id': 0, 'firstBatch': [
             {
-                'title': 'title1', 'url': 'url', 'date': self.sample_timestamp(), 'number': 2, 'hide_votes': False,
-                'open': True, 'author': {"host": "localhost", "cookie": "cookie"}, "_id": self.example_ids[0], 'description': 'desc',
+                'title': 'title1',
+                'url': 'url',
+                'date': self.sample_timestamp(),
+                'number': 2,
+                'hide_votes': False,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                'author': {
+                    "host": "localhost",
+                    "cookie": "cookie"
+                },
+                "_id": self.example_ids[0],
+                'description': 'desc',
                 'questions': [
-                    {'content': 'Q1?', 'author': USER3,
-                     'votes': [{'author': USER1, 'upvote': False}]},
-                    {'content': 'Q2?', 'author': USER1,
-                     'votes': [
-                         {'author': USER2, 'upvote': False},
-                         {'author': USER3, 'upvote': True}
-                     ]}
+                    {
+                        'content': 'Q1?',
+                        'author': USER3,
+                        'votes': [
+                            {
+                                'author': USER1,
+                                'upvote': False
+                            }
+                        ]
+                    },
+                    {
+                        'content': 'Q2?',
+                        'author': USER1,
+                        'votes': [
+                            {
+                                'author': USER2,
+                                'upvote': False
+                            },
+                            {
+                                'author': USER3,
+                                'upvote': True
+                            }
+                        ]
+                    }
                 ],
                 "admin_secret": "SECRET", "results_secret": "SECRET", 'views': [USER1, USER2, USER3]
             },
@@ -90,8 +183,17 @@ class GetSurveysTest(BasicTest):
         data = json.loads(http_response.get_data(as_text=True))
         self.assertEqual(data, [
             {
-                'title': 'title1', 'key': 'url-2', 'date': self.sample_timestamp_string(), 'description': 'desc',
-                'hideVotes': False, 'viewsNumber': 3, 'votersNumber': 3, 'questionersNumber': 2,
-                'open': True, "results_secret": "SECRET", "admin_secret": "SECRET"
+                'title': 'title1',
+                'key': 'url-2',
+                'date': self.sample_timestamp_string(),
+                'description': 'desc',
+                'hideVotes': False,
+                'viewsNumber': 3,
+                'votersNumber': 3,
+                'questionersNumber': 2,
+                'open': True,
+                'askingQuestionsEnabled': True,
+                "results_secret": "SECRET",
+                "admin_secret": "SECRET"
             }
         ])
