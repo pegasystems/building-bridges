@@ -34,7 +34,6 @@ class GetSurveysTest(BasicTest):
                 'number': 2,
                 'hide_votes': False,
                 'isAnonymous': True,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'author': {
@@ -67,7 +66,6 @@ class GetSurveysTest(BasicTest):
                 'number': 3,
                 'hide_votes': True,
                 'isAnonymous': True,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'author': {
@@ -115,7 +113,6 @@ class GetSurveysTest(BasicTest):
                 'description': None,
                 'hideVotes': False,
                 'isAnonymous': True,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'viewsNumber': 2,
@@ -129,7 +126,6 @@ class GetSurveysTest(BasicTest):
                 'description': 'desc',
                 'hideVotes': True,
                 'isAnonymous': True,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'viewsNumber': 1,
@@ -150,7 +146,6 @@ class GetSurveysTest(BasicTest):
                 'number': 2,
                 'hide_votes': False,
                 'isAnonymous': True,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'author': {
@@ -208,7 +203,6 @@ class GetSurveysTest(BasicTest):
                 'viewsNumber': 3,
                 'votersNumber': 3,
                 'questionersNumber': 2,
-                'open': True,
                 'asking_questions_enabled': True,
                 'voting_enabled': True,
                 'results_secret': 'SECRET',

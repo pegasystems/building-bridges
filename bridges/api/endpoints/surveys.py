@@ -116,12 +116,7 @@ survey_model = {
         default=False),
     'isAnonymous': fields.Boolean(
         required=False,
-        description='Are askers in the survey anonymous'
-    ),
-    'open': fields.Boolean(
-        required=False,
-        description='Is survey active',
-        default=True),
+        description='Are askers in the survey anonymous'),
     'asking_questions_enabled': fields.Boolean(
         required=False,
         description='Is posting question allowed',
@@ -173,7 +168,6 @@ survey_created_model = api.model(
 
 survey_settings_model = api.model(
     'Survey Settings', dict_subset(survey_model, {
-        'open',
         'asking_questions_enabled',
         'voting_enabled',
         'error'
@@ -184,7 +178,6 @@ survey_details_model = api.inherit(
         survey_model, {
             'key',
             'date',
-            'open',
             'asking_questions_enabled',
             'voting_enabled',
             'viewsNumber',

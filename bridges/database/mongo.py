@@ -141,12 +141,6 @@ def get_survey(url: str) -> Survey:
     return from_dict(data_class=Survey,
                      data=survey_db_result) if survey_db_result else None
 
-def check_if_survey_is_open(url: str) -> bool:
-    clear_url = '/' if url[0] == '/' else url
-    url_and_number = get_url_and_number(clear_url)
-    survey_db_result = surveys_collection.find_one(url_and_number, { 'open': 1 })
-    return survey_db_result.get('open', True) if survey_db_result else True
-
 
 def update_survey(survey: Survey, settings: dict) -> Survey:
     """

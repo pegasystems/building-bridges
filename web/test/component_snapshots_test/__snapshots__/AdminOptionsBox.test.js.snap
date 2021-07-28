@@ -7,11 +7,6 @@ exports[`AdminOptions renders properly test 1`] = `
   <fieldset
     className="MuiFormControl-root"
   >
-    <legend
-      className="MuiFormLabel-root"
-    >
-      Survey Status (toggle to Open or Close the survey)
-    </legend>
     <div
       className="MuiFormGroup-root"
     >
@@ -19,48 +14,98 @@ exports[`AdminOptions renders properly test 1`] = `
         className="MuiFormControlLabel-root"
       >
         <span
-          className="MuiSwitch-root"
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-checked-2 Mui-checked MuiIconButton-colorPrimary"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
         >
           <span
-            aria-disabled={false}
-            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiSwitch-switchBase MuiSwitch-colorPrimary PrivateSwitchBase-checked-2 Mui-checked"
-            onBlur={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={null}
+            className="MuiIconButton-label"
           >
-            <span
-              className="MuiIconButton-label"
+            <input
+              checked={true}
+              className="PrivateSwitchBase-input-4"
+              data-indeterminate={false}
+              disabled={false}
+              name="askingQuestionsEnabled"
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
             >
-              <input
-                checked={true}
-                className="PrivateSwitchBase-input-4 MuiSwitch-input"
-                disabled={false}
-                name="checkedB"
-                onChange={[Function]}
-                type="checkbox"
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
               />
-              <span
-                className="MuiSwitch-thumb"
-              />
-            </span>
+            </svg>
           </span>
-          <span
-            className="MuiSwitch-track"
-          />
         </span>
         <span
           className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
         >
-          Open (Questions and voting allowed)
+          Asking Questions Enabled
+        </span>
+      </label>
+      <label
+        className="MuiFormControlLabel-root"
+      >
+        <span
+          aria-disabled={false}
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-1 MuiCheckbox-root MuiCheckbox-colorPrimary PrivateSwitchBase-checked-2 Mui-checked MuiIconButton-colorPrimary"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={null}
+        >
+          <span
+            className="MuiIconButton-label"
+          >
+            <input
+              checked={true}
+              className="PrivateSwitchBase-input-4"
+              data-indeterminate={false}
+              disabled={false}
+              name="votingEnabled"
+              onChange={[Function]}
+              type="checkbox"
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+          </span>
+        </span>
+        <span
+          className="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+        >
+          Voting Enabled
         </span>
       </label>
     </div>

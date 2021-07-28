@@ -57,7 +57,7 @@ class PutSurveysTest(BasicTest):
         self.mock_get_info_about_survey(asking_questions_enabled=will_survey_be_open_after_change)
         http_response = future()
         json_result = json.loads(http_response.data.decode())
-        self.assertEqual(json_result['open'], will_survey_be_open_after_change)
+        self.assertEqual(json_result['asking_questions_enabled'], will_survey_be_open_after_change)
         self.assertEqual(http_response.status_code, HTTPStatus.CREATED)
 
     def test_enable_questions_already_open(self):
@@ -68,5 +68,5 @@ class PutSurveysTest(BasicTest):
         self.mock_get_info_about_survey(asking_questions_enabled=True)
         http_response = future()
         json_result = json.loads(http_response.data.decode())
-        self.assertEqual(json_result['open'], will_survey_be_open_after_change)
+        self.assertEqual(json_result['asking_questions_enabled'], will_survey_be_open_after_change)
         self.assertEqual(http_response.status_code, HTTPStatus.CREATED)

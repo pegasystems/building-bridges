@@ -1,4 +1,5 @@
 import React from 'react';
+import { camelizeKeys } from 'humps';
 import SurveyLink from '../../Components/SurveyLink';
 import queryString from 'query-string';
 import update from 'immutability-helper';
@@ -23,7 +24,8 @@ interface SurveyState {
     questionersNumber: number;
     votersNumber: number;
     date: string;
-    open: boolean;
+    askingQuestionsEnabled: boolean;
+    votingEnabled: boolean;
 }
 
 interface SurveyProps {
@@ -49,7 +51,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             questionersNumber: 0,
             votersNumber: 0,
             date: '',
-            open: true
+            askingQuestionsEnabled: true,
+            votingEnabled: true
         };
         this.surveyKey = props?.match?.params?.surveyKey;
         this.results_secret = queryString.parse(props?.location?.search).results_secret?.toString();
@@ -77,14 +80,17 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                 }
                 return response.json();
             }).then(data => {
-            data.questions = shuffle(data.questions);
-            data.questions = data.questions.map((questionDict: any) => {
-                return Models.Question.createQuestionFromApiResult(questionDict);
-            })
-            this.setState({...data, ...{fetchInProgress: false}});
-            if (window.location.hash) {
-                window.location.href = window.location.hash;
-            }
+                data.questions = shuffle(data.questions);
+                data.questions = data.questions.map((questionDict: any) => {
+                    return Models.Question.createQuestionFromApiResult(questionDict);
+                })
+                data = camelizeKeys(data, function (key, convert) {
+                    return key === 'asking_questions_enabled' || key === 'voting_enabled' ? convert(key) : key;
+                })
+                this.setState({...data, ...{fetchInProgress: false}});
+                if (window.location.hash) {
+                    window.location.href = window.location.hash;
+                }
         });
     }
 
@@ -129,10 +135,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                     {$set: question}
             })
         });
-    }
-
-    updateSurveyStateCallback = (newState: boolean) => {
-        this.setState({open: newState})
     }
 
     deleteVoteCallback = (question: Models.Question) => {
@@ -192,7 +194,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                               surveyKey={this.surveyKey}
                               isResultPage={this.showResultsSummary()}
                               adminSecret={this.admin_secret}
-                              open={this.state.open}
+                              askingQuestionsEnabled={this.state.askingQuestionsEnabled}
+                              votingEnabled={this.state.votingEnabled}
                 />;
         } else {
             questionsLists =
@@ -207,7 +210,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         surveyKey={this.surveyKey}
                         isResultPage={false}
                         adminSecret=''
-                        open={this.state.open}
+                        askingQuestionsEnabled={this.state.askingQuestionsEnabled}
+                        votingEnabled={this.state.votingEnabled}
                     />
 
                     <QuestionList
@@ -220,7 +224,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         surveyKey={this.surveyKey}
                         isResultPage={false}
                         adminSecret=''
-                        open={this.state.open}
+                        askingQuestionsEnabled={this.state.askingQuestionsEnabled}
+                        votingEnabled={this.state.votingEnabled}
                     />
                 </>;
         }
@@ -228,20 +233,27 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     private showSingleColumn() {
-        return this.admin_secret || this.results_secret || !this.state.open || !this.state.hideVotes;
+        return this.admin_secret || this.results_secret || !this.state.votingEnabled || !this.state.hideVotes;
     }
 
     render(): JSX.Element {
         return (
-            <div className={(this.state.hideVotes && this.state.open) ? 'hide-votes' : 'not-hide'}>
+            <div className={(this.state.hideVotes && this.state.votingEnabled) ? 'hide-votes' : 'not-hide'}>
                 <div className="title-div">
                     <h1 className="survey-title">{this.state.title}</h1>
                     <h1 className="survey-description">{this.state.description}</h1>
                     <SurveyLink link={document.location.href}/>
-                    {!this.state.open && !this.admin_secret &&
+                    {!this.state.askingQuestionsEnabled && !this.admin_secret &&
                         <div className='results-info'>
                             <div className='aligned-center'>
-                                This survey has been locked by the Survey Administrator. No new questions or votes can be submitted at this time.
+                                No new questions can be submitted at this time.
+                            </div>
+                        </div>
+                    }
+                    {!this.state.votingEnabled && !this.admin_secret &&
+                        <div className='results-info'>
+                            <div className='aligned-center'>
+                                No new votes can be submitted at this time.
                             </div>
                         </div>
                     }
@@ -253,8 +265,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                                             viewsNumber={this.state.viewsNumber}
                                             questionersNumber={this.state.questionersNumber}
                                             votersNumber={this.state.votersNumber} date={this.state.date} 
-                                            open={this.state.open}
-                                            surveyStateCallback={this.updateSurveyStateCallback}/>
+                                            askingQuestionsEnabled={this.state.askingQuestionsEnabled}
+                                            votingEnabled={this.state.votingEnabled}/>
 
                     }
                     {this.showNewQuestionBox() &&
@@ -277,6 +289,6 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     private showNewQuestionBox() {
-        return !this.results_secret && !this.admin_secret && this.state.open;
+        return !this.results_secret && !this.admin_secret && this.state.askingQuestionsEnabled;
     }
 }
