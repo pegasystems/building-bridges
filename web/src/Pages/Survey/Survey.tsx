@@ -85,7 +85,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                     return Models.Question.createQuestionFromApiResult(questionDict);
                 })
                 data = camelizeKeys(data, function (key, convert) {
-                    return key === '_id' ? key : convert(key);
+                    return key === 'asking_questions_enabled' || key === 'voting_enabled' ? convert(key) : key;
                 })
                 this.setState({...data, ...{fetchInProgress: false}});
                 if (window.location.hash) {
