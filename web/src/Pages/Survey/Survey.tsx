@@ -109,8 +109,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     addVoteCallback = (question: Models.Question, voteType: Models.UserVote) => {
+        let questionModel = Models.Question.createQuestionFromApiResult(question);
         if (this.state.hideVotes) {
-            question.hideVotes = false;
+            questionModel.hideVotes = false;
             fetch(`${SURVEYS_API}${this.surveyKey}${QUESTIONS_ENDPOINT}/${question._id}`, {
                 method: 'GET',
                 headers: {
@@ -122,8 +123,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                     this.updateQuestionInState(data);
                 });
         } else {
-            question.addUserVote(voteType);
-            this.updateQuestionInState(question);
+            questionModel.addUserVote(voteType);
+            this.updateQuestionInState(questionModel);
         }
     }
 
@@ -149,9 +150,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
     }
 
     markAsReadCallback = (question: Models.Question) => {
+        let questionModel = Models.Question.createQuestionFromApiResult(question);
         if (this.state.hideVotes) {
-            question.hideVotes = false;
-            fetch(`${SURVEYS_API}${this.surveyKey}${QUESTIONS_ENDPOINT}/${question._id}`, {
+            questionModel.hideVotes = false;
+            fetch(`${SURVEYS_API}${this.surveyKey}${QUESTIONS_ENDPOINT}/${questionModel._id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -159,16 +161,16 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             })
                 .then(response => response.json())
                 .then(data => {
-                    question.toggleRead();
-                    if (question.read === "false" && question.voted === Models.UserVote.None) {
+                    questionModel.toggleRead();
+                    if (questionModel.read === "false" && questionModel.voted === Models.UserVote.None) {
                         data.upvotes = null
                     }
                     let newQuestionState = Models.Question.createQuestionFromApiResult(data);
                     this.updateQuestionInState(newQuestionState);
                 });
         } else {
-            question.toggleRead();
-            this.updateQuestionInState(question);
+            questionModel.toggleRead();
+            this.updateQuestionInState(questionModel);
         }
     }
 
