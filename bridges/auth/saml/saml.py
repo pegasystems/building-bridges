@@ -8,7 +8,6 @@ from bridges.argument_parser import args
 
 
 ASSERTION_CUSTOMER_SERVICE = '/oauth2/callback/saml/'
-SAML_EMAIL_KEY = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
 
 
 def load(app: Flask) -> None:
@@ -38,7 +37,7 @@ def load(app: Flask) -> None:
             if 'AuthNRequestID' in session:
                 del session['AuthNRequestID']
 
-            session['samlEmail'] = auth.get_attributes()[SAML_EMAIL_KEY][0]
+            session['samlEmail'] = auth.get_attributes()['emailaddress'][0]
             session['samlFullName'] = ' '.join(auth.get_attributes()['FirstName'] + auth.get_attributes()['LastName'])
             session['samlNameId'] = auth.get_nameid()
             return redirect(auth.redirect_to(request.form['RelayState']))
