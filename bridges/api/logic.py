@@ -96,7 +96,7 @@ def add_question(survey: Survey, question: str, user: User) -> ObjectId:
     # It's enough for us to store user's host and cookie in database,
     # so to make it more anonymous, we don't save ID
     # of the question's author.
-    user = user.get_user_without_sensitive_data() if survey.is_anonymous \
+    user = user.get_user_without_sensitive_data(clear_user_id=True) if survey.is_anonymous \
         else User(user.host, user.cookie, None, user.full_name, user.email)
 
     check_question_requirements(question)

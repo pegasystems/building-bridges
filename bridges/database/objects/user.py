@@ -43,5 +43,6 @@ class User(MongoObject):
             ]
         }
 
-    def get_user_without_sensitive_data(self):
-        return User(self.host, self.cookie, None, None, None)
+    def get_user_without_sensitive_data(self, clear_user_id=False):
+        user_id = None if clear_user_id else self.user_id
+        return User(self.host, self.cookie, user_id, None, None)
