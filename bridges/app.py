@@ -40,7 +40,7 @@ app = Flask(__name__)
 
 # In order to use session in flask we need to
 # set the secret key to encrypt cookies
-app.config['SECRET_KEY'] = os.urandom(16)
+app.config['SECRET_KEY'] = args.session_secret_key
 
 # Swagger has problems with proxy, so we need to add this magic line to
 # make it work with k8s service
