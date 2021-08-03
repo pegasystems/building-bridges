@@ -1,5 +1,6 @@
 import argparse
 import configargparse
+import os
 from dotenv import load_dotenv
 
 
@@ -8,6 +9,17 @@ load_dotenv()
 
 
 parser = configargparse.ArgumentParser(description='Building bridges')
+
+# App arguments
+parser.add_argument(
+    '-s',
+    '--secretkey',
+    type=str,
+    default=os.urandom(16),
+    dest='session_secret_key',
+    env_var="SECRET_KEY",
+    help=''
+)
 
 # Database arguments
 parser.add_argument(
