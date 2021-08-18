@@ -73,6 +73,7 @@ Each parameter can be passed either in CLI as an argument or as a environment va
 | samlproviderid | SAML_PROVIDER_ID | ID of the Identity Provider                                                               |                           |
 | samlloginurl   | SAML_LOGIN_URL   | Login url of the Identity Provider                                                        |                           |
 | samlcert       | SAML_CERT        | Certificate of the IdP                                                                    |                           |
+| secretkey      | SECRET_KEY       | Flask session secret key                                                                  | os.urandom(16)            |
 
 
 <br>
