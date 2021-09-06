@@ -20,6 +20,9 @@ question_model_dict = {
         description='Full name of the question author'),
     'authorEmail': fields.String(
         description='E-mail of the question author'),
+    'author_nickname': fields.String(
+        required=False,
+        description='Name put by author'),
     'voted': fields.String(
         description='How the current user voted on the question (up/down/none)'),
     'read': fields.String(

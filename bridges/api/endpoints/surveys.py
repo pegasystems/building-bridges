@@ -2,7 +2,7 @@ import logging
 
 from flask_restx import reqparse
 from http import HTTPStatus
-from typing import Dict, Tuple, Callable
+from typing import Dict, Tuple, Callable, List
 from flask import request
 from flask_restx import Resource, fields
 from bridges.api import logic
@@ -210,7 +210,7 @@ class SurveyCollection(Resource):
     """
 
     @api.marshal_with(survey_details_model)
-    def get(self) -> Tuple[Dict, HTTPStatus]:
+    def get(self) -> Tuple[List[Dict], HTTPStatus]:
         """
         Returns all surveys with details.
         """

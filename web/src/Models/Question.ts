@@ -8,6 +8,7 @@ export default class QuestionModel {
     isAnonymous!: boolean;
     authorFullName: string = '';
     authorEmail: string = '';
+    authorNickname: string = '';
     upvotes: number = 0;
     downvotes: number = 0;
     voted: UserVote = UserVote.None;
@@ -48,6 +49,7 @@ export default class QuestionModel {
         question.isAnonymous = questionDict.isAnonymous;
         question.authorFullName = questionDict.authorFullName;
         question.authorEmail = questionDict.authorEmail;
+        question.authorNickname = questionDict.author_nickname;
         question.voted = questionDict.voted;
         question._id = questionDict._id;
         question.read = questionDict.read;

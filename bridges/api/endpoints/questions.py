@@ -69,6 +69,7 @@ class QuestionCollection(Resource):
             "_id": str(logic.add_question(
                 survey=survey,
                 question=request.json["content"],
+                author_nickname=request.json["author_nickname"] if "author_nickname" in request.json else None,
                 user=request.user))
         }, HTTPStatus.CREATED
 

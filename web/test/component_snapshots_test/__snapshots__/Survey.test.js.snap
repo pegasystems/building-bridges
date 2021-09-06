@@ -45,7 +45,18 @@ exports[`SurveyComponent renders properly test 1`] = `
         >
           
         </label>
-        <div />
+        <div>
+          <h5>
+            Name (optional): 
+            <input
+              id="questionAuthor"
+              maxLength={40}
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+          </h5>
+        </div>
         <input
           className="add-new-button"
           type="submit"

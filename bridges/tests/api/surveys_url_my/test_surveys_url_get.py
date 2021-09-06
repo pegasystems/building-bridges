@@ -105,7 +105,8 @@ class GetSurveysTest(BasicTest):
                     "hidden": False,
                     "isAnonymous": True,
                     "authorEmail": None,
-                    "authorFullName": None
+                    "authorFullName": None,
+                    'author_nickname': None
                 },
                 {
                     "_id": str(self.example_ids[2]),
@@ -118,7 +119,8 @@ class GetSurveysTest(BasicTest):
                     "hidden": False,
                     "isAnonymous": True,
                     "authorEmail": None,
-                    "authorFullName": None
+                    "authorFullName": None,
+                    'author_nickname': None
                 },
                 {
                     "_id": str(self.example_ids[3]),
@@ -131,7 +133,8 @@ class GetSurveysTest(BasicTest):
                     "hidden": False,
                     "isAnonymous": True,
                     "authorEmail": None,
-                    "authorFullName": None
+                    "authorFullName": None,
+                    'author_nickname': None
                 },
             ]
         })
@@ -191,7 +194,8 @@ class GetSurveysTest(BasicTest):
                     "hidden": False,
                     "isAnonymous": False,
                     "authorEmail": USER4['email'],
-                    "authorFullName": USER4['full_name']
+                    "authorFullName": USER4['full_name'],
+                    'author_nickname': None
                 },
             ]
         })
@@ -250,6 +254,7 @@ class GetSurveysTest(BasicTest):
                     "_id": str(self.example_ids[2]),
                     "authorEmail": None,
                     "authorFullName": None,
+                    'author_nickname': None,
                     "content": "example-content-2",
                     "upvotes": None,
                     "downvotes": None,
@@ -325,7 +330,8 @@ class GetSurveysTest(BasicTest):
                     "hidden": False,
                     "isAnonymous": True,
                     "authorEmail": None,
-                    "authorFullName": None
+                    "authorFullName": None,
+                    'author_nickname': None
                 },
             ]
         }

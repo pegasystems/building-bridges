@@ -176,14 +176,19 @@ def set_question_state(question_id: str, is_hidden: bool) -> str:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
 
 
-def add_question(author: User, survey: Survey, content, is_anonymous) -> ObjectId:
+def add_question(author: User, author_nickname: str, survey: Survey, content, is_anonymous) -> ObjectId:
     """
     Add new question to db
     """
 
     # We generate our own ID, so we can return it to user without asking db
     # about it
-    question = Question(content=content, author=author, _id=ObjectId(), is_anonymous=is_anonymous)
+    question = Question(
+        content=content,
+        author=author,
+        author_nickname=author_nickname,
+        _id=ObjectId(),
+        is_anonymous=is_anonymous)
     surveys_collection.update_one(
         {
             '_id': survey._id

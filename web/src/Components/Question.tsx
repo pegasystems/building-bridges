@@ -119,7 +119,8 @@ export default class Question extends React.Component<QuestionProps, {}> {
             : <div/>;
         const questionReadMarker = question.read === 'true' ? 'read' : ''
         const userVote = question.voted !== 'none' ? question.voted : questionReadMarker
-        const questionFootnote = question.isAnonymous !== undefined && question.isAnonymous ? <div/> :
+        const questionFootnote = question.isAnonymous !== undefined && question.isAnonymous ? 
+        <div className="footnote">{question.authorNickname}</div> :
             <div className="footnote"><a href={"mailto:" + question.authorEmail}>{question.authorFullName}</a></div>
         return (<li className={'vote ' + (this.props.adminSecret ? "" : userVote) + (this.props.question.hidden ? 'hidden' : '')} id={question._id}>
             <div className="right">

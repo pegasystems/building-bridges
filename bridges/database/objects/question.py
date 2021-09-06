@@ -17,6 +17,7 @@ class Question(MongoObject):
     content: str
     author: User
     is_anonymous: Optional[bool]
+    author_nickname: str = None
     hidden: Optional[bool] = False
     votes: List[Vote] = field(default_factory=list)
     user_contexts: List[QuestionUserContext] = field(default_factory=list)
@@ -38,7 +39,8 @@ class Question(MongoObject):
                 "isAuthor": self.author == user,
                 "isAnonymous": self.is_anonymous if self.is_anonymous is not None else True,
                 "authorFullName": self.author.full_name if not self.is_anonymous else None,
-                "authorEmail": self.author.email if not self.is_anonymous else None
+                "authorEmail": self.author.email if not self.is_anonymous else None,
+                "author_nickname": self.author_nickname if self.is_anonymous else None
             }
         }
 
