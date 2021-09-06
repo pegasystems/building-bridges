@@ -79,7 +79,8 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                         <h4>Survey name</h4>
                         <div className="creation-flex">
                             <input className="survey-name" type="text" value={this.state.newSurveyName} 
-                                onChange={this.handleSurveyNameChange} placeholder="Title of My Bridges Survey"/>
+                                onChange={this.handleSurveyNameChange} placeholder="Title of My Bridges Survey"
+                                minLength={3}/>
                         </div>
                         <h4>Survey description</h4>
                         <div className="creation-flex">
@@ -98,7 +99,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                                 <span className="checkmark"></span>
                             </label>
                         </div>
-                        <input className="add-new-button" type="submit" value="Create survey"/>
+                        <input className="add-new-button" type="submit" value="Create survey" disabled={!this.state.newSurveyName}/>
                     </form>
                 </div>
             </div>

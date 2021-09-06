@@ -79,7 +79,7 @@ def remove_question(question_id: str, user: User) -> None:
     db.remove_question(question_id)
 
 
-def add_question(survey: Survey, question: str, user: User) -> ObjectId:
+def add_question(survey: Survey, question: str, author_nickname: str, user: User) -> ObjectId:
     """
     Add question to given survey
     """
@@ -100,7 +100,12 @@ def add_question(survey: Survey, question: str, user: User) -> ObjectId:
         else User(user.host, user.cookie, None, user.full_name, user.email)
 
     check_question_requirements(question)
-    question_id = db.add_question(user, survey, sanitize(question), survey.is_anonymous)
+    question_id = db.add_question(
+        user,
+        sanitize(author_nickname),
+        survey,
+        sanitize(question),
+        survey.is_anonymous)
     return question_id
 
 

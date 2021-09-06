@@ -162,7 +162,9 @@ exports[`Question renders properly test 1`] = `
     className="center"
   >
     <div />
-    <div />
+    <div
+      className="footnote"
+    />
   </div>
   <a
     className="permalink"

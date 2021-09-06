@@ -19,6 +19,7 @@ exports[`CreateSurvey renders properly test 1`] = `
       >
         <input
           className="survey-name"
+          minLength={3}
           onChange={[Function]}
           placeholder="Title of My Bridges Survey"
           type="text"
@@ -79,6 +80,7 @@ exports[`CreateSurvey renders properly test 1`] = `
       </div>
       <input
         className="add-new-button"
+        disabled={true}
         type="submit"
         value="Create survey"
       />

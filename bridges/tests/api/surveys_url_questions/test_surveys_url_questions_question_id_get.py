@@ -54,7 +54,8 @@ class GetQuestionTest(BasicTest):
             'hidden': False,
             'isAnonymous': True,
             'authorEmail': None,
-            'authorFullName': None
+            'authorFullName': None,
+            'author_nickname': None
         })
 
     def test_notFound(self):

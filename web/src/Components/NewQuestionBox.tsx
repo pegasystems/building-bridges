@@ -12,6 +12,7 @@ interface NewQuestionBoxProps {
 
 interface NewQuestionBoxState {
     newQuestionContent: string;
+    authorNickname: string;
     errorMessage: string;
     userFullName: string;
     userEmail: string;
@@ -22,7 +23,8 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
         newQuestionContent: "",
         errorMessage: "",
         userFullName: "",
-        userEmail: ""
+        userEmail: "",
+        authorNickname: ""
     }
 
     componentDidMount() {
@@ -46,7 +48,10 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({content: this.state.newQuestionContent})
+            body: JSON.stringify({
+                content: this.state.newQuestionContent,
+                author_nickname: this.state.authorNickname
+            })
         })
         .then(async response => {
             let data = await response.json();
@@ -61,6 +66,8 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
                 question.isAnonymous = this.props.isAnonymous;
                 question.authorFullName = this.state.userFullName;
                 question.authorEmail = this.state.userEmail;
+                question.authorNickname=this.state.authorNickname;
+                this.setState({newQuestionContent: ''});
                 this.setState({newQuestionContent: ''});
                 this.props.afterSubmit(question);
             }
@@ -68,23 +75,39 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
         e.preventDefault();
     };
 
-    handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleQuestionContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
             newQuestionContent: e.target.value,
             errorMessage: ''
         });
     };
 
+    handleQuestionAuthorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            authorNickname: e.target.value,
+            errorMessage: ''
+        });
+    };
+
     render(): JSX.Element {
-        const lackOfAnonymityDisclaimer = this.props.isAnonymous ? <div/> :
-            <h5>The survey is not anonymous - your question will be attributed
-                to {this.state.userFullName} ({this.state.userEmail}).</h5>
+        let lackOfAnonymityDisclaimer = <div/>
+        if (this.props.isAnonymous) {
+            lackOfAnonymityDisclaimer = <div><h5>Name (optional): <input 
+                type="text" 
+                id="questionAuthor" 
+                value={this.state.authorNickname} 
+                onChange={this.handleQuestionAuthorChange}
+                maxLength={40}/></h5></div>
+        } else {
+            lackOfAnonymityDisclaimer = <h5>The survey is not anonymous - your question will be attributed
+            to {this.state.userFullName} ({this.state.userEmail}).</h5>
+        }
         return (
             <div className="question-box">
                 <h4>Ask a question</h4>
                 <form onSubmit={this.handleSubmit}>
                     <textarea id="questionBox" name="question" value={this.state.newQuestionContent}
-                              onChange={this.handleQuestionChange}></textarea>
+                              onChange={this.handleQuestionContentChange}></textarea>
                     <label htmlFor="questionBox">{this.state.errorMessage}</label>
                     {lackOfAnonymityDisclaimer}
                     <input className="add-new-button" type="submit" value="Submit"/>
