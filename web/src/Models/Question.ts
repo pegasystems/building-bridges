@@ -1,3 +1,4 @@
+import { camelizeKeys } from 'humps';
 import { UserVote } from ".";
 
 export default class QuestionModel {
@@ -42,18 +43,11 @@ export default class QuestionModel {
     
     static createQuestionFromApiResult(questionDict: any): QuestionModel {
         let question = new QuestionModel();
-        question.content = questionDict.content;
-        question.downvotes = questionDict.downvotes;
-        question.upvotes = questionDict.upvotes;
-        question.isAuthor = questionDict.isAuthor;
-        question.isAnonymous = questionDict.isAnonymous;
-        question.authorFullName = questionDict.authorFullName;
-        question.authorEmail = questionDict.authorEmail;
-        question.authorNickname = questionDict.author_nickname;
-        question.voted = questionDict.voted;
-        question._id = questionDict._id;
-        question.read = questionDict.read;
-        question.hidden = questionDict.hidden;
+        for (const [key, value] of Object.entries(camelizeKeys(questionDict, function (key, convert) {
+            return key === '_id' ? key : convert(key);
+        }))) {
+            (question as any)[key] = value
+        }
 
         question.hideVotes = question.upvotes == null && question.read === 'false';
         return question;
