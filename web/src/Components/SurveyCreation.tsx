@@ -7,6 +7,8 @@ interface SurveyCreationState {
     hideVotes: boolean;
     isAnonymous: boolean;
     canAddName: boolean;
+    limitQuestionCharactersEnabled: boolean;
+    limitQuestionCharacters: number;
     surveys: Models.Survey[];
 }
 
@@ -22,6 +24,8 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         hideVotes: false,
         isAnonymous: true,
         canAddName: false,
+        limitQuestionCharactersEnabled: false,
+        limitQuestionCharacters: 200,
         surveys: [] as Models.Survey[]
     }
 
@@ -37,7 +41,9 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                     description: this.state.description,
                     hideVotes: this.state.hideVotes,
                     isAnonymous: this.state.isAnonymous,
-                    canAddName: this.state.canAddName
+                    canAddName: this.state.canAddName,
+                    limitQuestionCharactersEnabled: this.state.limitQuestionCharactersEnabled,
+                    limitQuestionCharacters: this.state.limitQuestionCharacters,
                 }
             )
         })
@@ -80,6 +86,18 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         });
     }
 
+    handlelimitQuestionCharactersEnabledCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            limitQuestionCharactersEnabled: e.target.checked,
+        });
+    }
+
+    handlelimitQuestionCharactersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            limitQuestionCharacters: Number.parseInt(e.target.value),
+        });
+    }
+
     render(): JSX.Element {
         return (
             <div className="newSurveys" >
@@ -117,6 +135,23 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                                         onChange={this.handleCanAddNameCheckBoxClick}/>
                                     <span className="checkmark"></span>
                                 </label>
+                            }
+                            <label htmlFor="limit_characters_enabled" className="container-checkbox">Limit number of characters in question
+                                <input type="checkbox" id="limit_characters_enabled" name="limit_characters_enabled" value={String(this.state.limitQuestionCharactersEnabled)} onChange={this.handlelimitQuestionCharactersEnabledCheckBoxClick}/>
+                                <span className="checkmark"></span>
+                            </label>
+                            {
+                                this.state.limitQuestionCharactersEnabled && <label htmlFor="limit_characters" className="container-number"><span>to </span>
+                                    <input 
+                                        type="number" 
+                                        id="limit_characters" 
+                                        name="limit_characters" 
+                                        value={String(this.state.limitQuestionCharacters)}
+                                        style={{
+                                            width:((this.state.limitQuestionCharacters.toString().length + 1) * 12) + 'px'
+                                        }}
+                                        onChange={this.handlelimitQuestionCharactersChange}/>
+                                    <span> characters</span></label>
                             }
                         </div>
                         <input className="add-new-button" type="submit" value="Create survey" disabled={!this.state.newSurveyName}/>

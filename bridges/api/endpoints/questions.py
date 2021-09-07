@@ -64,6 +64,9 @@ class QuestionCollection(Resource):
         """
         Add new question
         """
+        content = request.json["content"]
+        if survey.asking_questions_enabled and len(content) > survey.limit_question_characters:
+            return {}, HTTPStatus.BAD_REQUEST
 
         return {
             "_id": str(logic.add_question(

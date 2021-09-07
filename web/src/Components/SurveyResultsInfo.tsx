@@ -9,6 +9,8 @@ interface SurveyResultsInfoProps {
     adminSecret?: string;
     askingQuestionsEnabled: boolean;
     votingEnabled: boolean;
+    limitQuestionCharactersEnabled: boolean;
+    limitQuestionCharacters: number;
 }
 
 export default class SurveyResultsInfo extends React.Component<SurveyResultsInfoProps> {
@@ -40,9 +42,11 @@ export default class SurveyResultsInfo extends React.Component<SurveyResultsInfo
                 </table>
                 {this.props.adminSecret && 
                     <AdminOptionsBox askingQuestionsEnabled={this.props.askingQuestionsEnabled}
-                                     votingEnabled={this.props.votingEnabled}
-                                     surveyKey={this.props.surveyKey} 
-                                     adminSecret={this.props.adminSecret}/>
+                        votingEnabled={this.props.votingEnabled}
+                        limitQuestionCharactersEnabled={this.props.limitQuestionCharactersEnabled}
+                        limitQuestionCharacters={this.props.limitQuestionCharacters}
+                        surveyKey={this.props.surveyKey}
+                        adminSecret={this.props.adminSecret}/>
                 }
             </div>
         );

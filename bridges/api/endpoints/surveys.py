@@ -129,6 +129,14 @@ survey_model = {
         required=False,
         description='Is voting allowed',
         default=True),
+    'limit_question_characters_enabled': fields.Boolean(
+        required=False,
+        description='Limit number of characters in question',
+        default=False),
+    'limit_question_characters': fields.Integer(
+        required=False,
+        description='Maximum number of characters in question',
+        default=200),
     'key': fields.String(
         readOnly=True,
         required=True,
@@ -160,6 +168,8 @@ survey_basic_model = api.model(
         'title',
         'hideVotes',
         'isAnonymous',
+        'canAddName',
+        'question_author_name_field_visible',
         'description'
     }))
 
@@ -174,6 +184,8 @@ survey_settings_model = api.model(
     'Survey Settings', dict_subset(survey_model, {
         'asking_questions_enabled',
         'voting_enabled',
+        'limit_question_characters_enabled',
+        'limit_question_characters',
         'error'
     }))
 
@@ -185,6 +197,8 @@ survey_details_model = api.inherit(
             'question_author_name_field_visible',
             'asking_questions_enabled',
             'voting_enabled',
+            'limit_question_characters_enabled',
+            'limit_question_characters',
             'viewsNumber',
             'votersNumber',
             'questionersNumber'
@@ -236,6 +250,8 @@ class SurveyCollection(Resource):
             is_anonymous=request.json.get("isAnonymous"),
             description=request.json.get("description"),
             question_author_name_field_visible=request.json.get("canAddName"),
+            limit_question_characters_enabled=request.json.get("limitQuestionCharactersEnabled"),
+            limit_question_characters=request.json.get("limitQuestionCharacters"),
             author=request.user)
         return key_and_secrets, HTTPStatus.CREATED
 
@@ -291,7 +307,12 @@ class SurveyItem(Resource):
         Change survey settings.
         """
 
-        settings = ['asking_questions_enabled', 'voting_enabled']
+        settings = [
+            'asking_questions_enabled',
+            'voting_enabled',
+            'limit_question_characters_enabled',
+            'limit_question_characters'
+        ]
         settings_values = {s: request.json.get(s) for s in settings}
         settings_not_none = {key: value for (key, value) in settings_values.items() if value is not None}
         settings_changed = {key: value for (key, value) in settings_not_none.items() if value != survey.__getattribute__(key)}

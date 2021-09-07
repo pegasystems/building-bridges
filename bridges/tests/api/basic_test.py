@@ -15,7 +15,11 @@ USER = {'host': 'host1.example.com', 'cookie': 'cookie1', 'user_id': 'abcdefghij
 class BasicTest(unittest.TestCase):
 
     @staticmethod
-    def get_survey(asking_questions_enabled=True, voting_enabled=True):
+    def get_survey(
+            asking_questions_enabled=True,
+            voting_enabled=True,
+            limit_question_characters_enabled=False,
+            limit_question_characters=200):
         return {
             '_id': ObjectId('666f6f2d6261722d71757578'),
             'title': 'title',
@@ -25,15 +29,25 @@ class BasicTest(unittest.TestCase):
             'author': USER,
             'asking_questions_enabled': asking_questions_enabled,
             'voting_enabled': voting_enabled,
+            'limit_question_characters_enabled': limit_question_characters_enabled,
+            'limit_question_characters': limit_question_characters,
             'is_anonymous': True,
         }
 
-    def mock_get_info_about_survey(self, asking_questions_enabled=True, voting_enabled=True):
+    def mock_get_info_about_survey(self,
+                                   asking_questions_enabled=True,
+                                   voting_enabled=True,
+                                   limit_question_characters_enabled=False,
+                                   limit_question_characters=100):
         request = self.server.receives()
         request.ok(cursor={
             'id': 1,
             'firstBatch': [
-                self.get_survey(asking_questions_enabled, voting_enabled)
+                self.get_survey(
+                    asking_questions_enabled,
+                    voting_enabled,
+                    limit_question_characters_enabled,
+                    limit_question_characters)
             ]
         })
 

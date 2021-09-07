@@ -27,6 +27,8 @@ interface SurveyState {
     questionAuthorNameFieldVisible: boolean
     askingQuestionsEnabled: boolean;
     votingEnabled: boolean;
+    limitQuestionCharactersEnabled: boolean;
+    limitQuestionCharacters: number;
 }
 
 interface SurveyProps {
@@ -54,7 +56,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             date: '',
             questionAuthorNameFieldVisible: false,
             askingQuestionsEnabled: true,
-            votingEnabled: true
+            votingEnabled: true,
+            limitQuestionCharactersEnabled: false,
+            limitQuestionCharacters: 200
         };
         this.surveyKey = props?.match?.params?.surveyKey;
         this.results_secret = queryString.parse(props?.location?.search).results_secret?.toString();
@@ -87,9 +91,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                     return Models.Question.createQuestionFromApiResult(questionDict);
                 })
                 data = camelizeKeys(data, function (key, convert) {
-                    return key === 'asking_questions_enabled' || 
-                        key === 'voting_enabled' ||
-                        key === 'question_author_name_field_visible' ? convert(key) : key;
+                    return key !== '_id' ? convert(key) : key;
                 })
                 this.setState({...data, ...{fetchInProgress: false}});
                 if (window.location.hash) {
@@ -202,6 +204,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                               adminSecret={this.admin_secret}
                               askingQuestionsEnabled={this.state.askingQuestionsEnabled}
                               votingEnabled={this.state.votingEnabled}
+                              limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
+                              limitQuestionCharacters={this.state.limitQuestionCharacters}
                 />;
         } else {
             questionsLists =
@@ -218,6 +222,8 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         adminSecret=''
                         askingQuestionsEnabled={this.state.askingQuestionsEnabled}
                         votingEnabled={this.state.votingEnabled}
+                        limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
+                        limitQuestionCharacters={this.state.limitQuestionCharacters}
                     />
 
                     <QuestionList
@@ -232,7 +238,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                         adminSecret=''
                         askingQuestionsEnabled={this.state.askingQuestionsEnabled}
                         votingEnabled={this.state.votingEnabled}
-                    />
+                        limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
+                        limitQuestionCharacters={this.state.limitQuestionCharacters}
+                        />
                 </>;
         }
         return questionsLists;
@@ -272,13 +280,18 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                                             questionersNumber={this.state.questionersNumber}
                                             votersNumber={this.state.votersNumber} date={this.state.date} 
                                             askingQuestionsEnabled={this.state.askingQuestionsEnabled}
-                                            votingEnabled={this.state.votingEnabled}/>
+                                            votingEnabled={this.state.votingEnabled}
+                                            limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
+                                            limitQuestionCharacters={this.state.limitQuestionCharacters}/>
 
                     }
                     {this.showNewQuestionBox() &&
-                        <NewQuestionBox surveyKey={this.surveyKey} 
+                        <NewQuestionBox 
+                                surveyKey={this.surveyKey} 
                                 isAnonymous={this.state.isAnonymous}
                                 questionAuthorNameFieldVisible={this.state.questionAuthorNameFieldVisible}
+                                limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
+                                limitQuestionCharacters={this.state.limitQuestionCharacters}
                                 afterSubmit={this.addQuestionToState}/>
                     }
                 </div>

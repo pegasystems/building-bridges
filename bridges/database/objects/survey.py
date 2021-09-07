@@ -26,6 +26,8 @@ class Survey(MongoObject):
     question_author_name_field_visible: Optional[bool] = False
     asking_questions_enabled: Optional[bool] = True
     voting_enabled: Optional[bool] = True
+    limit_question_characters_enabled: Optional[bool] = False
+    limit_question_characters: Optional[int] = 200
     url: Optional[str] = None
     description: Optional[str] = None
     questions: List[Question] = field(default_factory=list)

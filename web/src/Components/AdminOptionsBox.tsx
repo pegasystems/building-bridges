@@ -6,12 +6,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 
 import { SURVEYS_API } from '../Consts';
+import { TextField } from '@material-ui/core';
 
 interface AdminOptionsProps {
     surveyKey: string;
     adminSecret: string;
     askingQuestionsEnabled: boolean;
     votingEnabled: boolean;
+    limitQuestionCharactersEnabled: boolean;
+    limitQuestionCharacters: number;
 }
 
 export default class AdminOptionsBox extends React.Component<AdminOptionsProps, any> {
@@ -20,7 +23,9 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
         super(props)
         this.state = {
             askingQuestionsEnabled: this.props.askingQuestionsEnabled,
-            votingEnabled: this.props.votingEnabled
+            votingEnabled: this.props.votingEnabled,
+            limitQuestionCharactersEnabled: this.props.limitQuestionCharactersEnabled,
+            limitQuestionCharacters: this.props.limitQuestionCharacters
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -29,18 +34,31 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
         if (prevProps !== this.props) {
             this.setState({
                 askingQuestionsEnabled: this.props.askingQuestionsEnabled,
-                votingEnabled: this.props.votingEnabled
+                votingEnabled: this.props.votingEnabled,
+                limitQuestionCharactersEnabled: this.props.limitQuestionCharactersEnabled,
+                limitQuestionCharacters: this.props.limitQuestionCharacters
             })
         }
     }
 
-    handleChange = async (e: FormEvent<HTMLInputElement>) => {
+    handleChange = async (e: FormEvent<HTMLElement>) => {
+        const setting: {[index: string]: any} = {}
         const target = e.target as HTMLInputElement;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        var value;
+        switch(target.type) {
+            case 'checkbox':
+                value = target.checked;
+                break;
+            case 'number':
+                value =  Number.parseFloat(target.value);
+                break;
+            default:
+                value = target.value;
+
+        }
         const name = target.name;
         this.setState({ [name]: value })
-        const setting: {[index: string]: any} = {}
-        setting[name] = target.checked
+        setting[name] = value
         fetch(`${SURVEYS_API}${this.props.surveyKey}?admin_secret=${this.props.adminSecret}`, {
             method: 'PUT',
             headers: {
@@ -54,24 +72,48 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
         return (<div className="admin-box">
                 <FormControl component="fieldset">
                     <FormGroup>
-                    <FormControlLabel
-                        control={
-                        <Checkbox
-                            checked={this.state.askingQuestionsEnabled}
-                            onChange={this.handleChange} 
-                            name="askingQuestionsEnabled"
-                            color="primary" />
+                        <FormControlLabel
+                            control={
+                            <Checkbox
+                                checked={this.state.askingQuestionsEnabled}
+                                onChange={this.handleChange} 
+                                name="askingQuestionsEnabled"
+                                color="primary" />
+                            }
+                            label="Asking Questions Enabled"/>
+                        <FormControlLabel
+                            control={
+                            <Checkbox
+                                checked={this.state.votingEnabled}
+                                onChange={this.handleChange} 
+                                name="votingEnabled"
+                                color="primary" />
+                            }
+                            label="Voting Enabled"/>
+                        <FormControlLabel
+                            control={
+                            <Checkbox
+                                checked={this.state.limitQuestionCharactersEnabled}
+                                onChange={this.handleChange} 
+                                name="limitQuestionCharactersEnabled"
+                                color="primary" />
+                            }
+                            label="Limit question to"/>
+                        {
+                            this.state.limitQuestionCharactersEnabled && <FormControlLabel
+                                control={
+                                <TextField
+                                    value={this.state.limitQuestionCharacters}
+                                    onChange={this.handleChange} 
+                                    type="number"
+                                    name="limitQuestionCharacters"
+                                    color="primary"
+                                    style={{
+                                        width:((this.state.limitQuestionCharacters.toString().length + 1) * 12) + 'px'
+                                    }} />
+                                }
+                                label="characters"/>
                         }
-                        label="Asking Questions Enabled"/>
-                    <FormControlLabel
-                        control={
-                        <Checkbox
-                            checked={this.state.votingEnabled}
-                            onChange={this.handleChange} 
-                            name="votingEnabled"
-                            color="primary" />
-                        }
-                        label="Voting Enabled"/>
                     </FormGroup>
                 </FormControl>
             </div>

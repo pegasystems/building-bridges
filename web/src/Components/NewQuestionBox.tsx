@@ -7,6 +7,8 @@ import {shuffle} from "../utils";
 interface NewQuestionBoxProps {
     surveyKey: string;
     questionAuthorNameFieldVisible: boolean,
+    limitQuestionCharactersEnabled: boolean,
+    limitQuestionCharacters: number,
     isAnonymous: boolean;
     afterSubmit(question: Models.Question): any
 }
@@ -22,6 +24,7 @@ interface NewQuestionBoxState {
 export default class NewQuestionBox extends React.Component<NewQuestionBoxProps, NewQuestionBoxState> {
     state = {
         newQuestionContent: "",
+        numberOfCharacters: 0,
         errorMessage: "",
         userFullName: "",
         userEmail: "",
@@ -77,9 +80,27 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
     };
 
     handleQuestionContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (this.props.limitQuestionCharactersEnabled && e.target.value.length > this.props.limitQuestionCharacters) {
+            this.setState({
+                errorMessage: 'limit of characters reached'
+            })
+            if (this.state.newQuestionContent.length == this.props.limitQuestionCharacters) {
+                return
+            }
+        } else {
+            this.setState({
+                errorMessage: ''
+            });
+        }
+
         this.setState({
             newQuestionContent: e.target.value,
-            errorMessage: ''
+        });
+    };
+
+    handleQuestionContentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        this.setState({
+            newQuestionContent: e.clipboardData.getData('Text'),
         });
     };
 
@@ -107,13 +128,29 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
         }
         return (
             <div className="question-box">
-                <h4>Ask a question</h4>
+                <h4>Ask a question</h4> 
+                {
+                    this.props.limitQuestionCharactersEnabled && 
+                        <span
+                            style={{
+                                color: this.state.newQuestionContent.length > this.props.limitQuestionCharacters ? 'red' : 'black'
+                            }}
+                        >{this.state.newQuestionContent.length} of {this.props.limitQuestionCharacters}</span>
+                }
                 <form onSubmit={this.handleSubmit}>
-                    <textarea id="questionBox" name="question" value={this.state.newQuestionContent}
-                              onChange={this.handleQuestionContentChange}></textarea>
+                    <textarea 
+                        id="questionBox" 
+                        name="question" 
+                        value={this.state.newQuestionContent}
+                        onChange={this.handleQuestionContentChange}
+                        onPaste={this.handleQuestionContentPaste}/>
                     <label htmlFor="questionBox">{this.state.errorMessage}</label>
                     {lackOfAnonymityDisclaimer}
-                    <input className="add-new-button" type="submit" value="Submit"/>
+                    <input className="add-new-button" 
+                        type="submit" 
+                        value="Submit"
+                        disabled={this.props.limitQuestionCharactersEnabled && 
+                            this.state.newQuestionContent.length > this.props.limitQuestionCharacters}/>
                 </form>
             </div>
         );
