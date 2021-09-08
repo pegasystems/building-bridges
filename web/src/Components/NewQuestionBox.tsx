@@ -6,6 +6,7 @@ import {shuffle} from "../utils";
 
 interface NewQuestionBoxProps {
     surveyKey: string;
+    questionAuthorNameFieldVisible: boolean,
     isAnonymous: boolean;
     afterSubmit(question: Models.Question): any
 }
@@ -92,12 +93,14 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
     render(): JSX.Element {
         let lackOfAnonymityDisclaimer = <div/>
         if (this.props.isAnonymous) {
-            lackOfAnonymityDisclaimer = <div><h5>Name (optional): <input 
-                type="text" 
-                id="questionAuthor" 
-                value={this.state.authorNickname} 
-                onChange={this.handleQuestionAuthorChange}
-                maxLength={40}/></h5></div>
+            if (this.props.questionAuthorNameFieldVisible) {
+                lackOfAnonymityDisclaimer = <div><h5>Name (optional): <input 
+                    type="text" 
+                    id="questionAuthor" 
+                    value={this.state.authorNickname} 
+                    onChange={this.handleQuestionAuthorChange}
+                    maxLength={40}/></h5></div>
+            }
         } else {
             lackOfAnonymityDisclaimer = <h5>The survey is not anonymous - your question will be attributed
             to {this.state.userFullName} ({this.state.userEmail}).</h5>

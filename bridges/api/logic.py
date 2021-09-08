@@ -110,15 +110,28 @@ def add_question(survey: Survey, question: str, author_nickname: str, user: User
 
 
 @anonymize_user
-def create_survey(title: str, hide_votes: bool, is_anonymous: bool, description: str, author: User) -> Dict[str, str]:
+def create_survey(
+        title: str,
+        hide_votes: bool,
+        is_anonymous: bool,
+        description: str,
+        question_author_name_field_visible: bool,
+        author: User) -> Dict[str, str]:
     """
     Create new survey
     """
     results_secret = secrets.token_hex(8)
     admin_secret = secrets.token_hex(8)
     return {
-        'key': db.create_survey(sanitize(title), hide_votes, is_anonymous, results_secret,
-                                admin_secret, sanitize(description), author),
+        'key': db.create_survey(
+            sanitize(title),
+            hide_votes,
+            is_anonymous,
+            question_author_name_field_visible,
+            results_secret,
+            admin_secret,
+            sanitize(description),
+            author),
         'results_secret': results_secret,
         'admin_secret': admin_secret
     }

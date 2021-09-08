@@ -6,6 +6,7 @@ interface SurveyCreationState {
     description: string;
     hideVotes: boolean;
     isAnonymous: boolean;
+    canAddName: boolean;
     surveys: Models.Survey[];
 }
 
@@ -20,6 +21,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         description: '',
         hideVotes: false,
         isAnonymous: true,
+        canAddName: false,
         surveys: [] as Models.Survey[]
     }
 
@@ -35,6 +37,7 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                     description: this.state.description,
                     hideVotes: this.state.hideVotes,
                     isAnonymous: this.state.isAnonymous,
+                    canAddName: this.state.canAddName
                 }
             )
         })
@@ -71,6 +74,12 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
         });
     }
 
+    handleCanAddNameCheckBoxClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            canAddName: e.target.checked,
+        });
+    }
+
     render(): JSX.Element {
         return (
             <div className="newSurveys" >
@@ -98,6 +107,17 @@ export default class SurveyCreation extends React.Component<SurveyCreationProps,
                                 <input type="checkbox" id="show_names" name="show_names" value={String(!this.state.isAnonymous)} onChange={this.handleIsAnonymousCheckBoxClick}/>
                                 <span className="checkmark"></span>
                             </label>
+                            {
+                                this.state.isAnonymous && <label htmlFor="add_name" className="container-checkbox">Enable adding author name to question
+                                    <input 
+                                        type="checkbox" 
+                                        id="add_name" 
+                                        name="add_name" 
+                                        value={String(this.state.canAddName)} 
+                                        onChange={this.handleCanAddNameCheckBoxClick}/>
+                                    <span className="checkmark"></span>
+                                </label>
+                            }
                         </div>
                         <input className="add-new-button" type="submit" value="Create survey" disabled={!this.state.newSurveyName}/>
                     </form>

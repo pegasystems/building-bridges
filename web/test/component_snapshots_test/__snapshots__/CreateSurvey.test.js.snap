@@ -77,6 +77,22 @@ exports[`CreateSurvey renders properly test 1`] = `
             className="checkmark"
           />
         </label>
+        <label
+          className="container-checkbox"
+          htmlFor="add_name"
+        >
+          Enable adding author name to question
+          <input
+            id="add_name"
+            name="add_name"
+            onChange={[Function]}
+            type="checkbox"
+            value="false"
+          />
+          <span
+            className="checkmark"
+          />
+        </label>
       </div>
       <input
         className="add-new-button"

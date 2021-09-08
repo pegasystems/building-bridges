@@ -71,7 +71,7 @@ def add_vote(user: User, question_id: str, vote_type: str) -> None:
     )
 
 
-def create_survey(title: str, hide_votes: bool, is_anonymous: bool,
+def create_survey(title: str, hide_votes: bool, is_anonymous: bool, question_author_name_field_visible: bool,
                   results_secret: str, admin_secret: str,
                   description: str, author: User) -> str:
     """
@@ -86,6 +86,7 @@ def create_survey(title: str, hide_votes: bool, is_anonymous: bool,
         description=description,
         hide_votes=hide_votes,
         is_anonymous=is_anonymous,
+        question_author_name_field_visible=question_author_name_field_visible,
         results_secret=results_secret,
         author=author,
         url=encoded_uri_title,
