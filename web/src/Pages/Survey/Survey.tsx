@@ -24,6 +24,7 @@ interface SurveyState {
     questionersNumber: number;
     votersNumber: number;
     date: string;
+    questionAuthorNameFieldVisible: boolean
     askingQuestionsEnabled: boolean;
     votingEnabled: boolean;
 }
@@ -51,6 +52,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             questionersNumber: 0,
             votersNumber: 0,
             date: '',
+            questionAuthorNameFieldVisible: false,
             askingQuestionsEnabled: true,
             votingEnabled: true
         };
@@ -85,7 +87,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                     return Models.Question.createQuestionFromApiResult(questionDict);
                 })
                 data = camelizeKeys(data, function (key, convert) {
-                    return key === 'asking_questions_enabled' || key === 'voting_enabled' ? convert(key) : key;
+                    return key === 'asking_questions_enabled' || 
+                        key === 'voting_enabled' ||
+                        key === 'question_author_name_field_visible' ? convert(key) : key;
                 })
                 this.setState({...data, ...{fetchInProgress: false}});
                 if (window.location.hash) {
@@ -272,8 +276,10 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
 
                     }
                     {this.showNewQuestionBox() &&
-                        <NewQuestionBox surveyKey={this.surveyKey} isAnonymous={this.state.isAnonymous}
-                                        afterSubmit={this.addQuestionToState}/>
+                        <NewQuestionBox surveyKey={this.surveyKey} 
+                                isAnonymous={this.state.isAnonymous}
+                                questionAuthorNameFieldVisible={this.state.questionAuthorNameFieldVisible}
+                                afterSubmit={this.addQuestionToState}/>
                     }
                 </div>
                 <div className="responses">

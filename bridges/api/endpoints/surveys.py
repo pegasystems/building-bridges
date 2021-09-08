@@ -117,6 +117,10 @@ survey_model = {
     'isAnonymous': fields.Boolean(
         required=False,
         description='Are askers in the survey anonymous'),
+    'question_author_name_field_visible': fields.Boolean(
+        required=False,
+        description='Author can add his name',
+        default=False),
     'asking_questions_enabled': fields.Boolean(
         required=False,
         description='Is posting question allowed',
@@ -178,6 +182,7 @@ survey_details_model = api.inherit(
         survey_model, {
             'key',
             'date',
+            'question_author_name_field_visible',
             'asking_questions_enabled',
             'voting_enabled',
             'viewsNumber',
@@ -230,6 +235,7 @@ class SurveyCollection(Resource):
             hide_votes=request.json.get("hideVotes") or False,
             is_anonymous=request.json.get("isAnonymous"),
             description=request.json.get("description"),
+            question_author_name_field_visible=request.json.get("canAddName"),
             author=request.user)
         return key_and_secrets, HTTPStatus.CREATED
 
@@ -241,7 +247,7 @@ class MySurveyCollection(Resource):
     """
 
     @api.marshal_with(survey_details_with_secrets_model)
-    def get(self) -> Tuple[Dict, HTTPStatus]:
+    def get(self) -> Tuple[List[Dict], HTTPStatus]:
         """
         Returns user surveys with details and secret.
         """

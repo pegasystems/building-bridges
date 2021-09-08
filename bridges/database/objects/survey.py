@@ -23,6 +23,7 @@ class Survey(MongoObject):
     _id: ObjectId = None
     hide_votes: Optional[bool] = False
     is_anonymous: Optional[bool] = True
+    question_author_name_field_visible: Optional[bool] = False
     asking_questions_enabled: Optional[bool] = True
     voting_enabled: Optional[bool] = True
     url: Optional[str] = None
