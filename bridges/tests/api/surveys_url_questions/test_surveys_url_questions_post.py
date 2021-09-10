@@ -49,3 +49,13 @@ class PostQuestionTest(BasicTest):
         request.ok({'nModified': 0})
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_overpass_character_limit(self):
+        future = self.make_future_post_request(f'{QUESTIONS_ENDPOINT}',
+                                               dict(content='123456'))
+        # get data about survey
+        self.mock_get_info_about_survey(
+            limit_question_characters_enabled=True,
+            limit_question_characters=5)
+        http_response = future()
+        self.assertEqual(http_response.status_code, HTTPStatus.BAD_REQUEST)

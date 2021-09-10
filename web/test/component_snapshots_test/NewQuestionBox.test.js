@@ -39,7 +39,7 @@ test('NewQuestionBox shows disclaimer about lack of anonymity when isAnonymous s
 test('NewQuestionBox does not show disclaimer about lack of anonymity when isAnonymous set to true', () => {
     const wrapper = mount(
         <NewQuestionBox surveyKey='survey-1' isAnonymous={true}/>
-);
+    );
     return flushPromises().then(() => {
         wrapper.update();
         expect(wrapper.contains(<h5>The survey is not anonymous -
@@ -47,4 +47,50 @@ test('NewQuestionBox does not show disclaimer about lack of anonymity when isAno
     });
 });
 
+test('NewQuestionBox show counter when limit question characters set', () => {
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' limitQuestionCharactersEnabled={true} limitQuestionCharacters={10}/>
+    );
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(wrapper.html().includes('<span style="color: black;">0 of 10</span>')).toEqual(true);
+    });
+});
+
+test('NewQuestionBox counter limit changes when content change', () => {
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' limitQuestionCharactersEnabled={true} limitQuestionCharacters={10}/>
+    );
+    wrapper.find('textarea').simulate('change', {target: { value: 'aa' }});
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(wrapper.html().includes('<span style="color: black;">2 of 10</span>')).toEqual(true);
+    });
+});
+
+test('NewQuestionBox counter limit changes when content change', () => {
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' limitQuestionCharactersEnabled={true} limitQuestionCharacters={5}/>
+    );
+    wrapper.find('textarea').simulate('change', {target: { value: '12345' }});
+    wrapper.find('textarea').simulate('change', {target: { value: '123456' }});
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(wrapper.html().includes('<span style="color: black;">5 of 5</span>')).toEqual(true);
+        expect(wrapper.html().includes('limit of characters reached')).toEqual(true);
+    });
+});
+
+test('NewQuestionBox should be able to paste overlimit content but not submit', () => {
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' limitQuestionCharactersEnabled={true} limitQuestionCharacters={5}/>
+    );
+    wrapper.find('textarea').simulate('paste', { clipboardData: { getData:  function() {
+        return '123456';
+    }}});
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(wrapper.html().includes('<span style="color: red;">6 of 5</span>')).toEqual(true);
+    });
+});
 

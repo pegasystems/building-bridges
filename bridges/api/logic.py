@@ -116,6 +116,8 @@ def create_survey(
         is_anonymous: bool,
         description: str,
         question_author_name_field_visible: bool,
+        limit_question_characters_enabled: bool,
+        limit_question_characters: int,
         author: User) -> Dict[str, str]:
     """
     Create new survey
@@ -128,6 +130,8 @@ def create_survey(
             hide_votes,
             is_anonymous,
             question_author_name_field_visible,
+            limit_question_characters_enabled,
+            limit_question_characters,
             results_secret,
             admin_secret,
             sanitize(description),

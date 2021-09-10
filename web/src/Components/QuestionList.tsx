@@ -15,6 +15,8 @@ interface QuestionListProps {
     adminSecret: string | undefined;
     askingQuestionsEnabled: boolean;
     votingEnabled: boolean;
+    limitQuestionCharactersEnabled: boolean;
+    limitQuestionCharacters: number;
 }
 
 export default class QuestionList extends React.Component<QuestionListProps, {}> {

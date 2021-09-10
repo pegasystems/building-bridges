@@ -38,6 +38,7 @@ exports[`SurveyComponent renders properly test 1`] = `
           id="questionBox"
           name="question"
           onChange={[Function]}
+          onPaste={[Function]}
           value=""
         />
         <label
@@ -48,6 +49,7 @@ exports[`SurveyComponent renders properly test 1`] = `
         <div />
         <input
           className="add-new-button"
+          disabled={false}
           type="submit"
           value="Submit"
         />

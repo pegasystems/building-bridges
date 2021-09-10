@@ -93,6 +93,22 @@ exports[`CreateSurvey renders properly test 1`] = `
             className="checkmark"
           />
         </label>
+        <label
+          className="container-checkbox"
+          htmlFor="limit_characters_enabled"
+        >
+          Limit number of characters in question
+          <input
+            id="limit_characters_enabled"
+            name="limit_characters_enabled"
+            onChange={[Function]}
+            type="checkbox"
+            value="false"
+          />
+          <span
+            className="checkmark"
+          />
+        </label>
       </div>
       <input
         className="add-new-button"
