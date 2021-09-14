@@ -77,7 +77,7 @@ test('NewQuestionBox counter limit changes when content change', () => {
     return flushPromises().then(() => {
         wrapper.update();
         expect(wrapper.html().includes('<span style="color: black;">5 of 5</span>')).toEqual(true);
-        expect(wrapper.html().includes('limit of characters reached')).toEqual(true);
+        expect(wrapper.html().includes("You've met this survey's character limit.")).toEqual(true);
     });
 });
 
