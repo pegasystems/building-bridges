@@ -82,7 +82,7 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
     handleQuestionContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (this.props.limitQuestionCharactersEnabled && e.target.value.length > this.props.limitQuestionCharacters) {
             this.setState({
-                errorMessage: 'limit of characters reached'
+                errorMessage: "You've met this survey's character limit."
             })
             if (this.state.newQuestionContent.length == this.props.limitQuestionCharacters) {
                 return
