@@ -85,12 +85,10 @@ test('NewQuestionBox should be able to paste overlimit content but not submit', 
     const wrapper = mount(
         <NewQuestionBox surveyKey='survey-1' limitQuestionCharactersEnabled={true} limitQuestionCharacters={5}/>
     );
-    wrapper.find('textarea').simulate('paste', { clipboardData: { getData:  function() {
-        return '123456';
-    }}});
+    wrapper.find('textarea').simulate('change', {target: { value: '1234567' }});
     return flushPromises().then(() => {
         wrapper.update();
-        expect(wrapper.html().includes('<span style="color: red;">6 of 5</span>')).toEqual(true);
+        expect(wrapper.html().includes('<span style="color: red;">7 of 5</span>')).toEqual(true);
     });
 });
 
