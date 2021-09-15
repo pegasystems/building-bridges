@@ -38,7 +38,6 @@ exports[`SurveyComponent renders properly test 1`] = `
           id="questionBox"
           name="question"
           onChange={[Function]}
-          onPaste={[Function]}
           value=""
         />
         <label

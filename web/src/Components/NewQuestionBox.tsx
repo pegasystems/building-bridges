@@ -98,12 +98,6 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
         });
     };
 
-    handleQuestionContentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-        this.setState({
-            newQuestionContent: e.clipboardData.getData('Text'),
-        });
-    };
-
     handleQuestionAuthorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             authorNickname: e.target.value,
@@ -142,8 +136,7 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
                         id="questionBox" 
                         name="question" 
                         value={this.state.newQuestionContent}
-                        onChange={this.handleQuestionContentChange}
-                        onPaste={this.handleQuestionContentPaste}/>
+                        onChange={this.handleQuestionContentChange}/>
                     <label htmlFor="questionBox">{this.state.errorMessage}</label>
                     {lackOfAnonymityDisclaimer}
                     <input className="add-new-button" 
