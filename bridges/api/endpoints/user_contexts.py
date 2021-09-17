@@ -23,9 +23,8 @@ class UserContextCollection(Resource):
     in one question.
     """
 
-    @survey_api.get
     @survey_api.voting_enabled
-    def put(self, survey: Survey, question_id: str) -> Tuple[Dict, int]:
+    def put(self, question_id: str) -> Tuple[Dict, int]:
         """
         Add new read state
         """

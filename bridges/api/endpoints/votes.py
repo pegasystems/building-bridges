@@ -24,9 +24,9 @@ class VotesCollection(Resource):
     """
 
     @api.expect(put_question_parser, validate=True)
-    @survey_api.get
+
     @survey_api.voting_enabled
-    def put(self, survey: Survey, question_id: str) -> Tuple[Dict, int]:
+    def put(self, question_id: str) -> Tuple[Dict, int]:
         """
         Add new vote
         """
@@ -36,9 +36,8 @@ class VotesCollection(Resource):
             is_upvote=put_question_parser.parse_args(request)['type'] == 'up')
         return None, HTTPStatus.CREATED
 
-    @survey_api.get
     @survey_api.voting_enabled
-    def delete(self, survey: Survey, question_id: str) -> Tuple[Dict, int]:
+    def delete(self, question_id: str) -> Tuple[Dict, int]:
         """
         Delete vote
         """

@@ -150,6 +150,18 @@ def get_survey(url: str) -> Survey:
                      data=survey_db_result) if survey_db_result else None
 
 
+def get_survey_voting_enabled(url: str) -> bool:
+    """
+    Gets a single survey from database
+    with proper url.
+    """
+
+    clear_url = '/' if url[0] == '/' else url
+    url_and_number = get_url_and_number(clear_url)
+    survey_db_result = surveys_collection.find(url_and_number, {'voting_enabled'}).next()
+    return survey_db_result['voting_enabled']
+
+
 def update_survey(survey: Survey, settings: dict) -> Survey:
     """
     Update survey settings).
