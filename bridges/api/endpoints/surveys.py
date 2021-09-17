@@ -83,12 +83,13 @@ class SurveyApi(object):
         """
         Validate if voting on questions is open before executing operations on the survey.
         """
-        def wrapper_voting_enabled(*args, survey: Survey, **kwargs):
-            if not survey.voting_enabled:
+        def wrapper_voting_enabled(*args, **kwargs):
+            survey_url = kwargs['survey_url']
+            if not db.get_survey_voting_enabled(survey_url):
                 return {
                            'error': 'Voting not allowed for this survey'
                        }, HTTPStatus.METHOD_NOT_ALLOWED
-            return func(*args, survey=survey, **kwargs)
+            return func(*args, **{i: kwargs[i] for i in kwargs if i != 'survey_url'})
 
         return wrapper_voting_enabled
 
