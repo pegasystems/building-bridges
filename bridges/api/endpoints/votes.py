@@ -24,7 +24,6 @@ class VotesCollection(Resource):
     """
 
     @api.expect(put_question_parser, validate=True)
-
     @survey_api.voting_enabled
     def put(self, question_id: str) -> Tuple[Dict, int]:
         """

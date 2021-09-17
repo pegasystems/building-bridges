@@ -152,8 +152,7 @@ def get_survey(url: str) -> Survey:
 
 def get_survey_voting_enabled(url: str) -> bool:
     """
-    Gets a single survey from database
-    with proper url.
+    Gets a voting_enabled flag for given survey
     """
 
     clear_url = '/' if url[0] == '/' else url
