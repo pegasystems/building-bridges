@@ -17,12 +17,13 @@ class Question(MongoObject):
     content: str
     author: User
     is_anonymous: Optional[bool]
+    reply: Optional[str] = ""
     author_nickname: str = None
     hidden: Optional[bool] = False
     votes: List[Vote] = field(default_factory=list)
     user_contexts: List[QuestionUserContext] = field(default_factory=list)
     _id: ObjectId = None
-    date: datetime = field(default_factory=datetime.now)
+    date: datetime = field(default_factory=datetime.now) 
 
     def get_api_result(self, user: User, hide_votes=False):
         upvotes = sum(1 if vote.upvote else 0 for vote in self.votes)

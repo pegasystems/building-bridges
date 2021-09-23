@@ -2,12 +2,17 @@ import React from 'react';
 import * as Models from '../Models'
 import {SURVEYS_API, QUESTIONS_ENDPOINT} from '../Consts'
 import Eye from './Eye';
-
+import ReplyButton from './response/ReplyButton';
+import Reply from './response/Reply';
 
 export enum UserVote {
     Up = "up",
     Down = "down",
     None = "none",
+}
+
+interface QuestionState {
+    replyEditMode: boolean
 }
 
 
@@ -22,7 +27,12 @@ export interface QuestionProps {
     updateQuestionInState(question: Models.Question): any;
 }
 
-export default class Question extends React.Component<QuestionProps, {}> {
+export default class Question extends React.Component<QuestionProps, QuestionState> {
+
+    constructor(props: QuestionProps) {
+        super(props);
+        this.state = {replyEditMode: false};
+      }
 
     deleteQuestion = (e: React.FormEvent<HTMLFormElement>) => {
         fetch(`${SURVEYS_API}${this.props.surveyKey}${QUESTIONS_ENDPOINT}/${this.props.question._id}`, {
@@ -105,7 +115,11 @@ export default class Question extends React.Component<QuestionProps, {}> {
         this.props.question.hidden = !this.props.question.hidden;
         this.props.updateQuestionInState(this.props.question);
     };
-    
+
+    switchDisplayReplyField = () => {
+        this.setState({ replyEditMode: !this.state.replyEditMode })
+    };
+
     render(): JSX.Element {
         const question = this.props.question;
         const deleteButton = question.isAuthor && !this.props.adminSecret && question.upvotes === 0 && question.downvotes === 0 ?
@@ -117,12 +131,20 @@ export default class Question extends React.Component<QuestionProps, {}> {
         const hideButton = this.props.adminSecret ?
             <Eye slashed={this.props.question.hidden} hideOrShowCallback={this.markAsHidden}></Eye>
             : <div/>;
+        const replyButton = this.props.adminSecret ?
+            <ReplyButton replyButtonClickCallback={this.switchDisplayReplyField}></ReplyButton>
+            : <div/>;
+        const reply = <Reply
+            question={this}
+            questionModel={this.props.question}
+            editMode={this.state.replyEditMode}/>
         const questionReadMarker = question.read === 'true' ? 'read' : ''
         const userVote = question.voted !== 'none' ? question.voted : questionReadMarker
         const questionFootnote = question.isAnonymous !== undefined && question.isAnonymous ? 
         <div className="footnote">{question.authorNickname}</div> :
             <div className="footnote"><a href={"mailto:" + question.authorEmail}>{question.authorFullName}</a></div>
-        return (<li className={'vote ' + (this.props.adminSecret ? "" : userVote) + (this.props.question.hidden ? 'hidden' : '')} id={question._id}>
+        return (<div>
+            <li className={'vote ' + (this.props.adminSecret ? "" : userVote) + (this.props.question.hidden ? 'hidden' : '')} id={question._id}>
             <div className="right">
                 <div className="thumbs">
                     <div className="item">
@@ -153,6 +175,9 @@ export default class Question extends React.Component<QuestionProps, {}> {
             <a href={`#${question._id}`} title="Direct link to this post" className="permalink">#</a>
             {deleteButton}
             {hideButton}
-        </li>);
+            {replyButton}
+        </li>
+        {reply}
+        </div>);
     }
 }

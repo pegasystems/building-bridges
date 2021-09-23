@@ -97,6 +97,7 @@ Having this project here wouldn't have been possible without Meeples team at Peg
 * Piotr Kucia
 * Agnieszka Pulnar
 * Wojciech Buczek
+* Piotr Januszek
 
 ## License
 >You can check out the full license [here](LICENSE)

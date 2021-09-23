@@ -26,6 +26,7 @@ class GetQuestionTest(BasicTest):
             "questions": [
                 {
                     "content": "example-content",
+                    "reply": "reply",
                     'author': {"host": "localhost", "cookie": "cookie"},
                     "date": self.sample_timestamp(),
                     "votes": [{
@@ -47,6 +48,7 @@ class GetQuestionTest(BasicTest):
             'content': 'example-content',
             'isAuthor': True,
             'voted': 'up',
+            "reply": "reply",
             'downvotes': 0,
             'upvotes': 1,
             'votes': [{'upvote': True, 'date': self.sample_timestamp_string()}],

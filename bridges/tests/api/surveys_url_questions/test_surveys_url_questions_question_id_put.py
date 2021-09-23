@@ -1,12 +1,7 @@
-import json
 from http import HTTPStatus
 
-from mockupdb import MockupDB, go, Command, OpReply
-from json import dumps
-import datetime
 from bridges.tests.api.basic_test import BasicTest
 from bridges.tests.api.basic_test import BasicTest, ADMIN_SECRET
-import bridges.api.logic
 
 QUESTION_ENDPOINT = 'surveys/test-1/questions/'
 

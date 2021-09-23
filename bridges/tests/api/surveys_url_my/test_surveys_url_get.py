@@ -45,6 +45,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "content": "example-content-1",
                     'author': {"host": "localhost", "cookie": "cookie"},
+                    "reply": 'sample reply',
                     "date": self.sample_timestamp(),
                     "votes": [],
                     "_id": self.example_ids[1],
@@ -102,6 +103,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "_id": str(self.example_ids[1]),
                     "content": "example-content-1",
+                    "reply": 'sample reply',
                     "upvotes": 0,
                     "downvotes": 0,
                     "isAuthor": True,
@@ -116,6 +118,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "_id": str(self.example_ids[2]),
                     "content": "example-content-2",
+                    "reply": '',
                     "upvotes": 1,
                     "downvotes": 0,
                     "isAuthor": True,
@@ -130,6 +133,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "_id": str(self.example_ids[3]),
                     "content": "example-content-3",
+                    "reply": '',
                     "upvotes": 0,
                     "downvotes": 1,
                     "isAuthor": True,
@@ -165,6 +169,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "content": "example-content-1",
                     'author': USER4,
+                    'reply': 'reply',
                     'is_anonymous': False,
                     "date": self.sample_timestamp(),
                     "votes": [],
@@ -196,6 +201,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "_id": str(self.example_ids[1]),
                     "content": "example-content-1",
+                    'reply': 'reply',
                     "upvotes": 0,
                     "downvotes": 0,
                     "isAuthor": False,
@@ -271,6 +277,7 @@ class GetSurveysTest(BasicTest):
                     "_id": str(self.example_ids[2]),
                     "authorEmail": None,
                     "authorFullName": None,
+                    "reply": "",
                     'author_nickname': None,
                     "content": "example-content-2",
                     "upvotes": None,
@@ -304,6 +311,7 @@ class GetSurveysTest(BasicTest):
                 {
                     "content": "example-content-2",
                     'author': {"host": "NOT-LOCALHOST", "cookie": "BAD_COOKIE"},
+                    "reply": "answer",
                     "date": self.sample_timestamp(),
                     "votes": [
                         {'author': USER1,
@@ -344,6 +352,7 @@ class GetSurveysTest(BasicTest):
                     "content": "example-content-2",
                     "upvotes": 1,
                     "downvotes": 2,
+                    "reply": "answer",
                     "isAuthor": False,
                     "voted": "none",
                     "read": "false",

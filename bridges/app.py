@@ -7,6 +7,7 @@ from flask import Flask, Blueprint, render_template, request, session, g
 from bridges.api.endpoints.surveys import ns as surveys_namespace
 from bridges.api.endpoints.questions import ns as questions_namespace
 from bridges.api.endpoints.votes import ns as votes_namespace
+from bridges.api.endpoints.replies import ns as replies_namespace
 from bridges.api.endpoints.user_contexts import ns as question_user_contexts_namespace
 from bridges.api.endpoints.info import ns as info_namespace
 from bridges.database.mongo import init as mongo_init
@@ -34,7 +35,8 @@ NAMESPACES = [surveys_namespace,
               questions_namespace,
               votes_namespace,
               question_user_contexts_namespace,
-              info_namespace]
+              info_namespace,
+              replies_namespace]
 
 app = Flask(__name__)
 

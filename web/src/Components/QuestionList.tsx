@@ -53,15 +53,18 @@ export default class QuestionList extends React.Component<QuestionListProps, {}>
                     }
 
                     return (
-                        <Question surveyKey={this.props.surveyKey}
-                                  question={question}
-                                  addVoteCallback={addVoteCallback}
-                                  deleteQuestionCallback={deleteQuestion}
-                                  deleteVoteCallback={deleteVoteCallback}
-                                  markAsReadCallback={markAsReadCallback}
-                                  adminSecret={this.props.adminSecret}
-                                  updateQuestionInState={updateQuestionInState}
-                                  key={question._id}/>
+                        <div>
+                            <Question surveyKey={this.props.surveyKey}
+                                    question={question}
+                                    addVoteCallback={addVoteCallback}
+                                    deleteQuestionCallback={deleteQuestion}
+                                    deleteVoteCallback={deleteVoteCallback}
+                                    markAsReadCallback={markAsReadCallback}
+                                    adminSecret={this.props.adminSecret}
+                                    updateQuestionInState={updateQuestionInState}
+                                    key={question._id}/>
+
+                        </div>
                     );
                 });
             return (

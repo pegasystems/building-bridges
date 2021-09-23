@@ -85,6 +85,7 @@ class GetSurveysTest(BasicTest):
                     {
                         'content': 'Q2?',
                         'author': USER1,
+                        'reply': 'sample reply',
                         'votes': [
                              {
                                  'author': USER2,

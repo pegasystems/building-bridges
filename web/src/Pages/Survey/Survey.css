@@ -1,3 +1,7 @@
+.qa-box {
+	display: flex;
+	flex-direction: column;
+}
 .center {
     flex: 1;
     order: 0;
@@ -7,6 +11,7 @@
 	font-style: italic;
 	font-size: 13px;
 	color: #949494;
+	margin-top: 2%;
 }
 
 .right {
@@ -19,7 +24,7 @@
 
 .thumbs {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	justify-content: space-between;
 }
 
