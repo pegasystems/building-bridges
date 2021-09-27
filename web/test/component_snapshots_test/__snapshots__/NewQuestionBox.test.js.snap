@@ -24,6 +24,7 @@ exports[`NewQuestionBox renders properly test 1`] = `
     <div />
     <input
       className="add-new-button"
+      disabled={false}
       type="submit"
       value="Submit"
     />

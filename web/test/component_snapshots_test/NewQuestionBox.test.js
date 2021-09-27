@@ -3,6 +3,7 @@ import renderer from "react-test-renderer";
 import NewQuestionBox from "../../src/Components/NewQuestionBox";
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
+import { Question } from "../../src/Models";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -13,7 +14,8 @@ global.fetch = jest.fn(() =>
         json: () => Promise.resolve({
             userFullName: "John Doe",
             userEmail: "john.doe@company.com"
-        })
+        }),
+        ok: true
     })
 );
 
@@ -92,3 +94,33 @@ test('NewQuestionBox should be able to paste overlimit content but not submit', 
     });
 });
 
+test("Can't submit exisitng question", () => {
+    const question = new Question()
+    question.content = 'aaa'
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' questions={[question]}/>
+    );
+    wrapper.find('textarea').simulate('change', {target: { value: 'aaa' }});
+    wrapper.find("input").simulate("submit");
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(wrapper.html().includes("Exactly the same question has been asked")).toEqual(true);
+    });
+});
+
+global.flushPromises = () => new Promise(resolve => setImmediate(resolve));
+
+test("Submit question", () => {
+    let createdQuestion
+    const wrapper = mount(
+        <NewQuestionBox surveyKey='survey-1' questions={[]} afterSubmit={(question) => {
+            createdQuestion = question
+        }}/>
+    );
+    wrapper.find('textarea').simulate('change', {target: { value: 'aaa' }});
+    wrapper.find("input").simulate("submit");
+    return flushPromises().then(() => {
+        wrapper.update();
+        expect(createdQuestion.content).toEqual('aaa');
+    });
+});
