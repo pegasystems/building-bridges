@@ -53,9 +53,7 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
     }
 
    handleSubmit = async (e: FormEvent<HTMLElement>) => {
-        if (this.props.questions.map(function (question: Models.Question) { 
-            return question.content 
-        }).includes(this.state.newQuestionContent)) {
+        if (this.props.questions.map(q => q.content).includes(this.state.newQuestionContent)) {
             this.setState({
                 errorMessage: 'Exactly the same question has been asked.',
             })
@@ -77,14 +75,7 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
                     this.setState({errorMessage: data['message']})
                 }
                 else {
-                    const question = new Models.Question();
-                    question._id = data._id;
-                    question.content = this.state.newQuestionContent;
-                    question.isAuthor = true;
-                    question.isAnonymous = this.props.isAnonymous;
-                    question.authorFullName = this.state.userFullName;
-                    question.authorEmail = this.state.userEmail;
-                    question.authorNickname=this.state.authorNickname;
+                    const question = this.createQuestion(data._id);
                     this.setState({newQuestionContent: ''});
                     this.setState({submitInProgress: false});
                     this.props.afterSubmit(question);
@@ -94,6 +85,18 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
 
         e.preventDefault();
     };
+
+    createQuestion(id: string) {
+        const question = new Models.Question();
+        question._id = id;
+        question.content = this.state.newQuestionContent;
+        question.isAuthor = true;
+        question.isAnonymous = this.props.isAnonymous;
+        question.authorFullName = this.state.userFullName;
+        question.authorEmail = this.state.userEmail;
+        question.authorNickname=this.state.authorNickname;
+        return question
+    }
 
     handleQuestionContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (this.props.limitQuestionCharactersEnabled && e.target.value.length > this.props.limitQuestionCharacters) {
