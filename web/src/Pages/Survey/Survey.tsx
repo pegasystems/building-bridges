@@ -292,6 +292,7 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
                                 questionAuthorNameFieldVisible={this.state.questionAuthorNameFieldVisible}
                                 limitQuestionCharactersEnabled={this.state.limitQuestionCharactersEnabled}
                                 limitQuestionCharacters={this.state.limitQuestionCharacters}
+                                questions={this.state.questions}
                                 afterSubmit={this.addQuestionToState}/>
                     }
                 </div>

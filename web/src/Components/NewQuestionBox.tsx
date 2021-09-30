@@ -1,6 +1,7 @@
 import React, { FormEvent } from 'react';
 import * as Models from '../Models'
 import * as Consts from '../Consts'
+import Loader from 'react-loader-spinner';
 import {SURVEYS_API} from "../Consts";
 import {shuffle} from "../utils";
 
@@ -9,6 +10,7 @@ interface NewQuestionBoxProps {
     questionAuthorNameFieldVisible: boolean,
     limitQuestionCharactersEnabled: boolean,
     limitQuestionCharacters: number,
+    questions: Models.Question[],
     isAnonymous: boolean;
     afterSubmit(question: Models.Question): any
 }
@@ -19,6 +21,8 @@ interface NewQuestionBoxState {
     errorMessage: string;
     userFullName: string;
     userEmail: string;
+    submitInProgress: boolean;
+    isTooLongQuestion: boolean;
 }
 
 export default class NewQuestionBox extends React.Component<NewQuestionBoxProps, NewQuestionBoxState> {
@@ -28,7 +32,9 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
         errorMessage: "",
         userFullName: "",
         userEmail: "",
-        authorNickname: ""
+        authorNickname: "",
+        submitInProgress: false,
+        isTooLongQuestion: false
     }
 
     componentDidMount() {
@@ -47,54 +53,69 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
     }
 
    handleSubmit = async (e: FormEvent<HTMLElement>) => {
-        fetch(`${Consts.SURVEYS_API}${this.props.surveyKey}${Consts.QUESTIONS_ENDPOINT}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                content: this.state.newQuestionContent,
-                author_nickname: this.state.authorNickname
+        if (this.props.questions.map(q => q.content).includes(this.state.newQuestionContent)) {
+            this.setState({
+                errorMessage: 'Exactly the same question has been asked.',
             })
-        })
-        .then(async response => {
-            let data = await response.json();
-            if (!response.ok) {
-                this.setState({errorMessage: data['message']})
-            }
-            else {
-                const question = new Models.Question();
-                question._id = data._id;
-                question.content = this.state.newQuestionContent;
-                question.isAuthor = true;
-                question.isAnonymous = this.props.isAnonymous;
-                question.authorFullName = this.state.userFullName;
-                question.authorEmail = this.state.userEmail;
-                question.authorNickname=this.state.authorNickname;
-                this.setState({newQuestionContent: ''});
-                this.setState({newQuestionContent: ''});
-                this.props.afterSubmit(question);
-            }
-            });
+        } else {
+            this.setState({submitInProgress: true});
+            fetch(`${Consts.SURVEYS_API}${this.props.surveyKey}${Consts.QUESTIONS_ENDPOINT}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: this.state.newQuestionContent,
+                    author_nickname: this.state.authorNickname
+                })
+            })
+            .then(async response => {
+                let data = await response.json();
+                if (!response.ok) {
+                    this.setState({errorMessage: data['message']})
+                }
+                else {
+                    const question = this.createQuestion(data._id);
+                    this.setState({newQuestionContent: ''});
+                    this.setState({submitInProgress: false});
+                    this.props.afterSubmit(question);
+                }
+                });
+        }
+
         e.preventDefault();
     };
+
+    createQuestion(id: string) {
+        const question = new Models.Question();
+        question._id = id;
+        question.content = this.state.newQuestionContent;
+        question.isAuthor = true;
+        question.isAnonymous = this.props.isAnonymous;
+        question.authorFullName = this.state.userFullName;
+        question.authorEmail = this.state.userEmail;
+        question.authorNickname=this.state.authorNickname;
+        return question
+    }
 
     handleQuestionContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (this.props.limitQuestionCharactersEnabled && e.target.value.length > this.props.limitQuestionCharacters) {
             this.setState({
-                errorMessage: "You've met this survey's character limit."
+                isTooLongQuestion: true,
+                errorMessage: "You've met this survey's character limit.",
             })
             if (this.state.newQuestionContent.length == this.props.limitQuestionCharacters) {
                 return
             }
         } else {
             this.setState({
+                isTooLongQuestion: false,
                 errorMessage: ''
             });
         }
 
         this.setState({
-            newQuestionContent: e.target.value,
+            newQuestionContent: e.target.value
         });
     };
 
@@ -131,20 +152,22 @@ export default class NewQuestionBox extends React.Component<NewQuestionBoxProps,
                             }}
                         >{this.state.newQuestionContent.length} of {this.props.limitQuestionCharacters}</span>
                 }
-                <form onSubmit={this.handleSubmit}>
-                    <textarea 
-                        id="questionBox" 
-                        name="question" 
-                        value={this.state.newQuestionContent}
-                        onChange={this.handleQuestionContentChange}/>
-                    <label htmlFor="questionBox">{this.state.errorMessage}</label>
-                    {lackOfAnonymityDisclaimer}
-                    <input className="add-new-button" 
-                        type="submit" 
-                        value="Submit"
-                        disabled={this.props.limitQuestionCharactersEnabled && 
-                            this.state.newQuestionContent.length > this.props.limitQuestionCharacters}/>
-                </form>
+                { this.state.submitInProgress ? 
+                    <Loader type="TailSpin" color="#000000" height={80} width={80}/> :
+                    <form onSubmit={this.handleSubmit}>
+                        <textarea 
+                            id="questionBox" 
+                            name="question" 
+                            value={this.state.newQuestionContent}
+                            onChange={this.handleQuestionContentChange}/>
+                        <label htmlFor="questionBox">{this.state.errorMessage}</label>
+                        {lackOfAnonymityDisclaimer}
+                        <input className="add-new-button" 
+                            type="submit" 
+                            value="Submit"
+                            disabled={this.state.isTooLongQuestion}/>
+                    </form>
+                }
             </div>
         );
     }
