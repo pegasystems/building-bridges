@@ -12,5 +12,4 @@ COPY logging.conf ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
-
-CMD [ "python3", "-m", "bridges" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:80", "--threads", "16", "--access-logfile", "-", "bridges.wsgi:app" ]

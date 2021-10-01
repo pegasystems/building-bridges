@@ -268,7 +268,6 @@ class MySurveyCollection(Resource):
         """
         Returns user surveys with details and secret.
         """
-
         return logic.get_user_surveys(user=request.user), HTTPStatus.OK
 
 
