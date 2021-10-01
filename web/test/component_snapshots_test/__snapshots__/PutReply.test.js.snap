@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Reply button renders properly test 1`] = `
+<div>
+  <li
+    className="vote "
+    id="id"
+  >
+    <div
+      className="right"
+    >
+      <div
+        className="thumbs"
+      >
+        <div
+          className="item"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-up"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="item"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-down"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="mark-as-read item "
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-read"
+              title="Mark as read"
+              type="submit"
+              value=""
+            />
+          </form>
+        </div>
+      </div>
+    </div>
+    <div
+      className="center"
+    >
+      <div />
+      <div
+        className="footnote"
+      />
+    </div>
+    <a
+      className="permalink"
+      href="#id"
+      title="Direct link to this post"
+    >
+      #
+    </a>
+    <div />
+    <i
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-eye fa-w-18 hide-eye"
+        data-icon="eye"
+        data-prefix="fas"
+        focusable="false"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 576 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </i>
+    <i
+      onClick={[Function]}
+    >
+      <svg
+        aria-hidden="true"
+        className="svg-inline--fa fa-reply fa-w-16 reply-button"
+        data-icon="reply"
+        data-prefix="fas"
+        focusable="false"
+        role="img"
+        style={Object {}}
+        viewBox="0 0 512 512"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8.309 189.836L184.313 37.851C199.719 24.546 224 35.347 224 56.015v80.053c160.629 1.839 288 34.032 288 186.258 0 61.441-39.581 122.309-83.333 154.132-13.653 9.931-33.111-2.533-28.077-18.631 45.344-145.012-21.507-183.51-176.59-185.742V360c0 20.7-24.3 31.453-39.687 18.164l-176.004-152c-11.071-9.562-11.086-26.753 0-36.328z"
+          fill="currentColor"
+          style={Object {}}
+        />
+      </svg>
+    </i>
+  </li>
+  <div
+    className="response"
+  >
+    <div>
+      sample reply
+    </div>
+    <div
+      className="footnote"
+    >
+      Answered by survey admin
+    </div>
+  </div>
+</div>
+`;

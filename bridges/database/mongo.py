@@ -12,6 +12,7 @@ from dacite.exceptions import (
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from bson.objectid import ObjectId
+from werkzeug.wrappers import Response
 from bridges.errors import NotFoundError
 from bridges.utils import get_url_from_title, get_url, get_url_and_number
 from bridges.database.objects.vote import Vote
@@ -41,6 +42,7 @@ def init() -> None:
     """
 
     global surveys_collection
+    global replies_collection
     logging.info("Connecting to database %s", args.database_uri)
 
     client = MongoClient(host=args.database_uri,
@@ -56,6 +58,7 @@ def init() -> None:
 
     db = client[args.database_name]
     surveys_collection = db.surveys
+    replies_collection = db.replies
     logging.info("Connected to database %s", args.database_uri)
 
 
@@ -190,6 +193,19 @@ def set_question_state(question_id: str, is_hidden: bool) -> str:
     result = surveys_collection.update_one(
         {MONGO_QUESTIONS_ID: ObjectId(question_id)},
         {MONGO_SET: {'questions.$.hidden': is_hidden}})
+
+    if result.raw_result['nModified'] == 0:
+        raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
+
+
+def set_question_reply(question_id: str, content: str) -> str:
+    """
+    Set question response
+    """
+    result = surveys_collection.update_one(
+        {MONGO_QUESTIONS_ID: ObjectId(question_id)},
+        {MONGO_SET: {'questions.$.reply': content}}
+    )
 
     if result.raw_result['nModified'] == 0:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)

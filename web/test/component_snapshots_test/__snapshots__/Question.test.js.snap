@@ -1,179 +1,288 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Not anonymous question renders properly test 1`] = `
-<li
-  className="vote undefined"
-  id="id"
->
-  <div
-    className="right"
+<div>
+  <li
+    className="vote undefined"
+    id="id"
   >
     <div
-      className="thumbs"
+      className="right"
     >
       <div
-        className="item"
+        className="thumbs"
       >
-        <form
-          onSubmit={[Function]}
+        <div
+          className="item"
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-up"
-            type="submit"
-          />
-        </form>
-      </div>
-      <div
-        className="item"
-      >
-        <form
-          onSubmit={[Function]}
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-up"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="item"
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-down"
-            type="submit"
-          />
-        </form>
-      </div>
-      <div
-        className="mark-as-read item "
-      >
-        <form
-          onSubmit={[Function]}
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-down"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="mark-as-read item "
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-read"
-            title="Mark as read"
-            type="submit"
-            value=""
-          />
-        </form>
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-read"
+              title="Mark as read"
+              type="submit"
+              value=""
+            />
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    className="center"
-  >
+    <div
+      className="center"
+    >
+      <div />
+      <div
+        className="footnote"
+      >
+        <a
+          href="mailto:john.doe@company.com"
+        >
+          John Doe
+        </a>
+      </div>
+    </div>
+    <a
+      className="permalink"
+      href="#id"
+      title="Direct link to this post"
+    >
+      #
+    </a>
     <div />
-    <div
-      className="footnote"
-    >
-      <a
-        href="mailto:john.doe@company.com"
-      >
-        John Doe
-      </a>
-    </div>
-  </div>
-  <a
-    className="permalink"
-    href="#id"
-    title="Direct link to this post"
-  >
-    #
-  </a>
+    <div />
+    <div />
+  </li>
   <div />
-  <div />
-</li>
+</div>
 `;
 
 exports[`Question renders properly test 1`] = `
-<li
-  className="vote undefined"
-  id="id"
->
-  <div
-    className="right"
+<div>
+  <li
+    className="vote undefined"
+    id="id"
   >
     <div
-      className="thumbs"
+      className="right"
     >
       <div
-        className="item"
+        className="thumbs"
       >
-        <form
-          onSubmit={[Function]}
+        <div
+          className="item"
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-up"
-            type="submit"
-          />
-        </form>
-      </div>
-      <div
-        className="item"
-      >
-        <form
-          onSubmit={[Function]}
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-up"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="item"
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-down"
-            type="submit"
-          />
-        </form>
-      </div>
-      <div
-        className="mark-as-read item "
-      >
-        <form
-          onSubmit={[Function]}
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-down"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="mark-as-read item "
         >
-          <input
-            name="id"
-            type="hidden"
-            value="id"
-          />
-          <input
-            className="submit-read"
-            title="Mark as read"
-            type="submit"
-            value=""
-          />
-        </form>
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-read"
+              title="Mark as read"
+              type="submit"
+              value=""
+            />
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    className="center"
-  >
+    <div
+      className="center"
+    >
+      <div />
+      <div
+        className="footnote"
+      />
+    </div>
+    <a
+      className="permalink"
+      href="#id"
+      title="Direct link to this post"
+    >
+      #
+    </a>
     <div />
+    <div />
+    <div />
+  </li>
+  <div />
+</div>
+`;
+
+exports[`Question with reply renders properly test 1`] = `
+<div>
+  <li
+    className="vote undefined"
+    id="id"
+  >
+    <div
+      className="right"
+    >
+      <div
+        className="thumbs"
+      >
+        <div
+          className="item"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-up"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="item"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-down"
+              type="submit"
+            />
+          </form>
+        </div>
+        <div
+          className="mark-as-read item "
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <input
+              name="id"
+              type="hidden"
+              value="id"
+            />
+            <input
+              className="submit-read"
+              title="Mark as read"
+              type="submit"
+              value=""
+            />
+          </form>
+        </div>
+      </div>
+    </div>
+    <div
+      className="center"
+    >
+      <div />
+      <div
+        className="footnote"
+      />
+    </div>
+    <a
+      className="permalink"
+      href="#id"
+      title="Direct link to this post"
+    >
+      #
+    </a>
+    <div />
+    <div />
+    <div />
+  </li>
+  <div
+    className="response"
+  >
+    <div>
+      sample reply
+    </div>
     <div
       className="footnote"
-    />
+    >
+      Answered by survey admin
+    </div>
   </div>
-  <a
-    className="permalink"
-    href="#id"
-    title="Direct link to this post"
-  >
-    #
-  </a>
-  <div />
-  <div />
-</li>
+</div>
 `;

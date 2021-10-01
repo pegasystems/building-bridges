@@ -4,6 +4,7 @@ import { UserVote } from ".";
 export default class QuestionModel {
     _id!: string;
     content!: string;
+    reply!: string;
     isAuthor!: boolean;
     hideVotes!: boolean;
     isAnonymous!: boolean;

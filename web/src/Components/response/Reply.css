@@ -1,0 +1,26 @@
+.response {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    border-radius: 6px;
+    list-style: none outside none;
+    top: -10px;
+    left: 20px;
+    position: relative;
+    text-shadow: 1px 1px 0 white;
+    min-height: 28px;
+    box-shadow: 0 0 5px #ccc;
+    white-space: pre-wrap;
+}
+
+.response textarea{  
+    text-decoration: none;  
+    font-weight: 400;  
+    color: #000;  
+    font-family: "Open Sans Condensed",Arial,Helvetica,sans-serif;  
+    padding: 5px;  
+    padding-top: 0;  
+    margin: 10px auto;  
+    width: 75%;  
+    font-size: 18px;  
+}

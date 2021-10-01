@@ -47,7 +47,6 @@ def add_vote(question_id: str, user: User, is_upvote: bool) -> None:
         pass
     db.add_vote(user, question_id, is_upvote)
 
-
 @anonymize_user
 def delete_vote(question_id: str, user: User) -> None:
     """
@@ -55,6 +54,13 @@ def delete_vote(question_id: str, user: User) -> None:
     """
 
     db.remove_user_vote(user, question_id)
+
+
+def set_reply(question_id: str, content: str) -> None:
+    """
+    Set question's answer
+    """
+    db.set_question_reply(question_id, content)
 
 
 def get_question(question_id: str, user: User) -> Question:

@@ -8,6 +8,8 @@ question_model_dict = {
     'content': fields.String(
         required=True,
         description='Content of the question'),
+    'reply': fields.String(
+        description='Reply to a question'),
     'upvotes': fields.Integer(
         description='Number of upvotes in the question'),
     'downvotes': fields.Integer(

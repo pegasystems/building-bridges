@@ -18,6 +18,20 @@ test('Question renders properly test', () => {
   expect(tree).toMatchSnapshot();
 });
 
+test('Question with reply renders properly test', () => {
+  const component = renderer.create(
+    <Question 
+      question={ {
+        "_id": "id", "isAnonymous": true, "reply": "sample reply"
+      }}
+      handleVote={(_) => {return () => { /* This is intentional */ };}}
+      deleteQuestion={() => { /* This is intentional */ }}
+    />
+  );
+  let tree = component.toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
 test('Not anonymous question renders properly test', () => {
     const component = renderer.create(
         <Question

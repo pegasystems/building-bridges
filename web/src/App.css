@@ -497,9 +497,17 @@ input.remove[type=submit] {
     display: none;
 }
 
+.reply-button {
+    border-radius: 5px;
+    right: -275px;
+    font-size: 20px;
+    position: relative;
+    top: -0.5em;
+}
+
 .hide-eye {
     border-radius: 5px;
-    right: -256px;
+    right: -265px;
     font-size: 20px;
     position: relative;
     top: -0.5em;
