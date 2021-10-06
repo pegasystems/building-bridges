@@ -207,7 +207,7 @@ def set_question_reply(question_id: str, content: str) -> str:
         {MONGO_SET: {'questions.$.reply': content}}
     )
 
-    if result.raw_result['nModified'] == 0:
+    if result.raw_result['nModified'] == 0 and result.raw_result['n'] == 0:
         raise NotFoundError(SURVEY_NOT_FOUND_ERROR_MESSAGE)
 
 

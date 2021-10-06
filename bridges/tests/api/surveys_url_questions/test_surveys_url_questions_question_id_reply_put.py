@@ -33,3 +33,21 @@ class ReplyToQuestionTest(BasicTest):
         request.ok(cursor={'id': 0, 'firstBatch': []})
         http_response = future()
         self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_reply_unchanged(self):
+        future = self.make_future_put_request(f'{QUESTION_ENDPOINT}{str(self.example_ids[1])}/reply?admin_secret={ADMIN_SECRET}',
+                                              {'content': SAMPLE_REPLY})
+        self.mock_get_info_about_survey()
+        request = self.server.receives()
+        request.ok({'nModified': 0, 'n': 1})
+        http_response = future()
+        self.assertEqual(http_response.status_code, HTTPStatus.CREATED)
+
+    def test_reply_question_not_exists(self):
+        future = self.make_future_put_request(f'{QUESTION_ENDPOINT}{str(self.example_ids[1])}/reply?admin_secret={ADMIN_SECRET}',
+                                              {'content': SAMPLE_REPLY})
+        self.mock_get_info_about_survey()
+        request = self.server.receives()
+        request.ok({'nModified': 0, 'n': 0})
+        http_response = future()
+        self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)

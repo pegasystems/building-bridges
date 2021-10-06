@@ -98,7 +98,7 @@ export default class AdminOptionsBox extends React.Component<AdminOptionsProps, 
                                 name="limitQuestionCharactersEnabled"
                                 color="primary" />
                             }
-                            label="Limit question to"/>
+                            label="Limit question length"/>
                         {
                             this.state.limitQuestionCharactersEnabled && <FormControlLabel
                                 control={
