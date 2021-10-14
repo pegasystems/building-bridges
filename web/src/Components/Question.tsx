@@ -122,7 +122,7 @@ export default class Question extends React.Component<QuestionProps, QuestionSta
 
     render(): JSX.Element {
         const question = this.props.question;
-        const deleteButton = question.isAuthor && !this.props.adminSecret && question.upvotes === 0 && question.downvotes === 0 ?
+        const deleteButton = false && question.isAuthor && !this.props.adminSecret && question.upvotes === 0 && question.downvotes === 0 ?
             <form onSubmit={this.deleteQuestion}>
             <input type="hidden" name="id" value={question._id}/>
             <input type="submit" value="x" title="Remove this question" className="remove"/>
