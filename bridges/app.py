@@ -1,8 +1,7 @@
 
 import logging.config
 
-import re
-import os, socket
+import socket
 from flask import Flask, Blueprint, render_template, request, session, g
 from bridges.api.endpoints.surveys import ns as surveys_namespace
 from bridges.api.endpoints.questions import ns as questions_namespace
@@ -48,11 +47,7 @@ app.config['SECRET_KEY'] = args.session_secret_key
 # make it work with k8s service
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-logging_conf_path = os.path.normpath(
-    os.path.join(
-        os.path.dirname(__file__),
-        '../logging.conf'))
-logging.config.fileConfig(logging_conf_path)
+
 log = logging.getLogger(__name__)
 
 
@@ -170,13 +165,21 @@ def set_cookie(response):
     return response
 
 
-def main():
+def main(production=False):
     """
     Opening function for the program.
     """
 
     initialize_app(app)
-    print("*********************")
-    log.info(
-        '>>>>> Starting server at http://0.0.0.0:%d/api/ <<<<<' % args.port)
-    app.run(debug=args.debug, port=args.port, host="0.0.0.0")
+    
+    if not production:
+        print("*********************")
+        log.info(
+            '>>>>> Starting server at http://0.0.0.0:%d/api/ <<<<<' % args.port)
+        app.run(debug=args.debug, port=args.port, host="0.0.0.0")
+
+
+if __name__ != '__main__':
+    gunicorn_error_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers.extend(gunicorn_error_logger.handlers)
+    app.logger.setLevel(logging.DEBUG)
