@@ -12,4 +12,4 @@ COPY logging.conf ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
-CMD [ "gunicorn", "--bind", "0.0.0.0:8888", "--workers", "8", "--access-logfile", "-", "bridges.wsgi:app" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:80", "--workers", "8", "--access-logfile", "-", "bridges.wsgi:app" ]
