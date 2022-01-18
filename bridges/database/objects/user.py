@@ -24,7 +24,10 @@ class User(MongoObject):
         if self.user_id and other.user_id:
             return self.user_id == other.user_id
 
-        return self.host == other.host or self.cookie == other.cookie
+        if self.cookie and other.cookie:
+            return self.cookie == other.cookie
+
+        return False
 
     def get_mongo_equal_query(self, prefix=''):
         prefix = prefix + '.' if prefix != '' else prefix

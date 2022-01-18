@@ -59,7 +59,7 @@ class BasicTest(unittest.TestCase):
         # We generate 100 example ids for our tests
         cls.example_ids = [ObjectId() for _ in range(0, 100)]
 
-    def make_future_get_request(self, url: str, data = None):
+    def make_future_get_request(self, url: str, data=None):
         url = API_NAMESPACE + url
         if data:
             return go(self.client.get, url, data=data, content_type=APP_JSON_CONTENT_TYPE)

@@ -12,6 +12,7 @@ QUESTIONS_ENDPOINT = 'surveys/url-1/questions/'
 class GetQuestionTest(BasicTest):
 
     def test_standard(self):
+        self.client.set_cookie('surveys/url-1', 'CLIENT_ID', 'cookie')
         future = self.make_future_get_request(f'{QUESTIONS_ENDPOINT}{str(self.example_ids[1])}')
         # get one question
         request = self.server.receives()

@@ -21,7 +21,7 @@ class TestUser(unittest.TestCase):
     def test_equal_basedOnHost(self):
         first = User('host', 'cookie1', None, None, None)
         second = User('host', 'cookie2', None, None, None)
-        self.assertEqual(first, second)
+        self.assertNotEqual(first, second)
 
     def test_notEqualBasedOnHostAndCookie(self):
         first = User('host1', 'cookie1', None, None, None)

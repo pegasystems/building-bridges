@@ -64,6 +64,7 @@ class DeleteQuestionTest(BasicTest):
         self.assertEqual(http_response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_notAuthorized(self):
+        self.client.set_cookie('surveys/url-1', 'CLIENT_ID', 'not-my-cookie')
         future = self.make_future_delete_request(f'{QUESTION_ENDPOINT}{str(self.example_ids[1])}')
         # get data about survey
         self.mock_get_info_about_survey()
@@ -91,6 +92,7 @@ class DeleteQuestionTest(BasicTest):
         self.assertEqual(http_response.status_code, HTTPStatus.UNAUTHORIZED)
 
     def test_Forbidden(self):
+        self.client.set_cookie('surveys/url-1', 'CLIENT_ID', 'cookie')
         future = self.make_future_delete_request(f'{QUESTION_ENDPOINT}{str(self.example_ids[1])}')
         # get data about survey
         self.mock_get_info_about_survey()

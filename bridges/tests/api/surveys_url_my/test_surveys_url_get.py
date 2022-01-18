@@ -23,6 +23,7 @@ class GetSurveysTest(BasicTest):
         request.ok({"nModified": 1})
 
     def test_standard(self):
+        self.client.set_cookie('surveys/url-1', 'CLIENT_ID', 'cookie')
         future = self.make_future_get_request('surveys/url-1')
         # get one survey
         request = self.server.receives()
