@@ -146,7 +146,7 @@ def get_user():
         return hashlib.sha256(str.encode(user_id)).hexdigest() if user_id else None
 
     user_data = get_user_name_and_email_from_session()
-    user = User(get_host_from_request(), get_cookie_from_request(), get_hashed_id_from_session(),
+    user = User(get_cookie_from_request(), get_hashed_id_from_session(),
                 user_data['userFullName'], user_data['userEmail'])
     request.user = user
 

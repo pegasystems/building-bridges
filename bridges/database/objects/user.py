@@ -8,7 +8,6 @@ class User(MongoObject):
     """
     Template of user
     """
-    host: str
     cookie: Optional[str]
     user_id: Optional[str]
     full_name: Optional[str]
@@ -36,10 +35,7 @@ class User(MongoObject):
                 {
                     "$and": [
                         {f'{prefix}user_id': None},
-                        {"$or": [
-                            {f'{prefix}host': self.host},
-                            {f'{prefix}cookie': self.cookie}
-                        ]}
+                        {f'{prefix}cookie': self.cookie}
                     ],
                 },
                 {f'{prefix}user_id': self.user_id if self.user_id else ''}
@@ -48,4 +44,4 @@ class User(MongoObject):
 
     def get_user_without_sensitive_data(self, clear_user_id=False):
         user_id = None if clear_user_id else self.user_id
-        return User(self.host, self.cookie, user_id, None, None)
+        return User(self.cookie, user_id, None, None)
