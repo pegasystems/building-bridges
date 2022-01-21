@@ -8,7 +8,6 @@ class User(MongoObject):
     """
     Template of user
     """
-    host: str
     cookie: Optional[str]
     user_id: Optional[str]
     full_name: Optional[str]
@@ -24,7 +23,10 @@ class User(MongoObject):
         if self.user_id and other.user_id:
             return self.user_id == other.user_id
 
-        return self.host == other.host or self.cookie == other.cookie
+        if self.cookie and other.cookie:
+            return self.cookie == other.cookie
+
+        return False
 
     def get_mongo_equal_query(self, prefix=''):
         prefix = prefix + '.' if prefix != '' else prefix
@@ -33,10 +35,7 @@ class User(MongoObject):
                 {
                     "$and": [
                         {f'{prefix}user_id': None},
-                        {"$or": [
-                            {f'{prefix}host': self.host},
-                            {f'{prefix}cookie': self.cookie}
-                        ]}
+                        {f'{prefix}cookie': self.cookie}
                     ],
                 },
                 {f'{prefix}user_id': self.user_id if self.user_id else ''}
@@ -45,4 +44,4 @@ class User(MongoObject):
 
     def get_user_without_sensitive_data(self, clear_user_id=False):
         user_id = None if clear_user_id else self.user_id
-        return User(self.host, self.cookie, user_id, None, None)
+        return User(self.cookie, user_id, None, None)
