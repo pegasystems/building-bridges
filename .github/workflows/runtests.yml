@@ -6,6 +6,9 @@ on:
       - master
   pull_request:
       types: [opened, synchronize, reopened]
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  APP_NAME: ${{ 'buildingbridges-last' }}
 
 jobs:
   CIValidation:
@@ -58,3 +61,17 @@ jobs:
           -Dsonar.coverage.exclusions=web/test/component_snapshots_test/**/*,bridges/tests/**/*,**/wsgi.py,bridges/__main__.py
           -Dsonar.python.coverage.reportPaths=.sonar/coverage.xml
           -Dsonar.javascript.lcov.reportPaths=web/coverage/lcov.info
+
+    - name: Docker build
+      run: docker login --username=kamil.kotara@pm.me --password=$HEROKU_API_KEY registry.heroku.com
+    - name: Deploy
+      working-directory: ./docker
+      run: |
+        heroku container:push web -a $APP_NAME --context-path ../
+        heroku container:release web -a $APP_NAME
+#    - name: Deploy
+#      uses: akhileshns/heroku-deploy@v3.12.12
+#        with:
+#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+#          heroku_app_name: buildingbridges-last
+#          heroku_email: "YOUR EMAIL"
