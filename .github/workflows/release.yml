@@ -2,6 +2,9 @@ name: Build and Publish Docker Image
 on:
   release:
     types: [published]
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  APP_NAME: ${{ 'buildingbridges' }}
 jobs:
   build_and_push:
     name: Push Docker image to GitHub Packages
@@ -24,3 +27,10 @@ jobs:
           file: docker/Dockerfile
           push: true
           tags: ghcr.io/pegasystems/building-bridges:${{ github.event.release.tag_name }}
+      - name: Docker build
+        run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+      - name: Deploy
+        working-directory: ./docker
+        run: |
+          heroku container:push web -a $APP_NAME --context-path ../
+          heroku container:release web -a $APP_NAME
