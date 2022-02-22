@@ -126,6 +126,9 @@ export default class Survey extends React.Component<SurveyProps, SurveyState> {
             })
                 .then(response => response.json())
                 .then(data => {
+                    data = camelizeKeys(data, function (key, convert) {
+                        return key !== '_id' ? convert(key) : key;
+                    })
                     this.updateQuestionInState(data);
                 });
         } else {
