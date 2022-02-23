@@ -69,9 +69,3 @@ jobs:
       run: |
         heroku container:push web -a $APP_NAME --context-path ../
         heroku container:release web -a $APP_NAME
-#    - name: Deploy
-#      uses: akhileshns/heroku-deploy@v3.12.12
-#        with:
-#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#          heroku_app_name: buildingbridges-last
-#          heroku_email: "YOUR EMAIL"
